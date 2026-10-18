@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>向いてる副業診断｜あなたはどの子？</title>
-<meta name="description" content="8つの質問で、あなたに向いている副業タイプと相棒キャラがわかる無料診断。全20通りの称号つき。">
+<meta name="description" content="11の質問で、あなたに向いている副業と、今の条件で始められる副業がわかる無料診断。最初の30日プランと全20通りの称号つき。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="向いてる副業診断｜あなたはどの子？">
-<meta property="og:description" content="8つの質問で、あなたに向いている副業タイプと相棒キャラがわかる無料診断。全20通りの称号つき。">
+<meta property="og:description" content="11の質問で、あなたに向いている副業と、今の条件で始められる副業がわかる無料診断。最初の30日プランと全20通りの称号つき。">
 <meta name="twitter:card" content="summary">
 <script>
 // GA4 の測定ID（G-XXXXXXX）を入れると計測が有効になる。空のままなら何も読み込まない。
@@ -78,6 +78,20 @@ ul{padding-left:1.2em;margin:.3em 0}
 .job b{display:block}
 .job .meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.82rem;color:var(--sub)}
 .stars{color:var(--accent);letter-spacing:1px}
+.job.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.job .real{font-size:.85rem;margin:6px 0 4px}
+.job .tag{display:inline-block;font-size:.72rem;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 8px;margin-left:6px;font-weight:600;vertical-align:middle}
+.job button{background:none;border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:4px 14px;font-size:.85rem;font-weight:600}
+.job.sel button{background:var(--accent);color:#fff}
+.out{font-size:.82rem;color:var(--sub);margin:10px 0 4px}
+.out li{margin:.15em 0}
+.plan{list-style:none;padding:0;margin:8px 0}
+.plan li{border-top:1px solid var(--line);padding:8px 0}
+.plan label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.plan input{width:20px;height:20px;margin:3px 0 0;flex:none;accent-color:var(--accent)}
+.plan .day{flex:none;width:3.6em;font-size:.8rem;font-weight:600;color:var(--accent);padding-top:2px}
+.plan .done span:last-child{color:var(--sub);text-decoration:line-through}
+.plan a{display:inline-block;margin:4px 0 0 calc(30px + 3.6em);color:var(--accent);font-weight:600;font-size:.9rem}
 .row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.9rem}
 .row b{width:6.5em;font-weight:500}
 .row .track{flex:1;margin:0}
@@ -105,9 +119,9 @@ ul{padding-left:1.2em;margin:.3em 0}
     <div class="lineup" id="lineup"></div>
     <h1>向いてる副業診断</h1>
     <p><b>あなたはどの子？</b></p>
-    <p class="sub">熱中するものがなくても大丈夫。8問に答えると、あなたに合う副業タイプと相棒キャラ、全20通りの称号がわかります。</p>
+    <p class="sub">熱中するものがなくても大丈夫。11問に答えると、あなたに合う副業タイプと相棒キャラ、今の時間とお金で始められる副業、最初の30日プランがわかります。</p>
     <button class="primary" id="go">診断をはじめる</button>
-    <p class="sub" style="margin-top:8px">約1分・登録不要・無料</p>
+    <p class="sub" style="margin-top:8px">約2分・登録不要・無料</p>
   </section>
 
   <section id="quiz" hidden>
@@ -118,6 +132,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     <div class="track"><i id="prog"></i><div class="walker" id="walker"></div></div>
     <p class="cheer" id="cheer"></p>
     <div class="card" id="qcard">
+      <p class="sub" id="qlabel" style="margin:0" hidden>条件の質問：今のあなたにできる副業に絞り込みます</p>
       <h2 id="q" style="font-size:1.15rem"></h2>
       <div id="opts"></div>
     </div>
@@ -151,15 +166,22 @@ ul{padding-left:1.2em;margin:.3em 0}
       <p class="sub" style="margin-bottom:0" id="rweak"></p>
     </div>
     <div class="card">
-      <h2>向いてる副業ベスト3</h2>
+      <h2 id="rjobsTitle"></h2>
+      <p class="sub" id="rcond"></p>
       <div class="jobs" id="rjobs"></div>
-      <p class="pr" style="margin-bottom:0">※ 費用・期間は始め方による一般的な目安で、収益を保証するものではありません。</p>
+      <div id="rout"></div>
+      <p class="pr" style="margin-bottom:0">※ 費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。</p>
+    </div>
+    <div class="card" id="planCard">
+      <h2 id="planTitle"></h2>
+      <p class="sub" id="planProg"></p>
+      <ul class="plan" id="rplan"></ul>
+      <p class="pr" style="margin-bottom:0">チェックはこの端末に保存されます。PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
     </div>
     <div class="card">
-      <h2>今日からできる最初の一歩</h2>
-      <ol id="rsteps" style="padding-left:1.3em"></ol>
-      <div class="links" id="rlinks"></div>
-      <p class="pr" style="margin-bottom:0">PR：上記リンクは広告（アフィリエイト）を含みます。</p>
+      <h2>あなたが避けた方がいい副業</h2>
+      <p style="margin:0"><b id="ravoidName"></b></p>
+      <p class="sub" style="margin-bottom:0" id="ravoid"></p>
     </div>
     <div class="card" id="barsCard">
       <h2>あなたのタイプ比率</h2>
@@ -225,9 +247,7 @@ const TYPES={
      aru:["買う前に口コミを30件読んでしまう","人に説明すると「わかりやすい」と言われる","気になったことは寝る前でも調べ始める"],
      str:["情報を集めて整理する力","ひとりで黙々と続けられる集中力","読み手を想像して伝える力"],
      weak:"つまずきやすい点：完璧を目指して公開が遅れがち。6割の出来でまず出すのがコツです。",
-     jobs:[["Webライター","0円","1か月前後",4],["ブログアフィリエイト","0〜1万円/年","3〜6か月",3],["note・有料記事","0円","1〜3か月",3]],
-     steps:["最近調べたことを、無料ブログに800字で1本書く（15分〜）","ASPに無料登録して、書けそうな商品を3つ探す","10本書いたら、読まれた記事の傾向を見て方向を決める"],
-     links:[["ブログをはじめる（レンタルサーバー）","#REPLACE_BLOG"],["アフィリエイト（ASP）に無料登録","#REPLACE_ASP"]],
+     avoid:["せどり（仕入れて転売）","仕入れの即決と在庫を抱える不安が続く副業です。じっくり調べてから動くあなたには、判断の速さが求められる場面がストレスになりやすいです。"],
      good:["V","話すタイプの発信力と組むと、書いた記事がもっと読まれます。"],opp:["S","即決型の売るタイプとは、スピード感がまるで逆。"]},
   V:{chara:"ピーチ",animal:"インコ",short:"話す・見せる",role:"発信者",adj:"愛されキャラの",
      catch:"あなたの声に、ファンがつく。",
@@ -235,9 +255,7 @@ const TYPES={
      aru:["面白いことがあると、すぐ誰かに話したくなる","SNSの反応がつくと素直にうれしい","一人作業が続くと元気がなくなる"],
      str:["人を惹きつける話し方","反応を見て素早く改善する力","続けるほど増えるファンづくり"],
      weak:"つまずきやすい点：反応が少ない時期に落ち込みやすい。最初の30投稿は練習と割り切りましょう。",
-     jobs:[["SNS運用・発信","0円","3〜6か月",4],["顔出しなし動画","0〜3万円","6か月〜",2],["音声・ライブ配信","0円","1〜3か月",3]],
-     steps:["SNSアカウントを1つ作り、今日の気づきを1投稿する（5分）","反応が良かった投稿のテーマを3つ書き出す","テーマが決まったら、関連商品の紹介を試す"],
-     links:[["動画編集ソフト・ツール","#REPLACE_VIDEO"],["アフィリエイト（ASP）に無料登録","#REPLACE_ASP"]],
+     avoid:["データ入力・単純作業の代行","一人で黙々と同じ作業を続ける副業です。人の反応がエネルギー源のあなたは、収入が出ても続けるのがつらくなりやすいです。"],
      good:["W","書くタイプが台本や記事を作ると、発信の中身が深まります。"],opp:["C","手順どおりのこなすタイプとは、自由さの感覚が逆。"]},
   M:{chara:"ポコ",animal:"ビーバー",short:"作る",role:"クリエイター",adj:"器用な",
      catch:"手を動かすほど、形が増える。",
@@ -245,9 +263,7 @@ const TYPES={
      aru:["説明書を読むより先に手が動く","100円ショップで材料を見ると何か作りたくなる","「器用だね」とよく言われる"],
      str:["アイデアを形にする力","試行錯誤を楽しめる粘り強さ","作品そのものが実績になる"],
      weak:"つまずきやすい点：作ることに夢中で値付けや宣伝が後回しに。作品と同じだけ売り方も工夫しましょう。",
-     jobs:[["デザイン・テンプレート販売","0円","1〜3か月",4],["ハンドメイド販売","数千円〜","1か月前後",3],["ノーコード制作代行","0円","1〜2か月",2]],
-     steps:["作れそうなものを3つ書き出し、一番簡単なものを今日作る","スキル・作品販売サービスに無料で出品してみる","売れた理由・売れなかった理由をメモする"],
-     links:[["スキル・作品販売サービス","#REPLACE_MARKET"],["デザイン・制作ツール","#REPLACE_TOOL"]],
+     avoid:["SNS発信・ライブ配信","毎日の投稿や人前での発信が中心の副業です。作る時間が削られるうえ、作品より自分を売る比重が大きく、あなたの強みが活きにくいです。"],
      good:["S","売るタイプの目利きと組むと、作ったものが売れる形になります。"],opp:["V","発信が得意な話すタイプとは、エネルギーの向きが逆。"]},
   S:{chara:"コン",animal:"キツネ",short:"売る",role:"商売人",adj:"目利きの",
      catch:"見つける目が、そのまま利益に。",
@@ -255,9 +271,7 @@ const TYPES={
      aru:["セール情報を見るとつい比べてしまう","「いいもの見つけるの上手だね」と言われる","迷うより先に動いていることが多い"],
      str:["売れるものを見抜く目","素早い判断と行動力","数字で結果を追える冷静さ"],
      weak:"つまずきやすい点：勢いで仕入れすぎること。最初は「売れてから仕入れる」ルールで。",
-     jobs:[["不用品のフリマ販売","0円","1週間前後",5],["店舗・ネットせどり","数万円〜","1か月前後",3],["古着・本の目利き転売","数千円〜","1か月前後",3]],
-     steps:["家の不用品を3つフリマに出品する（30分）","よく売れるカテゴリと価格を観察する","利益が出る仕入れのルールを自分で決める"],
-     links:[["フリマ・オークションサービス","#REPLACE_FURIMA"],["梱包資材・発送用品","#REPLACE_SHIP"]],
+     avoid:["ブログアフィリエイト","収入が出るまで半年以上かかることも珍しくない副業です。結果の早さを大事にするあなたには、手応えのない期間が長すぎます。"],
      good:["M","作るタイプの商品を売れば、仕入れなしで回せます。"],opp:["W","じっくり積み上げる書くタイプとは、時間感覚が逆。"]},
   C:{chara:"ハニ",animal:"ミツバチ",short:"こなす",role:"仕事人",adj:"堅実な",
      catch:"積み重ねた信頼が、収入になる。",
@@ -265,12 +279,86 @@ const TYPES={
      aru:["ToDoリストを消すのが気持ちいい","締め切りはきっちり守る","「几帳面だね」とよく言われる"],
      str:["正確さと丁寧さ","約束を守る信頼感","コツコツ続ける安定感"],
      weak:"つまずきやすい点：指示がない自由な仕事は迷いがち。まずは手順が決まった案件から始めましょう。",
-     jobs:[["データ入力・事務代行","0円","2週間前後",5],["オンライン秘書","0円","1か月前後",3],["リサーチ・文字起こし","0円","2週間前後",4]],
-     steps:["クラウドソーシングに無料登録して、簡単な案件を眺める（10分）","プロフィールに得意な作業を具体的に書く","小さな案件を1件完了して、実績と評価をもらう"],
-     links:[["クラウドソーシングに無料登録","#REPLACE_CROWD"],["在宅ワーク向け学習サービス","#REPLACE_LEARN"]],
+     avoid:["SNS発信・動画配信","何をどう発信するか、正解のないまま自分で決め続ける副業です。手順が決まっているほど力を出せるあなたは、迷う時間が長くなりがちです。"],
      good:["S","売るタイプの物販作業を手順化すれば、強力なチームに。"],opp:["V","ノリで動く話すタイプとは、進め方が逆。"]}
 };
 const KEYS=Object.keys(TYPES);
+
+// ---- アフィリエイトリンク（#REPLACE_… を本番のURLに差し替える） ----
+const LINKS={
+  BLOG:["ブログをはじめる（レンタルサーバー）","#REPLACE_BLOG"],
+  ASP:["アフィリエイト（ASP）に無料登録","#REPLACE_ASP"],
+  VIDEO:["動画編集ソフト・ツール","#REPLACE_VIDEO"],
+  MARKET:["スキル・作品販売サービス","#REPLACE_MARKET"],
+  TOOL:["デザイン・制作ツール","#REPLACE_TOOL"],
+  FURIMA:["フリマ・オークションサービス","#REPLACE_FURIMA"],
+  SHIP:["梱包資材・発送用品","#REPLACE_SHIP"],
+  CROWD:["クラウドソーシングに無料登録","#REPLACE_CROWD"],
+  LEARN:["在宅ワーク向け学習サービス","#REPLACE_LEARN"]
+};
+
+// ---- 副業カタログ ----
+// cost: 必要な初期費用（0=0円, 1=1万円まで, 2=5万円くらいまで）
+// h: 最低限ほしい週の時間, face: 0=顔も声も出さない, 1=声出しが必要, 2=顔出しが必要
+// plan: 最初の30日 [日目, やること, リンクキー?]
+const JOBS=[
+ {id:"writer",t:"W",name:"Webライター",cost:0,costLabel:"0円",h:3,face:0,first:"2〜4週間",month:"月1〜3万円",ease:4,
+  real:"最初は文字単価0.5〜1円の案件が中心で、3,000字書いて1,500〜3,000円ほど。実績が5件たまると単価を上げやすくなります。",
+  plan:[[1,"クラウドソーシングに登録し、プロフィールに得意なテーマを3つ書く","CROWD"],[2,"「初心者歓迎」のライティング案件を10件読み、よく求められる条件をメモする"],[3,"見本記事を1本（1,500字）書いて、プロフィールに載せる"],[5,"案件に3件応募する。応募文は案件ごとに一言変える"],[10,"受注できなければ応募をさらに5件。テーマを1つ絞り直す"],[14,"最初の1本を納品し、評価をもらう"],[21,"同じクライアントに継続できるか聞いてみる"],[30,"1か月の時給を計算し、次に狙う単価を決める"]]},
+ {id:"blog",t:"W",name:"ブログアフィリエイト",cost:1,costLabel:"月1,000円前後",h:5,face:0,first:"3〜6か月",month:"月0〜5,000円",ease:3,
+  real:"最初の3か月はほぼ0円が普通です。検索から読まれ始めるのは30〜50記事あたりから。半年で月1万円を超える人は少数です。",
+  plan:[[1,"書けそうなテーマを10個書き出し、一番続けられそうなものを選ぶ"],[3,"レンタルサーバーを契約し、ブログを開設する","BLOG"],[4,"ASPに登録して、テーマに合う商品を3つ探す","ASP"],[7,"1本目の記事（2,000字）を公開する"],[14,"記事を合計4本にする。週2本ペースを体に覚えさせる"],[21,"検索キーワードを意識した記事を1本書く"],[30,"記事8本を目標に。読まれた記事があれば同じ方向で続ける"]]},
+ {id:"note",t:"W",name:"note・有料記事",cost:0,costLabel:"0円",h:2,face:0,first:"1〜3か月",month:"月0〜1万円",ease:3,
+  real:"フォロワーがいない状態では有料記事はほぼ売れません。無料記事で読者を集めてから、一部を有料にするのが現実的です。",
+  plan:[[1,"noteに登録し、自分が人より詳しいことを3つ書き出す"],[3,"無料記事を1本公開する（体験談が読まれやすい）"],[7,"無料記事を合計3本に。スキが多い記事を確認する"],[14,"反応が良いテーマで、もう一段くわしい記事を書く"],[21,"Xなどで記事を紹介し、読者を増やす"],[30,"一番反応が良いテーマで、300〜500円の有料記事を1本出す"]]},
+ {id:"sns",t:"V",name:"SNS発信＋商品紹介",cost:0,costLabel:"0円",h:2,face:0,first:"3〜6か月",month:"月0〜1万円",ease:4,
+  real:"フォロワー1,000人ほどまでは収入はほぼありません。毎日投稿を3か月続けられるかが分かれ目です。",
+  plan:[[1,"発信のテーマを1つ決め、専用アカウントを作る"],[2,"同じテーマで伸びているアカウントを5つ見て、型をメモする"],[3,"毎日1投稿を始める（30日続けるのが目標）"],[10,"反応が良かった投稿を3つ選び、共通点を書き出す"],[14,"ASPに登録し、テーマに合う商品を探す","ASP"],[21,"商品の正直な感想を1投稿してみる（PR表記を忘れずに）"],[30,"30投稿を振り返り、次の1か月のテーマを決める"]]},
+ {id:"sns-agent",t:"V",name:"SNS運用代行",cost:0,costLabel:"0円",h:5,face:0,first:"1〜2か月",month:"月2〜5万円",ease:3,
+  real:"お店や個人事業主のアカウントを代わりに運用する仕事です。自分のアカウントで伸ばした実績を見せられると受注しやすくなります。",
+  plan:[[1,"クラウドソーシングに登録し、SNS運用の案件を10件読む","CROWD"],[3,"自分のアカウントで、投稿の作り方の見本を3つ作る"],[7,"身近なお店に「無料で1か月お手伝い」を提案してみる"],[14,"代行した投稿の反応を数字でまとめ、実績にする"],[21,"実績を添えて、有料の案件に3件応募する"],[30,"月額いくらで何投稿するか、自分の料金表を作る"]]},
+ {id:"voice",t:"V",name:"顔出しなしの動画・音声配信",cost:1,costLabel:"0〜1万円（マイク）",h:5,face:1,first:"6か月〜",month:"月0〜1万円",ease:2,
+  real:"YouTubeの広告収入は、登録者1,000人などの条件を満たすまでゼロです。最初の半年は練習期間と考えるのが現実的です。",
+  plan:[[1,"テーマを1つ決め、同じジャンルの人気チャンネルを5つ見る"],[3,"動画編集ツールを用意し、使い方の動画を1本見る","VIDEO"],[7,"1本目（3分以内）を作って公開する"],[14,"2本目、3本目を公開。サムネイルを毎回変えて比べる"],[21,"再生が多かった動画の要素を書き出す"],[30,"週1本のペースを決め、次の5本のネタを用意する"]]},
+ {id:"live",t:"V",name:"ライブ配信",cost:0,costLabel:"0円",h:3,face:2,first:"1〜3か月",month:"月0〜3万円",ease:3,
+  real:"投げ銭の収入は、毎回来てくれる常連の数でほぼ決まります。決まった時間に配信を続けることが一番の近道です。",
+  plan:[[1,"配信アプリを2つ試し、合いそうな方を選ぶ"],[3,"配信する曜日と時間を決めて、プロフィールに書く"],[5,"1回目の配信（30分）をする。来た人の名前をメモする"],[14,"週3回の配信を続け、話題のリストを作る"],[21,"常連さんが喜んだ話題を中心に、配信の型を決める"],[30,"1か月の配信回数と収入を記録し、続けるか判断する"]]},
+ {id:"template",t:"M",name:"デザイン・テンプレート販売",cost:0,costLabel:"0円",h:2,face:0,first:"1〜3か月",month:"月0〜1万円",ease:4,
+  real:"1点数百円の世界なので、収入は作品数に比例します。最初の10作品は売れなくても普通です。",
+  plan:[[1,"無料のデザインツールに登録し、テンプレートを3つ触ってみる","TOOL"],[3,"自分が欲しかったもの（家計簿、名刺など）を1つ作る"],[7,"作品販売サービスに無料で出品する","MARKET"],[14,"作品を合計5つに。同じジャンルで揃える"],[21,"売れている人の作品名と説明文を見て、自分の説明を直す"],[30,"10作品を目標に。見られた作品の傾向をメモする"]]},
+ {id:"handmade",t:"M",name:"ハンドメイド販売",cost:1,costLabel:"数千円〜1万円",h:4,face:0,first:"1か月前後",month:"月0〜2万円",ease:3,
+  real:"材料費と販売手数料（10%前後）を引くと、利益は売値の3〜5割が目安です。写真の撮り方で売れ行きが大きく変わります。",
+  plan:[[1,"作れるものを3つ書き出し、一番材料費が安いものを選ぶ"],[3,"試作品を1つ作り、材料費と作業時間を記録する"],[7,"自然光で写真を撮り、作品販売サービスに出品する","MARKET"],[10,"梱包資材を用意しておく","SHIP"],[14,"出品を3点に。同じジャンルの人気作品の値段を調べる"],[21,"売れなければ写真と作品名を変えてみる"],[30,"時給を計算し、値段か作り方を見直す"]]},
+ {id:"nocode",t:"M",name:"ノーコード制作代行",cost:0,costLabel:"0円",h:5,face:0,first:"1〜2か月",month:"月1〜5万円",ease:2,
+  real:"プログラミングなしでホームページや予約フォームを作る仕事です。作例がないと受注は難しいので、まず自分用に1つ作ります。",
+  plan:[[1,"ノーコードのサイト作成ツールに登録し、チュートリアルを1つ終える","TOOL"],[5,"自分用の紹介ページを1つ作り、作例にする"],[10,"知り合いのお店や団体のページを、無料か格安で1つ作る"],[14,"クラウドソーシングに登録し、作例を載せる","CROWD"],[21,"小さめの制作案件に3件応募する"],[30,"1件あたりの作業時間を記録し、料金を決める"]]},
+ {id:"furima",t:"S",name:"不用品のフリマ販売",cost:0,costLabel:"0円",h:1,face:0,first:"1週間前後",month:"数千円〜1万円（一時的）",ease:5,
+  real:"家の不用品が尽きたら終わる、練習用の副業です。売れる流れを体で覚えたら、次の仕入れ型に進むかを決めましょう。",
+  plan:[[1,"フリマアプリに登録し、家の不用品を5つ選ぶ","FURIMA"],[2,"同じ商品の売れた価格を調べ、少し下の値段で3つ出品する"],[4,"梱包資材を用意しておく","SHIP"],[7,"売れたら発送。売れなければ写真と値段を見直す"],[14,"残りも出品し、売れやすいカテゴリをメモする"],[30,"売上と手間を振り返り、仕入れに進むか決める"]]},
+ {id:"sedori",t:"S",name:"せどり（仕入れて転売）",cost:2,costLabel:"3〜5万円",h:5,face:0,first:"1か月前後",month:"月1〜5万円",ease:3,
+  real:"仕入れ資金が必要で、売れ残ると赤字になります。中古品を継続的に仕入れて売るには古物商許可が必要です。",
+  plan:[[1,"フリマで不用品を3つ売り、出品と発送の流れを体験する","FURIMA"],[5,"古物商許可が必要かを確認する（中古品を仕入れるなら必要）"],[7,"売れた価格の履歴を見ながら、仕入れ候補を10個リストにする"],[10,"1万円以内で3点だけ仕入れる（売れてから次を仕入れる）","SHIP"],[21,"売れた商品と売れない商品を比べ、ルールを書き出す"],[30,"利益率と回転の早さから、続けるカテゴリを1つに絞る"]]},
+ {id:"used",t:"S",name:"古着・古本の目利き転売",cost:1,costLabel:"数千円〜1万円",h:3,face:0,first:"1か月前後",month:"月0〜2万円",ease:3,
+  real:"1点の利益は数百円〜数千円。詳しいジャンルが1つあると強いです。継続して仕入れるなら古物商許可が必要です。",
+  plan:[[1,"詳しいジャンルを1つ決め、フリマで売れた価格を20件調べる","FURIMA"],[3,"近くのリサイクルショップを2店回り、値段の差を見る"],[7,"5,000円以内で3点仕入れて出品する","SHIP"],[14,"売れた理由をメモし、仕入れ値の上限を決める"],[21,"古物商許可について調べ、続けるなら申請の準備をする"],[30,"1か月の利益と作業時間から、続けるか判断する"]]},
+ {id:"data",t:"C",name:"データ入力・事務代行",cost:0,costLabel:"0円",h:3,face:0,first:"2週間前後",month:"月5,000〜2万円",ease:5,
+  real:"時給に直すと数百円の案件も多いです。最初は単価より実績づくりと割り切り、評価がたまったら単価の高い案件に移ります。",
+  plan:[[1,"クラウドソーシングに登録し、本人確認を済ませる","CROWD"],[2,"プロフィールに使えるソフトと作業スピードを具体的に書く"],[3,"タスク形式の簡単な作業を3件こなす"],[7,"プロジェクト形式の入力案件に3件応募する"],[14,"1件目を納品し、評価をもらう"],[21,"評価を添えて、単価が少し高い案件に応募する"],[30,"1か月の時給を計算し、伸ばしたいスキルを決める","LEARN"]]},
+ {id:"secretary",t:"C",name:"オンライン秘書",cost:0,costLabel:"0円",h:7,face:0,first:"1か月前後",month:"月3〜8万円",ease:3,
+  real:"週10時間ほどの稼働を求められることが多く、その分収入は安定しやすいです。事務の経験がそのまま強みになります。",
+  plan:[[1,"本業や過去の事務経験を、できる作業のリストにまとめる"],[3,"クラウドソーシングに登録し、秘書・アシスタント案件を読む","CROWD"],[7,"表計算やスケジュール管理など、足りないスキルを1つ学ぶ","LEARN"],[10,"案件に3件応募する。対応できる曜日と時間を明記する"],[21,"受注したら、毎日の作業報告を習慣にする"],[30,"継続契約と時給を見直す"]]},
+ {id:"transcribe",t:"C",name:"リサーチ・文字起こし",cost:0,costLabel:"0円",h:2,face:0,first:"2週間前後",month:"月5,000〜2万円",ease:4,
+  real:"文字起こしは音声1分あたり数十円からが多く、慣れるまでは時間がかかります。速く正確になるほど時給が上がります。",
+  plan:[[1,"クラウドソーシングに登録する","CROWD"],[2,"無料の文字起こし練習として、短い動画を5分ぶん書き起こし、かかった時間を測る"],[5,"文字起こしかリサーチの案件に3件応募する"],[10,"1件目を納品し、評価をもらう"],[21,"よく使う言い回しを辞書登録して、作業を速くする"],[30,"時給を計算し、得意な分野の案件に絞る"]]}
+];
+const JOB=Object.fromEntries(JOBS.map(j=>[j.id,j]));
+
+// ---- 条件の質問（性格の質問のあとに聞く。v は絞り込みに使う値） ----
+const CQ=[
+ {q:"副業に使える時間は、週にどれくらい？",o:[["週3時間未満",2],["週3〜7時間",5],["週7時間以上",10]]},
+ {q:"最初に使えるお金は？",o:[["0円で始めたい",0],["1万円くらいまで",1],["5万円くらいまで",2]]},
+ {q:"顔出し・声出しはできる？",o:[["どちらもしたくない",0],["声だけならOK",1],["顔出しもOK",2]]}
+];
 
 // ---- 質問（w は配点。本人の意向に近い質問を重くする） ----
 const Q=[
@@ -284,44 +372,50 @@ const Q=[
  {q:"理想の副業を一言でいうと？",w:2,a:{W:"書いたものが勝手に働いてくれる",V:"ファンがついてくれる",M:"作ったものが売れる",S:"仕入れて売って、利益が見える",C:"頼まれたことを確実に仕上げる"}}
 ];
 const MAX=Q.reduce((s,x)=>s+x.w,0);
-const CHEER={3:"いい調子！",4:"あと半分！",6:"あと2問！",7:"ラスト1問！"};
+const TOTAL=Q.length+CQ.length;
+const CHEER={3:"いい調子！",5:"あと半分！",8:"ここからは条件の質問です",10:"ラスト1問！"};
 
 const $=id=>document.getElementById(id);
 const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
-let i=0,answers=[];
+let i=0,answers=[],conds=[];
 
 function show(id){["start","quiz","loading","result"].forEach(s=>$(s).hidden=s!==id);scrollTo(0,0)}
 function shuffle(a){a=a.slice();for(let j=a.length-1;j>0;j--){const r=Math.random()*(j+1)|0;[a[j],a[r]]=[a[r],a[j]]}return a}
 
 function begin(){
-  i=0;answers=[];history.replaceState(null,"",location.pathname);
+  i=0;answers=[];conds=[];history.replaceState(null,"",location.pathname);
   show("quiz");render();track("quiz_start");
 }
 function render(){
-  const pct=i/Q.length*100;
-  $("num").textContent=`Q${i+1} / ${Q.length}`;
+  const pct=i/TOTAL*100,isCond=i>=Q.length;
+  $("num").textContent=`Q${i+1} / ${TOTAL}`;
   $("prog").style.width=pct+"%";
   $("walker").style.left=Math.max(pct,4)+"%";
   $("walker").innerHTML=charSVG(KEYS[i%KEYS.length]);
   $("cheer").textContent=CHEER[i]||"";
   $("back").disabled=i===0;
-  $("q").textContent=Q[i].q;
+  $("qlabel").hidden=!isCond;
   const box=$("opts");box.innerHTML="";
-  shuffle(KEYS).forEach(k=>{
-    const b=document.createElement("button");b.className="opt";b.textContent=Q[i].a[k];
-    b.onclick=()=>pick(k,b);
-    box.appendChild(b);
-  });
+  const add=(text,fn)=>{const b=document.createElement("button");b.className="opt";b.textContent=text;b.onclick=()=>fn(b);box.appendChild(b)};
+  if(isCond){
+    const c=CQ[i-Q.length];
+    $("q").textContent=c.q;
+    c.o.forEach(([text],n)=>add(text,b=>pick(n,b)));
+  }else{
+    $("q").textContent=Q[i].q;
+    shuffle(KEYS).forEach(k=>add(Q[i].a[k],b=>pick(k,b)));
+  }
   const card=$("qcard");card.classList.remove("slide-in");void card.offsetWidth;card.classList.add("slide-in");
 }
 let busy=false;
-function pick(k,b){
+function pick(v,b){
   if(busy)return;busy=true;
   b.classList.add("picked");
-  answers[i]=k;track("quiz_answer",{q:i+1});
-  setTimeout(()=>{busy=false;i++;i<Q.length?render():analyze()},reduced?0:220);
+  if(i<Q.length)answers[i]=v;else conds[i-Q.length]=v;
+  track("quiz_answer",{q:i+1});
+  setTimeout(()=>{busy=false;i++;i<TOTAL?render():analyze()},reduced?0:220);
 }
-$("back").onclick=()=>{if(i>0){i--;answers.length=i;render()}};
+$("back").onclick=()=>{if(i>0){i--;answers.length=Math.min(i,Q.length);conds.length=Math.max(i-Q.length,0);render()}};
 
 // 合計点 → 重い質問での点 → 後半の質問での選択 の順で同点を解く
 function rank(ans){
@@ -339,13 +433,44 @@ function analyze(){
   const code=r.order[0]+r.order[1];
   const nodes=[...sil.children];let n=0;
   const t=setInterval(()=>{nodes.forEach(x=>x.classList.remove("on"));nodes[n%nodes.length].classList.add("on");n++},180);
-  setTimeout(()=>{clearInterval(t);track("quiz_complete",{result:code});showResult(r.order[0],r.order[1],r.sc,false)},reduced?300:2000);
+  setTimeout(()=>{clearInterval(t);track("quiz_complete",{result:code,cond:conds.join("")});showResult(r.order[0],r.order[1],r.sc,false,conds.slice())},reduced?300:2000);
+}
+
+// 条件（CQ の選択肢番号の配列）に合う副業を、メインタイプ優先で最大3つ選ぶ
+function pickJobs(main,sub,ci){
+  const lim=ci&&{h:CQ[0].o[ci[0]][1],cost:CQ[1].o[ci[1]][1],face:CQ[2].o[ci[2]][1]};
+  const fit=j=>!lim||(j.h<=lim.h&&j.cost<=lim.cost&&j.face<=lim.face);
+  const why=j=>[j.h>lim.h&&`週${j.h}時間〜必要`,j.cost>lim.cost&&`初期費用${j.costLabel}`,j.face>lim.face&&(j.face===2?"顔出しが必要":"声出しが必要")].filter(Boolean).join("、");
+  const mine=JOBS.filter(j=>j.t===main);
+  const list=mine.filter(fit).slice(0,3);
+  JOBS.filter(j=>j.t===sub&&fit(j)).slice(0,list.length<2?2:1).forEach(j=>list.length<3&&list.push(Object.assign({sub:true},j)));
+  return {list,out:lim?mine.filter(j=>!fit(j)).map(j=>[j,why(j)]):[]};
+}
+
+const PLAN_KEY="shindan-plan-";
+function loadDone(id){try{return JSON.parse(localStorage.getItem(PLAN_KEY+id))||[]}catch(e){return []}}
+function saveDone(id,d){try{localStorage.setItem(PLAN_KEY+id,JSON.stringify(d))}catch(e){}}
+
+function showPlan(id,main){
+  const j=JOB[id],done=new Set(loadDone(id));
+  [...$("rjobs").children].forEach(el=>el.classList.toggle("sel",el.dataset.id===id));
+  $("planTitle").textContent=`${j.name}：最初の30日プラン`;
+  const prog=()=>$("planProg").textContent=`${done.size} / ${j.plan.length} 完了`+(done.size===j.plan.length?"　30日、おつかれさまでした！":"");
+  prog();
+  $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${lk?`<a href="${LINKS[lk][1]}" target="_blank" rel="sponsored noopener">${LINKS[lk][0]} →</a>`:""}</li>`).join("");
+  $("rplan").querySelectorAll("input").forEach(c=>c.onchange=()=>{
+    const n=+c.dataset.n;c.checked?done.add(n):done.delete(n);
+    c.parentNode.classList.toggle("done",c.checked);
+    saveDone(id,[...done]);prog();
+    if(c.checked)track("plan_check",{job:id,step:n+1});
+  });
+  $("rplan").querySelectorAll("a").forEach(a=>a.onclick=()=>track("affiliate_click",{type:main,job:id,link:a.textContent}));
 }
 
 function titleOf(main,sub){return TYPES[sub].adj+TYPES[main].role}
 function stars(n){return "★".repeat(n)+"☆".repeat(5-n)}
 
-function showResult(main,sub,sc,shared){
+function showResult(main,sub,sc,shared,ci){
   const T=TYPES[main],title=titleOf(main,sub);
   $("rchar").innerHTML=charSVG(main,true);$("rchar").firstChild.classList.add("pop");
   $("rname").textContent=`${T.animal}の「${T.chara}」 × ${TYPES[sub].short}の素質`;
@@ -355,10 +480,18 @@ function showResult(main,sub,sc,shared){
   $("raru").innerHTML=T.aru.map(s=>`<li>${s}</li>`).join("");
   $("rstr").innerHTML=T.str.map(s=>`<li>${s}</li>`).join("");
   $("rweak").textContent=T.weak;
-  $("rjobs").innerHTML=T.jobs.map(([name,cost,time,ease],n)=>`<div class="job"><b>${n+1}位　${name}</b><div class="meta"><span>初期費用 ${cost}</span><span>最初の収入まで ${time}</span><span>始めやすさ <span class="stars">${stars(ease)}</span></span></div></div>`).join("");
-  $("rsteps").innerHTML=T.steps.map(s=>`<li>${s}</li>`).join("");
-  $("rlinks").innerHTML=T.links.map(([t,u],n)=>`<a href="${u}" target="_blank" rel="sponsored noopener" data-n="${n}">${t} →</a>`).join("");
-  [...$("rlinks").children].forEach(a=>a.onclick=()=>track("affiliate_click",{type:main,link:a.textContent}));
+  const pj=pickJobs(main,sub,ci);
+  $("rjobsTitle").textContent=ci?"今のあなたにできる副業":"向いてる副業";
+  $("rcond").textContent=ci?"条件："+CQ.map((c,n)=>c.o[ci[n]][0]).join("・"):"";
+  $("rcond").hidden=!ci;
+  $("rjobs").innerHTML=pj.list.map((j,n)=>`<div class="job" data-id="${j.id}"><b>${n+1}. ${j.name}${j.sub?`<span class="tag">${TYPES[sub].short}の素質から</span>`:""}</b>
+    <div class="meta"><span>初期費用 ${j.costLabel}</span><span>週${j.h}時間〜</span><span>最初の収入まで ${j.first}</span><span>半年後の目安 ${j.month}</span><span>始めやすさ <span class="stars">${stars(j.ease)}</span></span></div>
+    <p class="real">${j.real}</p><button>30日プランを見る</button></div>`).join("");
+  [...$("rjobs").children].forEach(el=>el.querySelector("button").onclick=()=>{showPlan(el.dataset.id,main);track("plan_view",{job:el.dataset.id});$("planCard").scrollIntoView({behavior:reduced?"auto":"smooth"})});
+  $("rout").innerHTML=pj.out.length?`<div class="out">今の条件では外したもの<ul>${pj.out.map(([j,w])=>`<li>${j.name}（${w}）</li>`).join("")}</ul></div>`:"";
+  showPlan(pj.list[0].id,main);
+  $("ravoidName").textContent=T.avoid[0];
+  $("ravoid").textContent=T.avoid[1];
   if(sc){
     const order=KEYS.slice().sort((a,b)=>sc[b]-sc[a]);
     $("rbars").innerHTML=order.map(k=>{const p=Math.round(sc[k]/MAX*100);return `<div class="row"><b>${TYPES[k].short}</b><div class="track"><i style="width:${p}%"></i></div><em>${p}%</em></div>`}).join("");
@@ -368,7 +501,7 @@ function showResult(main,sub,sc,shared){
   $("rpair").innerHTML=`<div class="pair">${charSVG(g[0],true)}<div><b>最高の相棒：${TYPES[g[0]].animal}の${TYPES[g[0]].chara}（${TYPES[g[0]].short}）</b><br><span class="sub">${g[1]}</span></div></div>
     <div class="pair">${charSVG(o[0])}<div><b>真逆のタイプ：${TYPES[o[0]].animal}の${TYPES[o[0]].chara}（${TYPES[o[0]].short}）</b><br><span class="sub">${o[1]}</span></div></div>`;
 
-  const url=location.origin+location.pathname+"?r="+main+sub;
+  const url=location.origin+location.pathname+"?r="+main+sub+(ci?"&c="+ci.join(""):"");
   const text=`向いてる副業診断の結果、私は「${title}」でした！相棒は${T.animal}の${T.chara}。あなたはどの子？`;
   $("shareX").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url)+"&hashtags="+encodeURIComponent("向いてる副業診断");
   $("shareLine").href="https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text);
@@ -395,8 +528,9 @@ $("tryMe").onclick=e=>{e.preventDefault();begin()};
 
 // 共有リンク（?r=メイン+サブ）から来た人には、その結果を見せてから診断へ誘導する
 (()=>{
-  const r=new URLSearchParams(location.search).get("r")||"";
-  if(r.length===2&&TYPES[r[0]]&&TYPES[r[1]]&&r[0]!==r[1]){showResult(r[0],r[1],null,true);track("shared_view",{result:r})}
+  const p=new URLSearchParams(location.search),r=p.get("r")||"",c=p.get("c")||"";
+  const ci=/^[0-2]{3}$/.test(c)?[...c].map(Number):null;
+  if(r.length===2&&TYPES[r[0]]&&TYPES[r[1]]&&r[0]!==r[1]){showResult(r[0],r[1],null,true,ci);track("shared_view",{result:r})}
 })();
 </script>
 </body>
