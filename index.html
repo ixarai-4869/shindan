@@ -9,6 +9,9 @@
 <meta property="og:title" content="向いてる副業診断｜あなたはどの子？">
 <meta property="og:description" content="11の質問で、あなたに向いている副業と、今の条件で始められる副業がわかる無料診断。最初の30日プランと全20通りの称号つき。">
 <meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1917" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E">
 <script>
 // GA4 の測定ID（G-XXXXXXX）を入れると計測が有効になる。空のままなら何も読み込まない。
 const GA_ID="";
@@ -22,7 +25,8 @@ function track(name,params){if(window.gtag)gtag("event",name,params||{})}
 :root{--bg:#f7f5f0;--card:#fff;--text:#232220;--sub:#6b675f;--accent:#e2672f;--accent-soft:#fbe9df;--line:#e6e1d8;--good:#2f8f5b}
 @media (prefers-color-scheme:dark){:root{--bg:#1a1917;--card:#252421;--text:#efece6;--sub:#aaa59b;--accent:#f08a55;--accent-soft:#3a2a21;--line:#3a3833;--good:#5cc28a}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.7}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent;margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.7}
 main{max-width:640px;margin:0 auto;padding:16px 16px 64px;overflow-x:hidden}
 h1{font-size:1.5rem;margin:.4em 0;line-height:1.4}
 h2{font-size:1.05rem;margin:0 0 .5em}
@@ -30,11 +34,14 @@ h2{font-size:1.05rem;margin:0 0 .5em}
 .sub{color:var(--sub);font-size:.9rem}
 .pr{font-size:.78rem;color:var(--sub)}
 button{font:inherit;cursor:pointer}
+.opts{counter-reset:o}
 .opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin:8px 0;transition:border-color .15s,background .15s,transform .15s}
-.opt:hover,.opt:focus-visible{border-color:var(--accent)}
+.opt:focus-visible{border-color:var(--accent);outline:2px solid var(--accent);outline-offset:1px}
+/* タッチ端末では :hover が押した後も残るので、マウスのときだけ効かせる */
+@media (hover:hover){.opt:hover{border-color:var(--accent)}}
 .opt.picked{background:var(--accent-soft);border-color:var(--accent);transform:scale(.98)}
 .primary{display:inline-block;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:13px 32px;font-weight:600;text-decoration:none}
-.ghost{background:none;border:0;color:var(--sub);padding:6px 0;font-size:.9rem}
+.ghost{background:none;border:0;color:var(--sub);padding:10px 12px 10px 0;min-height:44px;font-size:.9rem}
 .ghost:disabled{visibility:hidden}
 [hidden]{display:none!important}
 
@@ -107,6 +114,30 @@ ul{padding-left:1.2em;margin:.3em 0}
 .others button{flex:1;background:none;border:1px solid var(--line);border-radius:10px;padding:6px 2px;color:var(--text);font-size:.75rem}
 .others svg{width:100%;height:auto;max-width:56px;display:block;margin:0 auto}
 .banner{background:var(--accent-soft);border-radius:12px;padding:12px 14px;margin:12px 0;font-size:.9rem}
+.resume{margin-top:20px}
+.resume button{background:none;border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:9px 20px;font-weight:600;font-size:.9rem}
+.keyhint{display:none;text-align:center;margin:4px 0 0}
+
+/* マウスとキーボードのある端末：数字キーで選べることを見せる */
+@media (hover:hover) and (pointer:fine){
+  .opts .opt{counter-increment:o;display:flex;gap:12px;align-items:baseline}
+  .opts .opt::before{content:counter(o);flex:none;width:1.6em;height:1.6em;line-height:1.6em;text-align:center;border-radius:6px;background:var(--line);color:var(--sub);font-size:.8rem;font-weight:600}
+  .keyhint{display:block}
+}
+
+/* PC：結果ページは2カラムにして、キャラと称号を左に固定する */
+@media (min-width:960px){
+  main{padding-top:24px}
+  main.wide{max-width:1040px}
+  #start h1{font-size:2rem}
+  #result:not([hidden]){display:grid;grid-template-columns:360px minmax(0,1fr);column-gap:24px;align-items:start}
+  #result>*{grid-column:2}
+  #result>.card{margin:0 0 16px}
+  #result>.hero{grid-column:1;grid-row:1 / span 30;margin:0}
+  #result>.share{margin:0 0 12px}
+  .hero svg{width:200px;height:200px}
+}
+@media (min-width:960px) and (min-height:700px){#result>.hero{position:sticky;top:16px}}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -122,6 +153,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     <p class="sub">熱中するものがなくても大丈夫。11問に答えると、あなたに合う副業タイプと相棒キャラ、今の時間とお金で始められる副業、最初の30日プランがわかります。</p>
     <button class="primary" id="go">診断をはじめる</button>
     <p class="sub" style="margin-top:8px">約2分・登録不要・無料</p>
+    <div class="resume" id="resume" hidden><button id="resumeBtn">前回の結果と30日プランを見る</button></div>
   </section>
 
   <section id="quiz" hidden>
@@ -134,8 +166,9 @@ ul{padding-left:1.2em;margin:.3em 0}
     <div class="card" id="qcard">
       <p class="sub" id="qlabel" style="margin:0" hidden>条件の質問：今のあなたにできる副業に絞り込みます</p>
       <h2 id="q" style="font-size:1.15rem"></h2>
-      <div id="opts"></div>
+      <div id="opts" class="opts"></div>
     </div>
+    <p class="sub keyhint">キーボードの 1〜5 でも選べます（Backspace で戻る）</p>
   </section>
 
   <section id="loading" hidden>
@@ -144,7 +177,7 @@ ul{padding-left:1.2em;margin:.3em 0}
   </section>
 
   <section id="result" hidden>
-    <div class="banner" id="sharedNote" hidden>友達の診断結果です。あなたはどの子？</div>
+    <div class="banner" id="sharedNote" hidden></div>
     <div class="card hero">
       <p class="sub" style="margin:0">あなたの副業タイプは</p>
       <div id="rchar"></div>
@@ -155,6 +188,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     </div>
 
     <div id="startHere" class="center" hidden><a class="primary" href="./" id="tryMe">あなたも診断する</a></div>
+    <div id="backMine" class="center" hidden><button class="primary" id="backMineBtn">自分の結果に戻る</button></div>
 
     <div class="card">
       <h2>こんなところ、ありませんか？</h2>
@@ -379,11 +413,12 @@ const $=id=>document.getElementById(id);
 const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let i=0,answers=[],conds=[];
 
-function show(id){["start","quiz","loading","result"].forEach(s=>$(s).hidden=s!==id);scrollTo(0,0)}
+function show(id){["start","quiz","loading","result"].forEach(s=>$(s).hidden=s!==id);document.querySelector("main").classList.toggle("wide",id==="result");scrollTo(0,0)}
 function shuffle(a){a=a.slice();for(let j=a.length-1;j>0;j--){const r=Math.random()*(j+1)|0;[a[j],a[r]]=[a[r],a[j]]}return a}
 
+// 質問ごとに履歴を積むので、スマホの「戻る」ジェスチャーやブラウザの戻るで前の質問に戻れる
 function begin(){
-  i=0;answers=[];conds=[];history.replaceState(null,"",location.pathname);
+  i=0;answers=[];conds=[];history.replaceState(null,"",location.pathname);history.pushState({q:0},"");
   show("quiz");render();track("quiz_start");
 }
 function render(){
@@ -413,9 +448,17 @@ function pick(v,b){
   b.classList.add("picked");
   if(i<Q.length)answers[i]=v;else conds[i-Q.length]=v;
   track("quiz_answer",{q:i+1});
-  setTimeout(()=>{busy=false;i++;i<TOTAL?render():analyze()},reduced?0:220);
+  setTimeout(()=>{busy=false;i++;if(i<TOTAL){history.pushState({q:i},"");render()}else{history.pushState({r:1},"");analyze()}},reduced?0:220);
 }
-$("back").onclick=()=>{if(i>0){i--;answers.length=Math.min(i,Q.length);conds.length=Math.max(i-Q.length,0);render()}};
+$("back").onclick=()=>{if(i>0)history.back()};
+
+// PC：1〜5キーで選択、Backspace / ← で戻る
+document.addEventListener("keydown",e=>{
+  if($("quiz").hidden||e.ctrlKey||e.metaKey||e.altKey)return;
+  const n=+e.key,opts=$("opts").children;
+  if(n>=1&&n<=opts.length){e.preventDefault();opts[n-1].click()}
+  else if((e.key==="Backspace"||e.key==="ArrowLeft")&&i>0){e.preventDefault();history.back()}
+});
 
 // 合計点 → 重い質問での点 → 後半の質問での選択 の順で同点を解く
 function rank(ans){
@@ -426,14 +469,20 @@ function rank(ans){
   return {order,sc};
 }
 
+let anaTick,anaDone;
 function analyze(){
   show("loading");
   const sil=$("sil");sil.innerHTML=KEYS.map(k=>charSVG(k)).join("");
   const r=rank(answers);
   const code=r.order[0]+r.order[1];
   const nodes=[...sil.children];let n=0;
-  const t=setInterval(()=>{nodes.forEach(x=>x.classList.remove("on"));nodes[n%nodes.length].classList.add("on");n++},180);
-  setTimeout(()=>{clearInterval(t);track("quiz_complete",{result:code,cond:conds.join("")});showResult(r.order[0],r.order[1],r.sc,false,conds.slice())},reduced?300:2000);
+  anaTick=setInterval(()=>{nodes.forEach(x=>x.classList.remove("on"));nodes[n%nodes.length].classList.add("on");n++},180);
+  anaDone=setTimeout(()=>{
+    clearInterval(anaTick);track("quiz_complete",{result:code,cond:conds.join("")});
+    mine={m:r.order[0],s:r.order[1],sc:r.sc,c:conds.slice()};
+    try{localStorage.setItem(LAST_KEY,JSON.stringify(mine))}catch(e){}
+    showMine();
+  },reduced?300:2000);
 }
 
 // 条件（CQ の選択肢番号の配列）に合う副業を、メインタイプ優先で最大3つ選ぶ
@@ -446,6 +495,12 @@ function pickJobs(main,sub,ci){
   JOBS.filter(j=>j.t===sub&&fit(j)).slice(0,list.length<2?2:1).forEach(j=>list.length<3&&list.push(Object.assign({sub:true},j)));
   return {list,out:lim?mine.filter(j=>!fit(j)).map(j=>[j,why(j)]):[]};
 }
+
+// 前回の自分の結果。30日プランのチェックを続けるために、トップから戻れるようにする
+const LAST_KEY="shindan-last";
+let mine=null;
+try{const v=JSON.parse(localStorage.getItem(LAST_KEY));if(v&&TYPES[v.m]&&TYPES[v.s])mine=v}catch(e){}
+function showMine(){showResult(mine.m,mine.s,mine.sc,"own",mine.c)}
 
 const PLAN_KEY="shindan-plan-";
 function loadDone(id){try{return JSON.parse(localStorage.getItem(PLAN_KEY+id))||[]}catch(e){return []}}
@@ -470,7 +525,8 @@ function showPlan(id,main){
 function titleOf(main,sub){return TYPES[sub].adj+TYPES[main].role}
 function stars(n){return "★".repeat(n)+"☆".repeat(5-n)}
 
-function showResult(main,sub,sc,shared,ci){
+// mode: "own"=自分の結果, "shared"=共有リンクで見ている友達の結果, "peek"=ほかの子を見ている
+function showResult(main,sub,sc,mode,ci){
   const T=TYPES[main],title=titleOf(main,sub);
   $("rchar").innerHTML=charSVG(main,true);$("rchar").firstChild.classList.add("pop");
   $("rname").textContent=`${T.animal}の「${T.chara}」 × ${TYPES[sub].short}の素質`;
@@ -481,7 +537,7 @@ function showResult(main,sub,sc,shared,ci){
   $("rstr").innerHTML=T.str.map(s=>`<li>${s}</li>`).join("");
   $("rweak").textContent=T.weak;
   const pj=pickJobs(main,sub,ci);
-  $("rjobsTitle").textContent=ci?"今のあなたにできる副業":"向いてる副業";
+  $("rjobsTitle").textContent=!ci?"向いてる副業":mode==="shared"?"この条件でできる副業":"今のあなたにできる副業";
   $("rcond").textContent=ci?"条件："+CQ.map((c,n)=>c.o[ci[n]][0]).join("・"):"";
   $("rcond").hidden=!ci;
   $("rjobs").innerHTML=pj.list.map((j,n)=>`<div class="job" data-id="${j.id}"><b>${n+1}. ${j.name}${j.sub?`<span class="tag">${TYPES[sub].short}の素質から</span>`:""}</b>
@@ -507,17 +563,29 @@ function showResult(main,sub,sc,shared,ci){
   $("shareLine").href="https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text);
   $("shareX").onclick=()=>track("share",{method:"x",result:main+sub});
   $("shareLine").onclick=()=>track("share",{method:"line",result:main+sub});
-  $("copy").textContent="リンクをコピー";
+  // スマホでは OS の共有シート（Instagram・メッセージなど）を開く。PC はコピー
+  const native=navigator.share&&matchMedia("(pointer:coarse)").matches;
+  $("copy").textContent=native?"ほかのアプリ":"リンクをコピー";
   $("copy").onclick=async()=>{
+    if(native){
+      track("share",{method:"native",result:main+sub});
+      try{await navigator.share({title:document.title,text,url});return}catch(e){if(e.name==="AbortError")return}
+    }
     track("share",{method:"copy",result:main+sub});
     try{await navigator.clipboard.writeText(text+"\n"+url);$("copy").textContent="コピーしました"}
     catch(e){prompt("コピーしてください",text+"\n"+url)}
   };
   $("others").innerHTML=KEYS.map(k=>`<button data-k="${k}">${charSVG(k,k===main)}${TYPES[k].short}</button>`).join("");
-  [...$("others").children].forEach(b=>b.onclick=()=>{const k=b.dataset.k;const s=k===main?sub:KEYS.find(x=>x!==k&&TYPES[k].good[0]===x)||KEYS.find(x=>x!==k);showResult(k,s,null,true)});
+  [...$("others").children].forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k;if(k===main)return;
+    const s=TYPES[k].good[0];
+    history.pushState({p:k+s},"");showResult(k,s,null,"peek");
+  });
 
-  $("sharedNote").hidden=!shared;
-  $("startHere").hidden=!shared;
+  $("sharedNote").textContent=mode==="shared"?"友達の診断結果です。あなたはどの子？":`${TYPES[main].animal}の${TYPES[main].chara}（${TYPES[main].short}タイプ）の結果の一例です。`;
+  $("sharedNote").hidden=mode==="own";
+  $("startHere").hidden=!(mode==="shared"||(mode==="peek"&&!mine));
+  $("backMine").hidden=mode!=="peek";
   show("result");
 }
 
@@ -525,13 +593,29 @@ $("lineup").innerHTML=KEYS.map(k=>charSVG(k)).join("");
 $("go").onclick=begin;
 $("again").onclick=begin;
 $("tryMe").onclick=e=>{e.preventDefault();begin()};
+$("backMineBtn").onclick=()=>history.back();
+$("resumeBtn").onclick=()=>{history.pushState({r:1},"");showMine();track("resume_view")};
 
-// 共有リンク（?r=メイン+サブ）から来た人には、その結果を見せてから診断へ誘導する
-(()=>{
+// 履歴の状態に合わせて画面を出し直す
+function route(state,first){
+  clearInterval(anaTick);clearTimeout(anaDone);busy=false;
+  if(state&&state.q!=null){
+    // 再読み込みなどで回答が消えていたら最初から
+    if(answers.length+conds.length<state.q){begin();return}
+    i=state.q;answers.length=Math.min(i,Q.length);conds.length=Math.max(i-Q.length,0);
+    show("quiz");render();return;
+  }
+  if(state&&state.r&&mine){showMine();return}
+  if(state&&state.p){showResult(state.p[0],state.p[1],null,"peek");return}
+  // 共有リンク（?r=メイン+サブ）から来た人には、その結果を見せてから診断へ誘導する
   const p=new URLSearchParams(location.search),r=p.get("r")||"",c=p.get("c")||"";
   const ci=/^[0-2]{3}$/.test(c)?[...c].map(Number):null;
-  if(r.length===2&&TYPES[r[0]]&&TYPES[r[1]]&&r[0]!==r[1]){showResult(r[0],r[1],null,true,ci);track("shared_view",{result:r})}
-})();
+  if(r.length===2&&TYPES[r[0]]&&TYPES[r[1]]&&r[0]!==r[1]){showResult(r[0],r[1],null,"shared",ci);if(first)track("shared_view",{result:r});return}
+  $("resume").hidden=!mine;
+  show("start");
+}
+addEventListener("popstate",e=>route(e.state));
+route(history.state,true);
 </script>
 </body>
 </html>
