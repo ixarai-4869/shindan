@@ -3,131 +3,401 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>向いてる副業診断</title>
-<meta name="description" content="8つの質問で、あなたに向いている副業タイプがわかる無料診断。">
+<title>向いてる副業診断｜あなたはどの子？</title>
+<meta name="description" content="8つの質問で、あなたに向いている副業タイプと相棒キャラがわかる無料診断。全20通りの称号つき。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="向いてる副業診断｜あなたはどの子？">
+<meta property="og:description" content="8つの質問で、あなたに向いている副業タイプと相棒キャラがわかる無料診断。全20通りの称号つき。">
+<meta name="twitter:card" content="summary">
+<script>
+// GA4 の測定ID（G-XXXXXXX）を入れると計測が有効になる。空のままなら何も読み込まない。
+const GA_ID="";
+if(GA_ID){
+  const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
+}
+function track(name,params){if(window.gtag)gtag("event",name,params||{})}
+</script>
 <style>
-:root{--bg:#f7f7f5;--card:#fff;--text:#222;--sub:#666;--accent:#2f6fed;--line:#e3e3df}
-@media (prefers-color-scheme:dark){:root{--bg:#18181a;--card:#242427;--text:#eee;--sub:#aaa;--accent:#6b9bff;--line:#38383c}}
+:root{--bg:#f7f5f0;--card:#fff;--text:#232220;--sub:#6b675f;--accent:#e2672f;--accent-soft:#fbe9df;--line:#e6e1d8;--good:#2f8f5b}
+@media (prefers-color-scheme:dark){:root{--bg:#1a1917;--card:#252421;--text:#efece6;--sub:#aaa59b;--accent:#f08a55;--accent-soft:#3a2a21;--line:#3a3833;--good:#5cc28a}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.7}
-main{max-width:640px;margin:0 auto;padding:24px 16px 64px}
-h1{font-size:1.5rem;margin:.5em 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin:16px 0}
+main{max-width:640px;margin:0 auto;padding:16px 16px 64px;overflow-x:hidden}
+h1{font-size:1.5rem;margin:.4em 0;line-height:1.4}
+h2{font-size:1.05rem;margin:0 0 .5em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
 .sub{color:var(--sub);font-size:.9rem}
+.pr{font-size:.78rem;color:var(--sub)}
 button{font:inherit;cursor:pointer}
-.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:8px 0}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin:8px 0;transition:border-color .15s,background .15s,transform .15s}
 .opt:hover,.opt:focus-visible{border-color:var(--accent)}
-.primary{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:12px 24px}
-.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--accent);transition:width .2s}
-.row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.9rem}
-.row b{width:7em;font-weight:500}.row .bar{flex:1}
-ul{padding-left:1.2em}
-a.link{display:inline-block;margin:4px 0;color:var(--accent)}
-.pr{font-size:.8rem;color:var(--sub)}
+.opt.picked{background:var(--accent-soft);border-color:var(--accent);transform:scale(.98)}
+.primary{display:inline-block;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:13px 32px;font-weight:600;text-decoration:none}
+.ghost{background:none;border:0;color:var(--sub);padding:6px 0;font-size:.9rem}
+.ghost:disabled{visibility:hidden}
 [hidden]{display:none!important}
+
+/* スタート */
+.lineup{display:flex;justify-content:center;gap:4px;margin:12px 0 4px}
+.lineup svg{width:19%;max-width:96px;height:auto}
+.lineup svg:nth-child(odd){animation:bob 2.4s ease-in-out infinite}
+.lineup svg:nth-child(even){animation:bob 2.4s ease-in-out .6s infinite}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.center{text-align:center}
+
+/* 質問 */
+.qhead{display:flex;align-items:center;justify-content:space-between;margin:4px 0 6px}
+.track{position:relative;height:8px;background:var(--line);border-radius:4px;margin:30px 0 4px}
+.track i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .35s ease}
+.walker{position:absolute;bottom:4px;width:34px;height:34px;transform:translateX(-50%);transition:left .35s ease}
+.cheer{min-height:1.6em;color:var(--accent);font-weight:600;font-size:.9rem;text-align:center}
+.slide-in{animation:slidein .3s ease both}
+@keyframes slidein{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+
+/* 分析中 */
+#loading{text-align:center;padding:48px 0}
+.sil{display:flex;justify-content:center;gap:6px}
+.sil svg{width:16%;max-width:72px;height:auto;filter:grayscale(1) brightness(.6);opacity:.35;transition:all .2s}
+.sil svg.on{filter:none;opacity:1;transform:translateY(-8px)}
+
+/* 結果 */
+.hero{text-align:center}
+.hero svg{width:160px;height:160px}
+.hero .pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+.hero .char-name{font-size:.95rem;color:var(--sub);margin:0}
+.title{font-size:1.75rem;margin:.1em 0}
+.title span{display:inline-block;animation:fadeup .4s ease both}
+@keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.catch{font-weight:600;color:var(--accent)}
+ul{padding-left:1.2em;margin:.3em 0}
+.aru li{margin:.2em 0}
+.jobs{display:grid;gap:10px}
+.job{border:1px solid var(--line);border-radius:10px;padding:12px}
+.job b{display:block}
+.job .meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.82rem;color:var(--sub)}
+.stars{color:var(--accent);letter-spacing:1px}
+.row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.9rem}
+.row b{width:6.5em;font-weight:500}
+.row .track{flex:1;margin:0}
+.row em{width:3em;text-align:right;font-style:normal;color:var(--sub)}
+.pair{display:flex;gap:12px;align-items:center;margin:8px 0}
+.pair svg{width:56px;height:56px;flex:none}
+.links a{display:block;margin:6px 0;color:var(--accent);font-weight:600}
+.share{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0}
+.share a,.share button{display:block;text-align:center;border-radius:10px;padding:11px 4px;font-size:.9rem;font-weight:600;text-decoration:none;border:1px solid var(--line);background:var(--card);color:var(--text)}
+.share .x{background:#111;color:#fff;border-color:#111}
+.share .line{background:#06c755;color:#fff;border-color:#06c755}
+.others{display:flex;justify-content:space-between;gap:4px}
+.others button{flex:1;background:none;border:1px solid var(--line);border-radius:10px;padding:6px 2px;color:var(--text);font-size:.75rem}
+.others svg{width:100%;height:auto;max-width:56px;display:block;margin:0 auto}
+.banner{background:var(--accent-soft);border-radius:12px;padding:12px 14px;margin:12px 0;font-size:.9rem}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <main>
-  <section id="start">
+  <p class="pr">※ 本サイトには広告（PR・アフィリエイトリンク）が含まれます。</p>
+
+  <section id="start" class="center">
+    <div class="lineup" id="lineup"></div>
     <h1>向いてる副業診断</h1>
-    <p class="sub">熱中するものがなくても大丈夫。8問に答えると、いまのあなたに合う副業タイプがわかります（約1分）。</p>
+    <p><b>あなたはどの子？</b></p>
+    <p class="sub">熱中するものがなくても大丈夫。8問に答えると、あなたに合う副業タイプと相棒キャラ、全20通りの称号がわかります。</p>
     <button class="primary" id="go">診断をはじめる</button>
+    <p class="sub" style="margin-top:8px">約1分・登録不要・無料</p>
   </section>
 
   <section id="quiz" hidden>
-    <div class="bar"><i id="prog"></i></div>
-    <div class="card">
-      <p class="sub" id="num"></p>
-      <h2 id="q" style="font-size:1.15rem;margin:.2em 0 .6em"></h2>
+    <div class="qhead">
+      <button class="ghost" id="back">← ひとつ戻る</button>
+      <span class="sub" id="num"></span>
+    </div>
+    <div class="track"><i id="prog"></i><div class="walker" id="walker"></div></div>
+    <p class="cheer" id="cheer"></p>
+    <div class="card" id="qcard">
+      <h2 id="q" style="font-size:1.15rem"></h2>
       <div id="opts"></div>
     </div>
   </section>
 
-  <section id="result" hidden>
-    <div class="card">
-      <p class="sub">あなたの副業タイプは</p>
-      <h1 id="rtitle"></h1>
-      <p id="rdesc"></p>
-      <div id="bars"></div>
-    </div>
-    <div class="card">
-      <h2 style="font-size:1.05rem;margin-top:0">最初の一歩</h2>
-      <ul id="steps"></ul>
-    </div>
-    <div class="card">
-      <h2 style="font-size:1.05rem;margin-top:0">はじめるのに役立つもの</h2>
-      <div id="links"></div>
-      <p class="pr">※ 本ページのリンクには広告（アフィリエイト）が含まれます。</p>
-    </div>
-    <button class="primary" id="copy">結果をコピーして共有</button>
-    <button class="opt" id="again" style="margin-top:12px;text-align:center">もう一度診断する</button>
+  <section id="loading" hidden>
+    <div class="sil" id="sil"></div>
+    <p class="sub">回答を分析しています…</p>
   </section>
+
+  <section id="result" hidden>
+    <div class="banner" id="sharedNote" hidden>友達の診断結果です。あなたはどの子？</div>
+    <div class="card hero">
+      <p class="sub" style="margin:0">あなたの副業タイプは</p>
+      <div id="rchar"></div>
+      <p class="char-name" id="rname"></p>
+      <h1 class="title" id="rtitle"></h1>
+      <p class="catch" id="rcatch"></p>
+      <p id="rdesc" style="text-align:left"></p>
+    </div>
+
+    <div id="startHere" class="center" hidden><a class="primary" href="./" id="tryMe">あなたも診断する</a></div>
+
+    <div class="card">
+      <h2>こんなところ、ありませんか？</h2>
+      <ul class="aru" id="raru"></ul>
+    </div>
+    <div class="card">
+      <h2>あなたの強み</h2>
+      <ul id="rstr"></ul>
+      <p class="sub" style="margin-bottom:0" id="rweak"></p>
+    </div>
+    <div class="card">
+      <h2>向いてる副業ベスト3</h2>
+      <div class="jobs" id="rjobs"></div>
+      <p class="pr" style="margin-bottom:0">※ 費用・期間は始め方による一般的な目安で、収益を保証するものではありません。</p>
+    </div>
+    <div class="card">
+      <h2>今日からできる最初の一歩</h2>
+      <ol id="rsteps" style="padding-left:1.3em"></ol>
+      <div class="links" id="rlinks"></div>
+      <p class="pr" style="margin-bottom:0">PR：上記リンクは広告（アフィリエイト）を含みます。</p>
+    </div>
+    <div class="card" id="barsCard">
+      <h2>あなたのタイプ比率</h2>
+      <div id="rbars"></div>
+    </div>
+    <div class="card">
+      <h2>相性</h2>
+      <div id="rpair"></div>
+    </div>
+
+    <div class="share">
+      <a class="x" id="shareX" target="_blank" rel="noopener">Xで共有</a>
+      <a class="line" id="shareLine" target="_blank" rel="noopener">LINEで送る</a>
+      <button id="copy">リンクをコピー</button>
+    </div>
+    <button class="opt" id="again" style="text-align:center">もう一度診断する</button>
+
+    <div class="card">
+      <h2>ほかの子も見てみる</h2>
+      <div class="others" id="others"></div>
+    </div>
+  </section>
+
   <p class="pr" style="margin-top:32px">この診断は娯楽・参考用です。収益を保証するものではありません。</p>
 </main>
 
 <script>
-const TYPES={
-  W:{name:"コツコツ書く タイプ",short:"書く",desc:"調べて整理して、文章にまとめるのが苦にならないタイプ。ブログや記事執筆は、元手がほぼ要らず、積み上げが資産になります。",
-     steps:["無料ブログで、最近調べたことを1本書いてみる","ASPに無料登録して、扱えそうな商品を探す","10本書いてから、アクセスと反応を見て方向を決める"],
-     links:[["無料ブログ・サイト作成サービス","#REPLACE_BLOG"],["アフィリエイト（ASP）無料登録","#REPLACE_ASP"]]},
-  V:{name:"話す・見せる タイプ",short:"話す・見せる",desc:"人とのやりとりや発信にエネルギーがあるタイプ。SNSや動画で人柄を出すと強みになります。顔出しなしでも始められます。",
-     steps:["SNSアカウントを1つ作り、日常の気づきを毎日1投稿","反応が良かった投稿のテーマを3つ書き出す","テーマが決まったら、関連商品の紹介を試す"],
-     links:[["動画編集ソフト・ツール","#REPLACE_VIDEO"],["アフィリエイト（ASP）無料登録","#REPLACE_ASP"]]},
-  M:{name:"手を動かして作る タイプ",short:"作る",desc:"ものや仕組みを作るのが好きなタイプ。ハンドメイド、デザイン、簡単なツールやテンプレート作りを売る道があります。",
-     steps:["作れそうなものを3つ書き出し、一番簡単なものを作る","スキル・作品を売れるサービスに無料で出品してみる","売れた理由、売れなかった理由をメモする"],
-     links:[["スキル・作品販売サービス","#REPLACE_MARKET"],["デザイン・制作ツール","#REPLACE_TOOL"]]},
-  S:{name:"見つけて売る タイプ",short:"売る",desc:"お得な情報や掘り出し物に敏感なタイプ。フリマやせどりなど、仕入れて売る形は、結果が早く数字で見えます。",
-     steps:["家の不用品を3つフリマに出して、流れを体験する","よく売れるカテゴリを観察する","利益が出る仕入れ先のルールを自分で決める"],
-     links:[["フリマ・オークションサービス","#REPLACE_FURIMA"],["梱包資材・発送用品","#REPLACE_SHIP"]]},
-  C:{name:"着実にこなす タイプ",short:"こなす",desc:"決まった手順を正確に進めるのが得意なタイプ。在宅の事務、データ入力、リサーチ代行など、クラウドソーシングが合います。",
-     steps:["クラウドソーシングに無料登録して、簡単な案件を眺める","プロフィールに得意な作業を具体的に書く","小さな案件を1件完了して、実績と評価をもらう"],
-     links:[["クラウドソーシング無料登録","#REPLACE_CROWD"],["在宅ワーク向け学習サービス","#REPLACE_LEARN"]]}
+// ---- キャラクター（インラインSVG） ----
+function eyes(x1,x2,y,happy,r){
+  r=r||5;
+  return happy
+    ?`<path d="M${x1-r} ${y}q${r} -${r+2} ${r*2} 0M${x2-r} ${y}q${r} -${r+2} ${r*2} 0" stroke="#2b2420" stroke-width="3" fill="none" stroke-linecap="round"/>`
+    :`<circle cx="${x1}" cy="${y}" r="${r}" fill="#2b2420"/><circle cx="${x2}" cy="${y}" r="${r}" fill="#2b2420"/><circle cx="${x1+1.6}" cy="${y-1.6}" r="1.6" fill="#fff"/><circle cx="${x2+1.6}" cy="${y-1.6}" r="1.6" fill="#fff"/>`;
+}
+const cheek=`<ellipse cx="38" cy="76" rx="6" ry="3.5" fill="#f4a3a3" opacity=".7"/><ellipse cx="82" cy="76" rx="6" ry="3.5" fill="#f4a3a3" opacity=".7"/>`;
+const ART={
+  W:h=>`<path d="M30 34 38 14 48 30M90 34 82 14 72 30" fill="#8a6142"/><ellipse cx="60" cy="68" rx="38" ry="40" fill="#a47551"/><ellipse cx="60" cy="80" rx="24" ry="24" fill="#e9d3b5"/>
+    <circle cx="45" cy="58" r="14" fill="#fff"/><circle cx="75" cy="58" r="14" fill="#fff"/>${eyes(45,75,58,h,6)}
+    <circle cx="45" cy="58" r="15" fill="none" stroke="#3c3c3c" stroke-width="2.5"/><circle cx="75" cy="58" r="15" fill="none" stroke="#3c3c3c" stroke-width="2.5"/><path d="M60 58h0" stroke="#3c3c3c" stroke-width="2.5"/>
+    <path d="M55 70 60 78 65 70z" fill="#f2a93b"/><rect x="88" y="70" width="6" height="30" rx="2" transform="rotate(25 91 85)" fill="#2f6fed"/>`,
+  V:h=>`<path d="M60 28c-4-14 6-20 10-14-6 2-6 8-4 14z" fill="#f7c948"/><ellipse cx="60" cy="68" rx="36" ry="40" fill="#5cc28a"/><ellipse cx="60" cy="56" rx="26" ry="22" fill="#f7e27a"/>
+    ${eyes(48,72,54,h)}<path d="M54 62q6 12 12 0z" fill="#f08a55"/>${cheek}
+    <rect x="86" y="70" width="8" height="22" rx="3" fill="#555"/><circle cx="90" cy="68" r="7" fill="#888"/>`,
+  M:h=>`<circle cx="32" cy="34" r="10" fill="#7b5236"/><circle cx="88" cy="34" r="10" fill="#7b5236"/><ellipse cx="60" cy="66" rx="38" ry="40" fill="#9c6b48"/><ellipse cx="60" cy="74" rx="22" ry="18" fill="#d9b08c"/>
+    ${eyes(46,74,56,h)}<ellipse cx="60" cy="66" rx="7" ry="5" fill="#3b2a20"/><rect x="54" y="74" width="12" height="10" rx="2" fill="#fff" stroke="#ddd"/><path d="M60 74v10" stroke="#ccc"/>${cheek}
+    <rect x="22" y="94" width="76" height="8" rx="3" fill="#e2672f"/>`,
+  S:h=>`<path d="M28 44 30 10 54 32zM92 44 90 10 66 32z" fill="#e2672f"/><path d="M33 36 34 20 46 32zM87 36 86 20 74 32z" fill="#fff3e6"/><ellipse cx="60" cy="66" rx="38" ry="38" fill="#f08a55"/>
+    <path d="M30 70q30 40 60 0q-10 26-30 26t-30-26z" fill="#fff3e6"/>${eyes(46,74,58,h)}<ellipse cx="60" cy="74" rx="5" ry="4" fill="#2b2420"/>${cheek}
+    <circle cx="94" cy="88" r="9" fill="none" stroke="#555" stroke-width="3"/><path d="M100 95l8 8" stroke="#555" stroke-width="4" stroke-linecap="round"/>`,
+  C:h=>`<path d="M48 30q-6-14-14-16M72 30q6-14 14-16" stroke="#2b2420" stroke-width="2.5" fill="none"/><circle cx="34" cy="14" r="4" fill="#2b2420"/><circle cx="86" cy="14" r="4" fill="#2b2420"/>
+    <ellipse cx="26" cy="54" rx="14" ry="20" fill="#d6ecff" opacity=".9"/><ellipse cx="94" cy="54" rx="14" ry="20" fill="#d6ecff" opacity=".9"/>
+    <ellipse cx="60" cy="68" rx="36" ry="40" fill="#f7c948"/><path d="M25 74h70M28 90h64" stroke="#3b2a20" stroke-width="8" stroke-linecap="round"/>
+    ${eyes(48,72,54,h)}<path d="M54 63q6 6 12 0" stroke="#2b2420" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <rect x="82" y="84" width="20" height="24" rx="3" fill="#fff" stroke="#999"/><path d="M86 92l3 3 5-6M86 101l3 3 5-6" stroke="#2f8f5b" stroke-width="2" fill="none"/>`
 };
+function charSVG(k,happy){return `<svg viewBox="0 0 120 120" role="img" aria-label="${TYPES[k].animal}の${TYPES[k].chara}">${ART[k](happy)}</svg>`}
+
+// ---- タイプ定義 ----
+const TYPES={
+  W:{chara:"フミ",animal:"フクロウ",short:"書く",role:"文筆家",adj:"物知りな",
+     catch:"書いたものが、寝ている間も働く。",
+     desc:"調べて整理して、文章にまとめるのが苦にならないタイプ。ブログや記事は元手がほぼ要らず、書いた分だけ資産として積み上がります。",
+     aru:["買う前に口コミを30件読んでしまう","人に説明すると「わかりやすい」と言われる","気になったことは寝る前でも調べ始める"],
+     str:["情報を集めて整理する力","ひとりで黙々と続けられる集中力","読み手を想像して伝える力"],
+     weak:"つまずきやすい点：完璧を目指して公開が遅れがち。6割の出来でまず出すのがコツです。",
+     jobs:[["Webライター","0円","1か月前後",4],["ブログアフィリエイト","0〜1万円/年","3〜6か月",3],["note・有料記事","0円","1〜3か月",3]],
+     steps:["最近調べたことを、無料ブログに800字で1本書く（15分〜）","ASPに無料登録して、書けそうな商品を3つ探す","10本書いたら、読まれた記事の傾向を見て方向を決める"],
+     links:[["ブログをはじめる（レンタルサーバー）","#REPLACE_BLOG"],["アフィリエイト（ASP）に無料登録","#REPLACE_ASP"]],
+     good:["V","話すタイプの発信力と組むと、書いた記事がもっと読まれます。"],opp:["S","即決型の売るタイプとは、スピード感がまるで逆。"]},
+  V:{chara:"ピーチ",animal:"インコ",short:"話す・見せる",role:"発信者",adj:"愛されキャラの",
+     catch:"あなたの声に、ファンがつく。",
+     desc:"人とのやりとりや発信にエネルギーがわくタイプ。SNSや動画で人柄を出すことが強みになります。顔出しなしでも始められます。",
+     aru:["面白いことがあると、すぐ誰かに話したくなる","SNSの反応がつくと素直にうれしい","一人作業が続くと元気がなくなる"],
+     str:["人を惹きつける話し方","反応を見て素早く改善する力","続けるほど増えるファンづくり"],
+     weak:"つまずきやすい点：反応が少ない時期に落ち込みやすい。最初の30投稿は練習と割り切りましょう。",
+     jobs:[["SNS運用・発信","0円","3〜6か月",4],["顔出しなし動画","0〜3万円","6か月〜",2],["音声・ライブ配信","0円","1〜3か月",3]],
+     steps:["SNSアカウントを1つ作り、今日の気づきを1投稿する（5分）","反応が良かった投稿のテーマを3つ書き出す","テーマが決まったら、関連商品の紹介を試す"],
+     links:[["動画編集ソフト・ツール","#REPLACE_VIDEO"],["アフィリエイト（ASP）に無料登録","#REPLACE_ASP"]],
+     good:["W","書くタイプが台本や記事を作ると、発信の中身が深まります。"],opp:["C","手順どおりのこなすタイプとは、自由さの感覚が逆。"]},
+  M:{chara:"ポコ",animal:"ビーバー",short:"作る",role:"クリエイター",adj:"器用な",
+     catch:"手を動かすほど、形が増える。",
+     desc:"ものや仕組みを作るのが好きなタイプ。ハンドメイド、デザイン、テンプレートや簡単なツールを作って売る道があります。",
+     aru:["説明書を読むより先に手が動く","100円ショップで材料を見ると何か作りたくなる","「器用だね」とよく言われる"],
+     str:["アイデアを形にする力","試行錯誤を楽しめる粘り強さ","作品そのものが実績になる"],
+     weak:"つまずきやすい点：作ることに夢中で値付けや宣伝が後回しに。作品と同じだけ売り方も工夫しましょう。",
+     jobs:[["デザイン・テンプレート販売","0円","1〜3か月",4],["ハンドメイド販売","数千円〜","1か月前後",3],["ノーコード制作代行","0円","1〜2か月",2]],
+     steps:["作れそうなものを3つ書き出し、一番簡単なものを今日作る","スキル・作品販売サービスに無料で出品してみる","売れた理由・売れなかった理由をメモする"],
+     links:[["スキル・作品販売サービス","#REPLACE_MARKET"],["デザイン・制作ツール","#REPLACE_TOOL"]],
+     good:["S","売るタイプの目利きと組むと、作ったものが売れる形になります。"],opp:["V","発信が得意な話すタイプとは、エネルギーの向きが逆。"]},
+  S:{chara:"コン",animal:"キツネ",short:"売る",role:"商売人",adj:"目利きの",
+     catch:"見つける目が、そのまま利益に。",
+     desc:"お得な情報や掘り出し物に敏感なタイプ。フリマやせどりなど、仕入れて売る形は結果が早く、数字で見えます。",
+     aru:["セール情報を見るとつい比べてしまう","「いいもの見つけるの上手だね」と言われる","迷うより先に動いていることが多い"],
+     str:["売れるものを見抜く目","素早い判断と行動力","数字で結果を追える冷静さ"],
+     weak:"つまずきやすい点：勢いで仕入れすぎること。最初は「売れてから仕入れる」ルールで。",
+     jobs:[["不用品のフリマ販売","0円","1週間前後",5],["店舗・ネットせどり","数万円〜","1か月前後",3],["古着・本の目利き転売","数千円〜","1か月前後",3]],
+     steps:["家の不用品を3つフリマに出品する（30分）","よく売れるカテゴリと価格を観察する","利益が出る仕入れのルールを自分で決める"],
+     links:[["フリマ・オークションサービス","#REPLACE_FURIMA"],["梱包資材・発送用品","#REPLACE_SHIP"]],
+     good:["M","作るタイプの商品を売れば、仕入れなしで回せます。"],opp:["W","じっくり積み上げる書くタイプとは、時間感覚が逆。"]},
+  C:{chara:"ハニ",animal:"ミツバチ",short:"こなす",role:"仕事人",adj:"堅実な",
+     catch:"積み重ねた信頼が、収入になる。",
+     desc:"決まった手順を正確に進めるのが得意なタイプ。在宅の事務、データ入力、リサーチ代行など、クラウドソーシングが合います。",
+     aru:["ToDoリストを消すのが気持ちいい","締め切りはきっちり守る","「几帳面だね」とよく言われる"],
+     str:["正確さと丁寧さ","約束を守る信頼感","コツコツ続ける安定感"],
+     weak:"つまずきやすい点：指示がない自由な仕事は迷いがち。まずは手順が決まった案件から始めましょう。",
+     jobs:[["データ入力・事務代行","0円","2週間前後",5],["オンライン秘書","0円","1か月前後",3],["リサーチ・文字起こし","0円","2週間前後",4]],
+     steps:["クラウドソーシングに無料登録して、簡単な案件を眺める（10分）","プロフィールに得意な作業を具体的に書く","小さな案件を1件完了して、実績と評価をもらう"],
+     links:[["クラウドソーシングに無料登録","#REPLACE_CROWD"],["在宅ワーク向け学習サービス","#REPLACE_LEARN"]],
+     good:["S","売るタイプの物販作業を手順化すれば、強力なチームに。"],opp:["V","ノリで動く話すタイプとは、進め方が逆。"]}
+};
+const KEYS=Object.keys(TYPES);
+
+// ---- 質問（w は配点。本人の意向に近い質問を重くする） ----
 const Q=[
- ["休日にやりがちなことは？",{W:"調べものや読書で気づけば数時間",V:"誰かと話す、SNSを眺める",M:"何かを作る、いじる",S:"買い物やお店巡り",C:"部屋の片付けなど、決まったことを淡々と"}],
- ["友達から言われがちなことは？",{W:"説明がわかりやすい",V:"話していて楽しい",M:"器用だね",S:"いいもの見つけるの上手だね",C:"几帳面だね"}],
- ["ネットで長く見てしまうのは？",{W:"解説記事やまとめ",V:"動画やSNSの投稿",M:"作り方や制作過程",S:"口コミ、レビュー、セール情報",C:"比較表やランキング"}],
- ["自分の作業スタイルに近いのは？",{W:"一人で集中して考えをまとめる",V:"反応をもらいながら進める",M:"試行錯誤して形にする",S:"素早く判断して動く",C:"手順を決めて着実に進める"}],
- ["副業に求めることは？",{W:"積み上げて資産になる",V:"自分の名前が広がる",M:"自分の作ったものが評価される",S:"結果が早く出る",C:"安定して少しずつ稼ぐ"}],
- ["苦手なことは？",{W:"長時間人と話すこと",V:"黙々と一人で作業すること",M:"数字の管理",S:"結果が出るまで待つこと",C:"自由すぎて指示がないこと"}],
- ["使える時間はどんな感じ？",{W:"夜にまとまった時間がとれる",V:"スキマ時間が多い",M:"休日に集中できる",S:"通勤や外出のついでに動ける",C:"平日の夜に短時間ずつ"}],
- ["理想の副業を一言でいうと？",{W:"書いたものが勝手に働いてくれる",V:"ファンがついてくれる",M:"作ったものが売れる",S:"仕入れて売って、利益が見える",C:"頼まれたことを確実に仕上げる"}]
+ {q:"休日にやりがちなことは？",w:1,a:{W:"調べものや読書で気づけば数時間",V:"誰かと話す、SNSを眺める",M:"何かを作る、いじる",S:"買い物やお店巡り",C:"部屋の片付けなど、決まったことを淡々と"}},
+ {q:"友達から言われがちなことは？",w:1,a:{W:"説明がわかりやすい",V:"話していて楽しい",M:"器用だね",S:"いいもの見つけるの上手だね",C:"几帳面だね"}},
+ {q:"ネットで長く見てしまうのは？",w:1,a:{W:"解説記事やまとめ",V:"動画やSNSの投稿",M:"作り方や制作過程",S:"口コミ、レビュー、セール情報",C:"比較表やランキング"}},
+ {q:"自分の作業スタイルに近いのは？",w:1,a:{W:"一人で集中して考えをまとめる",V:"反応をもらいながら進める",M:"試行錯誤して形にする",S:"素早く判断して動く",C:"手順を決めて着実に進める"}},
+ {q:"副業に求めることは？",w:2,a:{W:"積み上げて資産になる",V:"自分の名前が広がる",M:"自分の作ったものが評価される",S:"結果が早く出る",C:"安定して少しずつ稼ぐ"}},
+ {q:"どちらかといえば苦手なのは？",w:1,a:{W:"長時間人と話すこと",V:"黙々と一人で作業すること",M:"数字の管理",S:"結果が出るまで待つこと",C:"自由すぎて指示がないこと"}},
+ {q:"使える時間はどんな感じ？",w:1,a:{W:"夜にまとまった時間がとれる",V:"スキマ時間が多い",M:"休日に集中できる",S:"通勤や外出のついでに動ける",C:"平日の夜に短時間ずつ"}},
+ {q:"理想の副業を一言でいうと？",w:2,a:{W:"書いたものが勝手に働いてくれる",V:"ファンがついてくれる",M:"作ったものが売れる",S:"仕入れて売って、利益が見える",C:"頼まれたことを確実に仕上げる"}}
 ];
+const MAX=Q.reduce((s,x)=>s+x.w,0);
+const CHEER={3:"いい調子！",4:"あと半分！",6:"あと2問！",7:"ラスト1問！"};
+
 const $=id=>document.getElementById(id);
-let i=0,score;
-function show(id){["start","quiz","result"].forEach(s=>$(s).hidden=s!==id)}
-function begin(){i=0;score={W:0,V:0,M:0,S:0,C:0};show("quiz");render()}
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let i=0,answers=[];
+
+function show(id){["start","quiz","loading","result"].forEach(s=>$(s).hidden=s!==id);scrollTo(0,0)}
+function shuffle(a){a=a.slice();for(let j=a.length-1;j>0;j--){const r=Math.random()*(j+1)|0;[a[j],a[r]]=[a[r],a[j]]}return a}
+
+function begin(){
+  i=0;answers=[];history.replaceState(null,"",location.pathname);
+  show("quiz");render();track("quiz_start");
+}
 function render(){
+  const pct=i/Q.length*100;
   $("num").textContent=`Q${i+1} / ${Q.length}`;
-  $("prog").style.width=(i/Q.length*100)+"%";
-  $("q").textContent=Q[i][0];
+  $("prog").style.width=pct+"%";
+  $("walker").style.left=Math.max(pct,4)+"%";
+  $("walker").innerHTML=charSVG(KEYS[i%KEYS.length]);
+  $("cheer").textContent=CHEER[i]||"";
+  $("back").disabled=i===0;
+  $("q").textContent=Q[i].q;
   const box=$("opts");box.innerHTML="";
-  Object.entries(Q[i][1]).forEach(([k,t])=>{
-    const b=document.createElement("button");b.className="opt";b.textContent=t;
-    b.onclick=()=>{score[k]++;i++;i<Q.length?render():finish()};
+  shuffle(KEYS).forEach(k=>{
+    const b=document.createElement("button");b.className="opt";b.textContent=Q[i].a[k];
+    b.onclick=()=>pick(k,b);
     box.appendChild(b);
   });
+  const card=$("qcard");card.classList.remove("slide-in");void card.offsetWidth;card.classList.add("slide-in");
 }
-let shareText="";
-function finish(){
-  const order=Object.keys(score).sort((a,b)=>score[b]-score[a]);
-  const top=TYPES[order[0]];
-  $("rtitle").textContent=top.name;
-  $("rdesc").textContent=top.desc;
-  $("bars").innerHTML=order.map(k=>`<div class="row"><b>${TYPES[k].short}</b><div class="bar"><i style="width:${score[k]/Q.length*100}%"></i></div></div>`).join("");
-  $("steps").innerHTML=top.steps.map(s=>`<li>${s}</li>`).join("");
-  $("links").innerHTML=top.links.map(([t,u])=>`<a class="link" href="${u}" target="_blank" rel="sponsored noopener">${t} →</a><br>`).join("");
-  shareText=`向いてる副業診断の結果：${top.name}\n${location.href.split("#")[0]}`;
-  show("result");scrollTo(0,0);
+let busy=false;
+function pick(k,b){
+  if(busy)return;busy=true;
+  b.classList.add("picked");
+  answers[i]=k;track("quiz_answer",{q:i+1});
+  setTimeout(()=>{busy=false;i++;i<Q.length?render():analyze()},reduced?0:220);
 }
+$("back").onclick=()=>{if(i>0){i--;answers.length=i;render()}};
+
+// 合計点 → 重い質問での点 → 後半の質問での選択 の順で同点を解く
+function rank(ans){
+  const sc={},heavy={},last={};
+  KEYS.forEach(k=>{sc[k]=0;heavy[k]=0;last[k]=-1});
+  ans.forEach((k,n)=>{sc[k]+=Q[n].w;if(Q[n].w>1)heavy[k]+=Q[n].w;last[k]=n});
+  const order=KEYS.slice().sort((a,b)=>sc[b]-sc[a]||heavy[b]-heavy[a]||last[b]-last[a]);
+  return {order,sc};
+}
+
+function analyze(){
+  show("loading");
+  const sil=$("sil");sil.innerHTML=KEYS.map(k=>charSVG(k)).join("");
+  const r=rank(answers);
+  const code=r.order[0]+r.order[1];
+  const nodes=[...sil.children];let n=0;
+  const t=setInterval(()=>{nodes.forEach(x=>x.classList.remove("on"));nodes[n%nodes.length].classList.add("on");n++},180);
+  setTimeout(()=>{clearInterval(t);track("quiz_complete",{result:code});showResult(r.order[0],r.order[1],r.sc,false)},reduced?300:2000);
+}
+
+function titleOf(main,sub){return TYPES[sub].adj+TYPES[main].role}
+function stars(n){return "★".repeat(n)+"☆".repeat(5-n)}
+
+function showResult(main,sub,sc,shared){
+  const T=TYPES[main],title=titleOf(main,sub);
+  $("rchar").innerHTML=charSVG(main,true);$("rchar").firstChild.classList.add("pop");
+  $("rname").textContent=`${T.animal}の「${T.chara}」 × ${TYPES[sub].short}の素質`;
+  $("rtitle").innerHTML=[...title].map((c,n)=>`<span style="animation-delay:${.3+n*.06}s">${c}</span>`).join("");
+  $("rcatch").textContent=T.catch;
+  $("rdesc").textContent=T.desc+` さらに「${TYPES[sub].short}」の素質もあり、${TYPES[sub].str[0]}を組み合わせられるのがあなたらしさです。`;
+  $("raru").innerHTML=T.aru.map(s=>`<li>${s}</li>`).join("");
+  $("rstr").innerHTML=T.str.map(s=>`<li>${s}</li>`).join("");
+  $("rweak").textContent=T.weak;
+  $("rjobs").innerHTML=T.jobs.map(([name,cost,time,ease],n)=>`<div class="job"><b>${n+1}位　${name}</b><div class="meta"><span>初期費用 ${cost}</span><span>最初の収入まで ${time}</span><span>始めやすさ <span class="stars">${stars(ease)}</span></span></div></div>`).join("");
+  $("rsteps").innerHTML=T.steps.map(s=>`<li>${s}</li>`).join("");
+  $("rlinks").innerHTML=T.links.map(([t,u],n)=>`<a href="${u}" target="_blank" rel="sponsored noopener" data-n="${n}">${t} →</a>`).join("");
+  [...$("rlinks").children].forEach(a=>a.onclick=()=>track("affiliate_click",{type:main,link:a.textContent}));
+  if(sc){
+    const order=KEYS.slice().sort((a,b)=>sc[b]-sc[a]);
+    $("rbars").innerHTML=order.map(k=>{const p=Math.round(sc[k]/MAX*100);return `<div class="row"><b>${TYPES[k].short}</b><div class="track"><i style="width:${p}%"></i></div><em>${p}%</em></div>`}).join("");
+  }
+  $("barsCard").hidden=!sc;
+  const g=T.good,o=T.opp;
+  $("rpair").innerHTML=`<div class="pair">${charSVG(g[0],true)}<div><b>最高の相棒：${TYPES[g[0]].animal}の${TYPES[g[0]].chara}（${TYPES[g[0]].short}）</b><br><span class="sub">${g[1]}</span></div></div>
+    <div class="pair">${charSVG(o[0])}<div><b>真逆のタイプ：${TYPES[o[0]].animal}の${TYPES[o[0]].chara}（${TYPES[o[0]].short}）</b><br><span class="sub">${o[1]}</span></div></div>`;
+
+  const url=location.origin+location.pathname+"?r="+main+sub;
+  const text=`向いてる副業診断の結果、私は「${title}」でした！相棒は${T.animal}の${T.chara}。あなたはどの子？`;
+  $("shareX").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url)+"&hashtags="+encodeURIComponent("向いてる副業診断");
+  $("shareLine").href="https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text);
+  $("shareX").onclick=()=>track("share",{method:"x",result:main+sub});
+  $("shareLine").onclick=()=>track("share",{method:"line",result:main+sub});
+  $("copy").textContent="リンクをコピー";
+  $("copy").onclick=async()=>{
+    track("share",{method:"copy",result:main+sub});
+    try{await navigator.clipboard.writeText(text+"\n"+url);$("copy").textContent="コピーしました"}
+    catch(e){prompt("コピーしてください",text+"\n"+url)}
+  };
+  $("others").innerHTML=KEYS.map(k=>`<button data-k="${k}">${charSVG(k,k===main)}${TYPES[k].short}</button>`).join("");
+  [...$("others").children].forEach(b=>b.onclick=()=>{const k=b.dataset.k;const s=k===main?sub:KEYS.find(x=>x!==k&&TYPES[k].good[0]===x)||KEYS.find(x=>x!==k);showResult(k,s,null,true)});
+
+  $("sharedNote").hidden=!shared;
+  $("startHere").hidden=!shared;
+  show("result");
+}
+
+$("lineup").innerHTML=KEYS.map(k=>charSVG(k)).join("");
 $("go").onclick=begin;
 $("again").onclick=begin;
-$("copy").onclick=async()=>{
-  try{await navigator.clipboard.writeText(shareText);$("copy").textContent="コピーしました"}
-  catch(e){prompt("コピーしてください",shareText)}
-};
+$("tryMe").onclick=e=>{e.preventDefault();begin()};
+
+// 共有リンク（?r=メイン+サブ）から来た人には、その結果を見せてから診断へ誘導する
+(()=>{
+  const r=new URLSearchParams(location.search).get("r")||"";
+  if(r.length===2&&TYPES[r[0]]&&TYPES[r[1]]&&r[0]!==r[1]){showResult(r[0],r[1],null,true);track("shared_view",{result:r})}
+})();
 </script>
 </body>
 </html>
