@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>向いてる副業診断</title>
+<meta name="description" content="8つの質問で、あなたに向いている副業タイプがわかる無料診断。">
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--text:#222;--sub:#666;--accent:#2f6fed;--line:#e3e3df}
+@media (prefers-color-scheme:dark){:root{--bg:#18181a;--card:#242427;--text:#eee;--sub:#aaa;--accent:#6b9bff;--line:#38383c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.7}
+main{max-width:640px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:1.5rem;margin:.5em 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin:16px 0}
+.sub{color:var(--sub);font-size:.9rem}
+button{font:inherit;cursor:pointer}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:8px 0}
+.opt:hover,.opt:focus-visible{border-color:var(--accent)}
+.primary{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:12px 24px}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .2s}
+.row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.9rem}
+.row b{width:7em;font-weight:500}.row .bar{flex:1}
+ul{padding-left:1.2em}
+a.link{display:inline-block;margin:4px 0;color:var(--accent)}
+.pr{font-size:.8rem;color:var(--sub)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <section id="start">
+    <h1>向いてる副業診断</h1>
+    <p class="sub">熱中するものがなくても大丈夫。8問に答えると、いまのあなたに合う副業タイプがわかります（約1分）。</p>
+    <button class="primary" id="go">診断をはじめる</button>
+  </section>
+
+  <section id="quiz" hidden>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="card">
+      <p class="sub" id="num"></p>
+      <h2 id="q" style="font-size:1.15rem;margin:.2em 0 .6em"></h2>
+      <div id="opts"></div>
+    </div>
+  </section>
+
+  <section id="result" hidden>
+    <div class="card">
+      <p class="sub">あなたの副業タイプは</p>
+      <h1 id="rtitle"></h1>
+      <p id="rdesc"></p>
+      <div id="bars"></div>
+    </div>
+    <div class="card">
+      <h2 style="font-size:1.05rem;margin-top:0">最初の一歩</h2>
+      <ul id="steps"></ul>
+    </div>
+    <div class="card">
+      <h2 style="font-size:1.05rem;margin-top:0">はじめるのに役立つもの</h2>
+      <div id="links"></div>
+      <p class="pr">※ 本ページのリンクには広告（アフィリエイト）が含まれます。</p>
+    </div>
+    <button class="primary" id="copy">結果をコピーして共有</button>
+    <button class="opt" id="again" style="margin-top:12px;text-align:center">もう一度診断する</button>
+  </section>
+  <p class="pr" style="margin-top:32px">この診断は娯楽・参考用です。収益を保証するものではありません。</p>
+</main>
+
+<script>
+const TYPES={
+  W:{name:"コツコツ書く タイプ",short:"書く",desc:"調べて整理して、文章にまとめるのが苦にならないタイプ。ブログや記事執筆は、元手がほぼ要らず、積み上げが資産になります。",
+     steps:["無料ブログで、最近調べたことを1本書いてみる","ASPに無料登録して、扱えそうな商品を探す","10本書いてから、アクセスと反応を見て方向を決める"],
+     links:[["無料ブログ・サイト作成サービス","#REPLACE_BLOG"],["アフィリエイト（ASP）無料登録","#REPLACE_ASP"]]},
+  V:{name:"話す・見せる タイプ",short:"話す・見せる",desc:"人とのやりとりや発信にエネルギーがあるタイプ。SNSや動画で人柄を出すと強みになります。顔出しなしでも始められます。",
+     steps:["SNSアカウントを1つ作り、日常の気づきを毎日1投稿","反応が良かった投稿のテーマを3つ書き出す","テーマが決まったら、関連商品の紹介を試す"],
+     links:[["動画編集ソフト・ツール","#REPLACE_VIDEO"],["アフィリエイト（ASP）無料登録","#REPLACE_ASP"]]},
+  M:{name:"手を動かして作る タイプ",short:"作る",desc:"ものや仕組みを作るのが好きなタイプ。ハンドメイド、デザイン、簡単なツールやテンプレート作りを売る道があります。",
+     steps:["作れそうなものを3つ書き出し、一番簡単なものを作る","スキル・作品を売れるサービスに無料で出品してみる","売れた理由、売れなかった理由をメモする"],
+     links:[["スキル・作品販売サービス","#REPLACE_MARKET"],["デザイン・制作ツール","#REPLACE_TOOL"]]},
+  S:{name:"見つけて売る タイプ",short:"売る",desc:"お得な情報や掘り出し物に敏感なタイプ。フリマやせどりなど、仕入れて売る形は、結果が早く数字で見えます。",
+     steps:["家の不用品を3つフリマに出して、流れを体験する","よく売れるカテゴリを観察する","利益が出る仕入れ先のルールを自分で決める"],
+     links:[["フリマ・オークションサービス","#REPLACE_FURIMA"],["梱包資材・発送用品","#REPLACE_SHIP"]]},
+  C:{name:"着実にこなす タイプ",short:"こなす",desc:"決まった手順を正確に進めるのが得意なタイプ。在宅の事務、データ入力、リサーチ代行など、クラウドソーシングが合います。",
+     steps:["クラウドソーシングに無料登録して、簡単な案件を眺める","プロフィールに得意な作業を具体的に書く","小さな案件を1件完了して、実績と評価をもらう"],
+     links:[["クラウドソーシング無料登録","#REPLACE_CROWD"],["在宅ワーク向け学習サービス","#REPLACE_LEARN"]]}
+};
+const Q=[
+ ["休日にやりがちなことは？",{W:"調べものや読書で気づけば数時間",V:"誰かと話す、SNSを眺める",M:"何かを作る、いじる",S:"買い物やお店巡り",C:"部屋の片付けなど、決まったことを淡々と"}],
+ ["友達から言われがちなことは？",{W:"説明がわかりやすい",V:"話していて楽しい",M:"器用だね",S:"いいもの見つけるの上手だね",C:"几帳面だね"}],
+ ["ネットで長く見てしまうのは？",{W:"解説記事やまとめ",V:"動画やSNSの投稿",M:"作り方や制作過程",S:"口コミ、レビュー、セール情報",C:"比較表やランキング"}],
+ ["自分の作業スタイルに近いのは？",{W:"一人で集中して考えをまとめる",V:"反応をもらいながら進める",M:"試行錯誤して形にする",S:"素早く判断して動く",C:"手順を決めて着実に進める"}],
+ ["副業に求めることは？",{W:"積み上げて資産になる",V:"自分の名前が広がる",M:"自分の作ったものが評価される",S:"結果が早く出る",C:"安定して少しずつ稼ぐ"}],
+ ["苦手なことは？",{W:"長時間人と話すこと",V:"黙々と一人で作業すること",M:"数字の管理",S:"結果が出るまで待つこと",C:"自由すぎて指示がないこと"}],
+ ["使える時間はどんな感じ？",{W:"夜にまとまった時間がとれる",V:"スキマ時間が多い",M:"休日に集中できる",S:"通勤や外出のついでに動ける",C:"平日の夜に短時間ずつ"}],
+ ["理想の副業を一言でいうと？",{W:"書いたものが勝手に働いてくれる",V:"ファンがついてくれる",M:"作ったものが売れる",S:"仕入れて売って、利益が見える",C:"頼まれたことを確実に仕上げる"}]
+];
+const $=id=>document.getElementById(id);
+let i=0,score;
+function show(id){["start","quiz","result"].forEach(s=>$(s).hidden=s!==id)}
+function begin(){i=0;score={W:0,V:0,M:0,S:0,C:0};show("quiz");render()}
+function render(){
+  $("num").textContent=`Q${i+1} / ${Q.length}`;
+  $("prog").style.width=(i/Q.length*100)+"%";
+  $("q").textContent=Q[i][0];
+  const box=$("opts");box.innerHTML="";
+  Object.entries(Q[i][1]).forEach(([k,t])=>{
+    const b=document.createElement("button");b.className="opt";b.textContent=t;
+    b.onclick=()=>{score[k]++;i++;i<Q.length?render():finish()};
+    box.appendChild(b);
+  });
+}
+let shareText="";
+function finish(){
+  const order=Object.keys(score).sort((a,b)=>score[b]-score[a]);
+  const top=TYPES[order[0]];
+  $("rtitle").textContent=top.name;
+  $("rdesc").textContent=top.desc;
+  $("bars").innerHTML=order.map(k=>`<div class="row"><b>${TYPES[k].short}</b><div class="bar"><i style="width:${score[k]/Q.length*100}%"></i></div></div>`).join("");
+  $("steps").innerHTML=top.steps.map(s=>`<li>${s}</li>`).join("");
+  $("links").innerHTML=top.links.map(([t,u])=>`<a class="link" href="${u}" target="_blank" rel="sponsored noopener">${t} →</a><br>`).join("");
+  shareText=`向いてる副業診断の結果：${top.name}\n${location.href.split("#")[0]}`;
+  show("result");scrollTo(0,0);
+}
+$("go").onclick=begin;
+$("again").onclick=begin;
+$("copy").onclick=async()=>{
+  try{await navigator.clipboard.writeText(shareText);$("copy").textContent="コピーしました"}
+  catch(e){prompt("コピーしてください",shareText)}
+};
+</script>
+</body>
+</html>
