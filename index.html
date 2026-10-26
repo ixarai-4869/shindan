@@ -22,7 +22,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E">
 <script>
 // GA4 の測定ID（G-XXXXXXX）を入れると計測が有効になる。空のままなら何も読み込まない。
-const GA_ID="";
+const GA_ID="G-PX3Q72XL5G";
 if(GA_ID){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
@@ -41,6 +41,7 @@ h2{font-size:1.05rem;margin:0 0 .5em}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
 .sub{color:var(--sub);font-size:.9rem}
 .pr{font-size:.78rem;color:var(--sub)}
+.policy{margin-top:8px}.policy summary{cursor:pointer}.policy h3{font-size:.85rem;margin:14px 0 4px}.policy p{margin:0 0 8px;line-height:1.7}.policy a{color:inherit}
 button{font:inherit;cursor:pointer}
 .opts{counter-reset:o}
 .opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin:8px 0;transition:border-color .15s,background .15s,transform .15s}
@@ -114,6 +115,8 @@ ul{padding-left:1.2em;margin:.3em 0}
 .pair{display:flex;gap:12px;align-items:center;margin:8px 0}
 .pair svg{width:56px;height:56px;flex:none}
 .links a{display:block;margin:6px 0;color:var(--accent);font-weight:600}
+.more{color:var(--accent);font-weight:600;font-size:.9rem}
+.job .more{margin-left:12px}
 .share{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0}
 .share a,.share button{display:block;text-align:center;border-radius:10px;padding:11px 4px;font-size:.9rem;font-weight:600;text-decoration:none;border:1px solid var(--line);background:var(--card);color:var(--text)}
 .share .x{background:#111;color:#fff;border-color:#111}
@@ -193,6 +196,7 @@ ul{padding-left:1.2em;margin:.3em 0}
       <h1 class="title" id="rtitle"></h1>
       <p class="catch" id="rcatch"></p>
       <p id="rdesc" style="text-align:left"></p>
+      <a class="more" id="rmore"></a>
     </div>
 
     <div id="startHere" class="center" hidden><a class="primary" href="./" id="tryMe">あなたも診断する</a></div>
@@ -247,7 +251,21 @@ ul{padding-left:1.2em;margin:.3em 0}
     </div>
   </section>
 
+  <p class="center" style="margin-top:32px"><a class="more" href="fukugyo/guide/">タイプと副業の一覧を見る</a></p>
   <p class="pr" style="margin-top:32px">この診断は娯楽・参考用です。収益を保証するものではありません。</p>
+  <details class="pr policy">
+    <summary>プライバシーポリシー・免責事項</summary>
+    <h3>アクセス解析について</h3>
+    <p>当サイトはサイトの改善のため、Googleによるアクセス解析ツール「Google アナリティクス」を使用しています。Google アナリティクスはCookieを使用してトラフィックデータを収集しますが、個人を特定する情報は含みません。収集を拒否したい場合は、ブラウザの設定でCookieを無効にしてください。詳しくは<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">Googleのポリシー</a>をご覧ください。</p>
+    <h3>広告について</h3>
+    <p>当サイトはアフィリエイトプログラム（A8.net、もしもアフィリエイト等）に参加しており、紹介した商品・サービスの申し込みや購入があった場合に報酬を受け取ることがあります。Amazonのアソシエイトとして、当サイトは適格販売により収入を得ています。広告主のサービスに関するお問い合わせは、各サービスへ直接お願いします。</p>
+    <h3>診断データについて</h3>
+    <p>診断の回答と結果、30日プランのチェックはお使いの端末（ブラウザのlocalStorage）にのみ保存され、運営者のサーバーには送信されません。</p>
+    <h3>お問い合わせ</h3>
+    <p>当サイトへのお問い合わせは、<a href="mailto:info@mini-shindan.com">info@mini-shindan.com</a> までお願いします。</p>
+    <h3>免責事項</h3>
+    <p>掲載している費用・期間・収入は一般的な目安であり、正確性や収益を保証するものではありません。当サイトの情報を利用したことで生じた損害について、運営者は責任を負いかねます。</p>
+  </details>
 </main>
 
 <script>
@@ -283,7 +301,7 @@ function charSVG(k,happy){return `<svg viewBox="0 0 120 120" role="img" aria-lab
 
 // ---- タイプ定義 ----
 const TYPES={
-  W:{chara:"フミ",animal:"フクロウ",short:"書く",role:"文筆家",adj:"物知りな",
+  W:{slug:"owl",chara:"フミ",animal:"フクロウ",short:"書く",role:"文筆家",adj:"物知りな",
      catch:"書いたものが、寝ている間も働く。",
      desc:"調べて整理して、文章にまとめるのが苦にならないタイプ。ブログや記事は元手がほぼ要らず、書いた分だけ資産として積み上がります。",
      aru:["買う前に口コミを30件読んでしまう","人に説明すると「わかりやすい」と言われる","気になったことは寝る前でも調べ始める"],
@@ -291,7 +309,7 @@ const TYPES={
      weak:"つまずきやすい点：完璧を目指して公開が遅れがち。6割の出来でまず出すのがコツです。",
      avoid:["せどり（仕入れて転売）","仕入れの即決と在庫を抱える不安が続く副業です。じっくり調べてから動くあなたには、判断の速さが求められる場面がストレスになりやすいです。"],
      good:["V","話すタイプの発信力と組むと、書いた記事がもっと読まれます。"],opp:["S","即決型の売るタイプとは、スピード感がまるで逆。"]},
-  V:{chara:"ピーチ",animal:"インコ",short:"話す・見せる",role:"発信者",adj:"愛されキャラの",
+  V:{slug:"parakeet",chara:"ピーチ",animal:"インコ",short:"話す・見せる",role:"発信者",adj:"愛されキャラの",
      catch:"あなたの声に、ファンがつく。",
      desc:"人とのやりとりや発信にエネルギーがわくタイプ。SNSや動画で人柄を出すことが強みになります。顔出しなしでも始められます。",
      aru:["面白いことがあると、すぐ誰かに話したくなる","SNSの反応がつくと素直にうれしい","一人作業が続くと元気がなくなる"],
@@ -299,7 +317,7 @@ const TYPES={
      weak:"つまずきやすい点：反応が少ない時期に落ち込みやすい。最初の30投稿は練習と割り切りましょう。",
      avoid:["データ入力・単純作業の代行","一人で黙々と同じ作業を続ける副業です。人の反応がエネルギー源のあなたは、収入が出ても続けるのがつらくなりやすいです。"],
      good:["W","書くタイプが台本や記事を作ると、発信の中身が深まります。"],opp:["C","手順どおりのこなすタイプとは、自由さの感覚が逆。"]},
-  M:{chara:"ポコ",animal:"ビーバー",short:"作る",role:"クリエイター",adj:"器用な",
+  M:{slug:"beaver",chara:"ポコ",animal:"ビーバー",short:"作る",role:"クリエイター",adj:"器用な",
      catch:"手を動かすほど、形が増える。",
      desc:"ものや仕組みを作るのが好きなタイプ。ハンドメイド、デザイン、テンプレートや簡単なツールを作って売る道があります。",
      aru:["説明書を読むより先に手が動く","100円ショップで材料を見ると何か作りたくなる","「器用だね」とよく言われる"],
@@ -307,7 +325,7 @@ const TYPES={
      weak:"つまずきやすい点：作ることに夢中で値付けや宣伝が後回しに。作品と同じだけ売り方も工夫しましょう。",
      avoid:["SNS発信・ライブ配信","毎日の投稿や人前での発信が中心の副業です。作る時間が削られるうえ、作品より自分を売る比重が大きく、あなたの強みが活きにくいです。"],
      good:["S","売るタイプの目利きと組むと、作ったものが売れる形になります。"],opp:["V","発信が得意な話すタイプとは、エネルギーの向きが逆。"]},
-  S:{chara:"コン",animal:"キツネ",short:"売る",role:"商売人",adj:"目利きの",
+  S:{slug:"fox",chara:"コン",animal:"キツネ",short:"売る",role:"商売人",adj:"目利きの",
      catch:"見つける目が、そのまま利益に。",
      desc:"お得な情報や掘り出し物に敏感なタイプ。フリマやせどりなど、仕入れて売る形は結果が早く、数字で見えます。",
      aru:["セール情報を見るとつい比べてしまう","「いいもの見つけるの上手だね」と言われる","迷うより先に動いていることが多い"],
@@ -315,7 +333,7 @@ const TYPES={
      weak:"つまずきやすい点：勢いで仕入れすぎること。最初は「売れてから仕入れる」ルールで。",
      avoid:["ブログアフィリエイト","収入が出るまで半年以上かかることも珍しくない副業です。結果の早さを大事にするあなたには、手応えのない期間が長すぎます。"],
      good:["M","作るタイプの商品を売れば、仕入れなしで回せます。"],opp:["W","じっくり積み上げる書くタイプとは、時間感覚が逆。"]},
-  C:{chara:"ハニ",animal:"ミツバチ",short:"こなす",role:"仕事人",adj:"堅実な",
+  C:{slug:"bee",chara:"ハニ",animal:"ミツバチ",short:"こなす",role:"仕事人",adj:"堅実な",
      catch:"積み重ねた信頼が、収入になる。",
      desc:"決まった手順を正確に進めるのが得意なタイプ。在宅の事務、データ入力、リサーチ代行など、クラウドソーシングが合います。",
      aru:["ToDoリストを消すのが気持ちいい","締め切りはきっちり守る","「几帳面だね」とよく言われる"],
@@ -326,16 +344,16 @@ const TYPES={
 };
 const KEYS=Object.keys(TYPES);
 
-// ---- アフィリエイトリンク（#REPLACE_… を本番のURLに差し替える） ----
+// ---- アフィリエイトリンク（#REPLACE_… を本番のURLに差し替える。#REPLACE_ のままの枠は表示しない） ----
 const LINKS={
   BLOG:["ブログをはじめる（レンタルサーバー）","#REPLACE_BLOG"],
   ASP:["アフィリエイト（ASP）に無料登録","#REPLACE_ASP"],
   VIDEO:["動画編集ソフト・ツール","#REPLACE_VIDEO"],
-  MARKET:["スキル・作品販売サービス","#REPLACE_MARKET"],
+  MARKET:["スキル・作品販売サービス","https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6"],
   TOOL:["デザイン・制作ツール","#REPLACE_TOOL"],
-  FURIMA:["フリマ・オークションサービス","#REPLACE_FURIMA"],
-  SHIP:["梱包資材・発送用品","#REPLACE_SHIP"],
-  CROWD:["クラウドソーシングに無料登録","#REPLACE_CROWD"],
+  FURIMA:["フリマ・オークションの相場を調べる（無料登録）","https://px.a8.net/svt/ejp?a8mat=4BEPPX+DTQEIA+2990+6ARKY"],
+  SHIP:["梱包資材・発送用品を楽天市場で探す","https://rpx.a8.net/svt/ejp?a8mat=4BEPPX+AEHOAA+2HOM+6B70I&rakuten=y&a8ejpredirect=http%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa26102675013_4BEPPX_AEHOAA_2HOM_6B70I%3Fpc%3Dhttp%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F"],
+  CROWD:["クラウドソーシングに無料登録","https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY"],
   LEARN:["在宅ワーク向け学習サービス","#REPLACE_LEARN"]
 };
 
@@ -520,7 +538,7 @@ function showPlan(id,main){
   $("planTitle").textContent=`${j.name}：最初の30日プラン`;
   const prog=()=>$("planProg").textContent=`${done.size} / ${j.plan.length} 完了`+(done.size===j.plan.length?"　30日、おつかれさまでした！":"");
   prog();
-  $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${lk?`<a href="${LINKS[lk][1]}" target="_blank" rel="sponsored noopener">${LINKS[lk][0]} →</a>`:""}</li>`).join("");
+  $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${lk&&!LINKS[lk][1].startsWith("#REPLACE")?`<a href="${LINKS[lk][1]}" target="_blank" rel="sponsored noopener">${LINKS[lk][0]} →</a>`:""}</li>`).join("");
   $("rplan").querySelectorAll("input").forEach(c=>c.onchange=()=>{
     const n=+c.dataset.n;c.checked?done.add(n):done.delete(n);
     c.parentNode.classList.toggle("done",c.checked);
@@ -541,6 +559,7 @@ function showResult(main,sub,sc,mode,ci){
   $("rtitle").innerHTML=[...title].map((c,n)=>`<span style="animation-delay:${.3+n*.06}s">${c}</span>`).join("");
   $("rcatch").textContent=T.catch;
   $("rdesc").textContent=T.desc+` さらに「${TYPES[sub].short}」の素質もあり、${TYPES[sub].str[0]}を組み合わせられるのがあなたらしさです。`;
+  $("rmore").href=`fukugyo/type/${T.slug}/`;$("rmore").textContent=`${T.short}タイプをくわしく見る →`;
   $("raru").innerHTML=T.aru.map(s=>`<li>${s}</li>`).join("");
   $("rstr").innerHTML=T.str.map(s=>`<li>${s}</li>`).join("");
   $("rweak").textContent=T.weak;
@@ -550,7 +569,7 @@ function showResult(main,sub,sc,mode,ci){
   $("rcond").hidden=!ci;
   $("rjobs").innerHTML=pj.list.map((j,n)=>`<div class="job" data-id="${j.id}"><b>${n+1}. ${j.name}${j.sub?`<span class="tag">${TYPES[sub].short}の素質から</span>`:""}</b>
     <div class="meta"><span>初期費用 ${j.costLabel}</span><span>週${j.h}時間〜</span><span>最初の収入まで ${j.first}</span><span>半年後の目安 ${j.month}</span><span>始めやすさ <span class="stars">${stars(j.ease)}</span></span></div>
-    <p class="real">${j.real}</p><button>30日プランを見る</button></div>`).join("");
+    <p class="real">${j.real}</p><button>30日プランを見る</button><a class="more" href="fukugyo/job/${j.id}/">くわしく →</a></div>`).join("");
   [...$("rjobs").children].forEach(el=>el.querySelector("button").onclick=()=>{showPlan(el.dataset.id,main);track("plan_view",{job:el.dataset.id});$("planCard").scrollIntoView({behavior:reduced?"auto":"smooth"})});
   $("rout").innerHTML=pj.out.length?`<div class="out">今の条件では外したもの<ul>${pj.out.map(([j,w])=>`<li>${j.name}（${w}）</li>`).join("")}</ul></div>`:"";
   showPlan(pj.list[0].id,main);
