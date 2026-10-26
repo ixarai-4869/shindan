@@ -244,8 +244,8 @@ ul{padding-left:1.2em;margin:.3em 0}
   </section>
 
   <p class="center" style="margin-top:32px"><a class="more" href="fukugyo/guide/">タイプと副業の一覧を見る</a></p>
-  <p class="pr" style="margin-top:32px">この診断は娯楽・参考用です。収益を保証するものではありません。</p>
-  <details class="pr policy">
+  <p class="pr">この診断は娯楽・参考用です。収益を保証するものではありません。</p>
+  <details class="pr policy" id="policy">
     <summary>プライバシーポリシー・免責事項</summary>
     <h3>アクセス解析について</h3>
     <p>当サイトはサイトの改善のため、Googleによるアクセス解析ツール「Google アナリティクス」を使用しています。Google アナリティクスはCookieを使用してトラフィックデータを収集しますが、個人を特定する情報は含みません。収集を拒否したい場合は、ブラウザの設定でCookieを無効にしてください。詳しくは<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">Googleのポリシー</a>をご覧ください。</p>
@@ -633,6 +633,8 @@ function route(state,first){
   $("resume").hidden=!mine;
   show("start");
 }
+// 解説ページの「プライバシーポリシー」リンク（#policy）から来たら開いておく
+if(location.hash==="#policy")$("policy").open=true;
 addEventListener("popstate",e=>route(e.state));
 route(history.state,true);
 </script>

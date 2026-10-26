@@ -72,7 +72,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <nav class="crumbs" aria-label="パンくずリスト">${crumbs.map(([n,p],i)=>i<crumbs.length-1?`<a href="${href(p)}">${esc(n)}</a>`:`<span aria-current="page">${esc(n)}</span>`).join(" › ")}</nav>
 ${body(href)}
   <footer>
-    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a></p>
+    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href("")}#policy">プライバシーポリシー</a></p>
     <p class="pr">費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。この診断は娯楽・参考用です。</p>
   </footer>
 </main>
@@ -87,9 +87,10 @@ const cta=(href,text)=>`  <div class="cta card">
     <a class="primary" href="${href("")}" data-track="page_to_quiz">無料で診断する</a>
   </div>`;
 
-// URL が #REPLACE_… のままの枠は出さない（index.html の結果画面と同じ）
-const live=k=>k&&!LINKS[k][1].startsWith("#REPLACE");
-const affLinks=keys=>keys.length?`<ul class="aff">${keys.map(k=>`<li><a href="${LINKS[k][1]}" target="_blank" rel="sponsored noopener" data-track="affiliate_click">${esc(LINKS[k][0])} →</a></li>`).join("")}</ul>
+// #REPLACE_ のままの枠は index.html と同じく表示しない
+const live=k=>k&&LINKS[k]&&!LINKS[k][1].startsWith("#REPLACE");
+
+const affLinks=keys=>keys.length?`<ul class="aff">${keys.map(k=>`<li><a href="${esc(LINKS[k][1])}" target="_blank" rel="sponsored noopener" data-track="affiliate_click">${esc(LINKS[k][0])} →</a></li>`).join("")}</ul>
     <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>`:"";
 
 const jobMeta=j=>`<div class="meta"><span>初期費用 ${esc(j.costLabel)}</span><span>週${j.h}時間〜</span><span>最初の収入まで ${esc(j.first)}</span><span>半年後の目安 ${esc(j.month)}</span><span>始めやすさ <span class="stars">${stars(j.ease)}</span></span></div>`;
@@ -198,7 +199,7 @@ function jobPage(j){
 
   <section class="card">
     <h2>最初の30日プラン</h2>
-    <ol class="plan">${j.plan.map(([d,text,lk])=>`<li><span class="day">${d}日目</span><span>${esc(text)}${live(lk)?`<br><a href="${LINKS[lk][1]}" target="_blank" rel="sponsored noopener" data-track="affiliate_click">${esc(LINKS[lk][0])} →</a>`:""}</span></li>`).join("")}</ol>
+    <ol class="plan">${j.plan.map(([d,text,lk])=>`<li><span class="day">${d}日目</span><span>${esc(text)}${live(lk)?`<br><a href="${esc(LINKS[lk][1])}" target="_blank" rel="sponsored noopener" data-track="affiliate_click">${esc(LINKS[lk][0])} →</a>`:""}</span></li>`).join("")}</ol>
     ${linkKeys.length?`<p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>`:""}
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
   </section>
