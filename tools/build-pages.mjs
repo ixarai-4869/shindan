@@ -117,6 +117,16 @@ function typePage(k){
   </section>
 
   <section class="card">
+    <h2>${esc(T.short)}タイプがよく言うセリフ</h2>
+    <ul>${T.serif.map(s=>`<li>「${esc(s)}」</li>`).join("")}</ul>
+  </section>
+
+  <section class="card">
+    <h2>${esc(T.short)}タイプの取扱説明書</h2>
+    <dl class="faq">${T.tori.map(([h,t])=>`<dt>${esc(h)}</dt><dd>${esc(t)}</dd>`).join("")}</dl>
+  </section>
+
+  <section class="card">
     <h2>${esc(T.short)}タイプの強み</h2>
     <ul>${T.str.map(s=>`<li>${esc(s)}</li>`).join("")}</ul>
     <p class="sub">${esc(T.weak)}</p>
