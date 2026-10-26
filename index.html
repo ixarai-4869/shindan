@@ -118,6 +118,31 @@ ul{padding-left:1.2em;margin:.3em 0}
 .more{color:var(--accent);font-weight:600;font-size:.9rem}
 .job .more{margin-left:12px}
 .share{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0 0}
+.rare{display:inline-block;margin:4px 0 0;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:4px 14px;font-size:.85rem;font-weight:600}
+.rare small{display:block;font-weight:400;color:var(--sub);font-size:.72rem}
+.serif{display:flex;flex-direction:column;gap:8px}
+.serif p{margin:0;background:var(--accent-soft);border-radius:14px 14px 14px 4px;padding:8px 14px;align-self:flex-start;font-weight:600}
+.tori{margin:0}
+.tori dt{font-size:.8rem;font-weight:600;color:var(--accent);margin-top:10px}
+.tori dt:first-child{margin-top:0}
+.tori dd{margin:0}
+.vs{text-align:center}
+.vs .duo{display:flex;justify-content:center;align-items:flex-start;gap:8px}
+.vs .duo div{width:140px;font-size:.78rem;color:var(--sub)}
+.vs .duo svg{width:88px;height:88px;display:block;margin:0 auto}
+.vs .heart{font-size:1.6rem;color:var(--accent);padding-top:28px}
+.vs .score{font-size:2.6rem;font-weight:800;color:var(--accent);line-height:1.1;margin:8px 0 0}
+.vs .combo{font-size:1.25rem;font-weight:800;margin:0}
+.vs p.text{text-align:left}
+.vs .share{margin-top:12px}
+.coll{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.coll span{border:1px dashed var(--line);border-radius:8px;padding:6px 2px;font-size:.7rem;text-align:center;color:var(--sub);line-height:1.35}
+.coll span.got{border:1px solid var(--accent);background:var(--accent-soft);color:var(--text);font-weight:600}
+.invite{display:flex;gap:10px;align-items:center;text-align:left}
+.invite svg{width:56px;height:56px;flex:none}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10}
+.confetti i{position:absolute;top:-12px;width:8px;height:12px;border-radius:2px;animation:fall 1.8s cubic-bezier(.3,.6,.6,1) forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.3}}
 .shareCard .share a,.shareCard .share button{font-size:.82rem;white-space:nowrap}
 .shareCard img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}
 .share a,.share button{display:block;text-align:center;border-radius:10px;padding:11px 4px;font-size:.9rem;font-weight:600;text-decoration:none;border:1px solid var(--line);background:var(--card);color:var(--text)}
@@ -160,6 +185,7 @@ ul{padding-left:1.2em;margin:.3em 0}
   <p class="pr">※ 本サイトには広告（PR・アフィリエイトリンク）が含まれます。</p>
 
   <section id="start" class="center">
+    <div class="banner invite" id="invite" hidden></div>
     <div class="lineup" id="lineup"></div>
     <h1>向いてる副業診断</h1>
     <p><b>あなたはどの子？</b></p>
@@ -186,7 +212,7 @@ ul{padding-left:1.2em;margin:.3em 0}
 
   <section id="loading" hidden>
     <div class="sil" id="sil"></div>
-    <p class="sub">回答を分析しています…</p>
+    <p class="sub" id="loadMsg">回答を分析しています…</p>
   </section>
 
   <section id="result" hidden>
@@ -197,9 +223,12 @@ ul{padding-left:1.2em;margin:.3em 0}
       <p class="char-name" id="rname"></p>
       <h1 class="title" id="rtitle"></h1>
       <p class="catch" id="rcatch"></p>
+      <p class="rare" id="rrare" hidden></p>
       <p id="rdesc" style="text-align:left"></p>
       <a class="more" id="rmore"></a>
     </div>
+
+    <div class="card vs" id="vsCard" hidden></div>
 
     <div id="startHere" class="center" hidden><a class="primary" href="./" id="tryMe">あなたも診断する</a></div>
     <div id="backMine" class="center" hidden><button class="primary" id="backMineBtn">さっきの結果に戻る</button></div>
@@ -207,6 +236,14 @@ ul{padding-left:1.2em;margin:.3em 0}
     <div class="card">
       <h2>こんなところ、ありませんか？</h2>
       <ul class="aru" id="raru"></ul>
+    </div>
+    <div class="card">
+      <h2 id="serifTitle"></h2>
+      <div class="serif" id="rserif"></div>
+    </div>
+    <div class="card">
+      <h2 id="toriTitle"></h2>
+      <dl class="tori" id="rtori"></dl>
     </div>
     <div class="card">
       <h2>あなたの強み</h2>
@@ -251,6 +288,20 @@ ul{padding-left:1.2em;margin:.3em 0}
       <button class="opt" id="saveImg" style="text-align:center;margin-bottom:0">結果画像を保存する</button>
       <p class="sub" style="margin:6px 0 0;text-align:center">インスタのストーリーや画像投稿に使えます</p>
     </div>
+    <div class="card" id="inviteCard">
+      <h2>友達との副業相性を診断する</h2>
+      <p class="sub">このリンクを送ると、友達が診断したあとに2人の相性とコンビ名がわかります。</p>
+      <div class="share">
+        <a class="x" id="invX" target="_blank" rel="noopener">Xで誘う</a>
+        <a class="line" id="invLine" target="_blank" rel="noopener">LINEで誘う</a>
+        <button id="invCopy">リンクをコピー</button>
+      </div>
+    </div>
+    <div class="card" id="collCard">
+      <h2>称号コレクション</h2>
+      <p class="sub" id="collNote"></p>
+      <div class="coll" id="coll"></div>
+    </div>
     <button class="opt" id="again" style="text-align:center">もう一度診断する</button>
 
     <div class="card">
@@ -275,6 +326,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     <p>掲載している費用・期間・収入は一般的な目安であり、正確性や収益を保証するものではありません。当サイトの情報を利用したことで生じた損害について、運営者は責任を負いかねます。</p>
   </details>
 </main>
+<div class="confetti" id="confetti" aria-hidden="true"></div>
 
 <script>
 // ---- キャラクター（インラインSVG） ----
@@ -312,7 +364,9 @@ const TYPES={
   W:{slug:"owl",chara:"フミ",animal:"フクロウ",short:"書く",role:"文筆家",adj:"物知りな",
      catch:"書いたものが、寝ている間も働く。",
      desc:"調べて整理して、文章にまとめるのが苦にならないタイプ。ブログや記事は元手がほぼ要らず、書いた分だけ資産として積み上がります。",
-     aru:["買う前に口コミを30件読んでしまう","人に説明すると「わかりやすい」と言われる","気になったことは寝る前でも調べ始める"],
+     aru:["買う前に口コミを30件読んでしまう","人に説明すると「わかりやすい」と言われる","気になったことは寝る前でも調べ始める","ブラウザのタブが常に20個以上開いている","下書きフォルダに、公開されなかった文章が眠っている"],
+     serif:["ちょっと調べてからにする","それ、どこ情報？","下書きはあるんだけど…"],
+     tori:[["こう言われると伸びる","「説明うまいね、すごくわかりやすい」"],["言ってはいけない一言","「で、結論は？」（考えている途中で急かす）"],["疲れているサイン","調べものだけが進んで、手が止まっている"]],
      str:["情報を集めて整理する力","ひとりで黙々と続けられる集中力","読み手を想像して伝える力"],
      weak:"つまずきやすい点：完璧を目指して公開が遅れがち。6割の出来でまず出すのがコツです。",
      avoid:["せどり（仕入れて転売）","仕入れの即決と在庫を抱える不安が続く副業です。じっくり調べてから動くあなたには、判断の速さが求められる場面がストレスになりやすいです。"],
@@ -320,7 +374,9 @@ const TYPES={
   V:{slug:"parakeet",chara:"ピーチ",animal:"インコ",short:"話す・見せる",role:"発信者",adj:"愛されキャラの",
      catch:"あなたの声に、ファンがつく。",
      desc:"人とのやりとりや発信にエネルギーがわくタイプ。SNSや動画で人柄を出すことが強みになります。顔出しなしでも始められます。",
-     aru:["面白いことがあると、すぐ誰かに話したくなる","SNSの反応がつくと素直にうれしい","一人作業が続くと元気がなくなる"],
+     aru:["面白いことがあると、すぐ誰かに話したくなる","SNSの反応がつくと素直にうれしい","一人作業が続くと元気がなくなる","スクリーンタイムの通知を見なかったことにする","投稿したあと、いいねの数を何度も見に行く"],
+     serif:["ちょっと聞いて！","それ絶対ウケるって","ストーリーに載せていい？"],
+     tori:[["こう言われると伸びる","「話してると元気出る」"],["言ってはいけない一言","既読スルー（言葉ですらない）"],["疲れているサイン","急にSNSを全部ミュートする"]],
      str:["人を惹きつける話し方","反応を見て素早く改善する力","続けるほど増えるファンづくり"],
      weak:"つまずきやすい点：反応が少ない時期に落ち込みやすい。最初の30投稿は練習と割り切りましょう。",
      avoid:["データ入力・単純作業の代行","一人で黙々と同じ作業を続ける副業です。人の反応がエネルギー源のあなたは、収入が出ても続けるのがつらくなりやすいです。"],
@@ -328,7 +384,9 @@ const TYPES={
   M:{slug:"beaver",chara:"ポコ",animal:"ビーバー",short:"作る",role:"クリエイター",adj:"器用な",
      catch:"手を動かすほど、形が増える。",
      desc:"ものや仕組みを作るのが好きなタイプ。ハンドメイド、デザイン、テンプレートや簡単なツールを作って売る道があります。",
-     aru:["説明書を読むより先に手が動く","100円ショップで材料を見ると何か作りたくなる","「器用だね」とよく言われる"],
+     aru:["説明書を読むより先に手が動く","100円ショップで材料を見ると何か作りたくなる","「器用だね」とよく言われる","作りかけの何かが、家に3つ以上ある","完成した瞬間に、もう次の作品のことを考えている"],
+     serif:["これ、自分で作れそう","あと少しだけ直したい","材料はもう買ってある"],
+     tori:[["こう言われると伸びる","「これ、どうやって作ったの？」"],["言ってはいけない一言","「買った方が早くない？」"],["疲れているサイン","材料ばかり増えて、作業机が物置になる"]],
      str:["アイデアを形にする力","試行錯誤を楽しめる粘り強さ","作品そのものが実績になる"],
      weak:"つまずきやすい点：作ることに夢中で値付けや宣伝が後回しに。作品と同じだけ売り方も工夫しましょう。",
      avoid:["SNS発信・ライブ配信","毎日の投稿や人前での発信が中心の副業です。作る時間が削られるうえ、作品より自分を売る比重が大きく、あなたの強みが活きにくいです。"],
@@ -336,7 +394,9 @@ const TYPES={
   S:{slug:"fox",chara:"コン",animal:"キツネ",short:"売る",role:"商売人",adj:"目利きの",
      catch:"見つける目が、そのまま利益に。",
      desc:"お得な情報や掘り出し物に敏感なタイプ。フリマやせどりなど、仕入れて売る形は結果が早く、数字で見えます。",
-     aru:["セール情報を見るとつい比べてしまう","「いいもの見つけるの上手だね」と言われる","迷うより先に動いていることが多い"],
+     aru:["セール情報を見るとつい比べてしまう","「いいもの見つけるの上手だね」と言われる","迷うより先に動いていることが多い","ポイント還元率でお店を選んでいる","フリマアプリの「いいね」通知に心が躍る"],
+     serif:["それ、いくらで売れると思う？","今買わないと損","定価で買ったら負け"],
+     tori:[["こう言われると伸びる","「見る目あるね」"],["言ってはいけない一言","「もう少し考えてからにしたら？」"],["疲れているサイン","欲しいものが何も思い浮かばない"]],
      str:["売れるものを見抜く目","素早い判断と行動力","数字で結果を追える冷静さ"],
      weak:"つまずきやすい点：勢いで仕入れすぎること。最初は「売れてから仕入れる」ルールで。",
      avoid:["ブログアフィリエイト","収入が出るまで半年以上かかることも珍しくない副業です。結果の早さを大事にするあなたには、手応えのない期間が長すぎます。"],
@@ -344,7 +404,9 @@ const TYPES={
   C:{slug:"bee",chara:"ハニ",animal:"ミツバチ",short:"こなす",role:"仕事人",adj:"堅実な",
      catch:"積み重ねた信頼が、収入になる。",
      desc:"決まった手順を正確に進めるのが得意なタイプ。在宅の事務、データ入力、リサーチ代行など、クラウドソーシングが合います。",
-     aru:["ToDoリストを消すのが気持ちいい","締め切りはきっちり守る","「几帳面だね」とよく言われる"],
+     aru:["ToDoリストを消すのが気持ちいい","締め切りはきっちり守る","「几帳面だね」とよく言われる","予定のない休日でもToDoリストを作る","グループ旅行で、いつの間にか幹事になっている"],
+     serif:["一回、整理させて","念のため確認ですが","それ、期限いつ？"],
+     tori:[["こう言われると伸びる","「いつも助かってる、ありがとう」"],["言ってはいけない一言","「適当でいいよ」"],["疲れているサイン","ToDoリストを作るだけで1日が終わる"]],
      str:["正確さと丁寧さ","約束を守る信頼感","コツコツ続ける安定感"],
      weak:"つまずきやすい点：指示がない自由な仕事は迷いがち。まずは手順が決まった案件から始めましょう。",
      avoid:["SNS発信・動画配信","何をどう発信するか、正解のないまま自分で決め続ける副業です。手順が決まっているほど力を出せるあなたは、迷う時間が長くなりがちです。"],
@@ -431,22 +493,60 @@ const CQ=[
 
 // ---- 質問（w は配点。本人の意向に近い質問を重くする） ----
 const Q=[
- {q:"休日にやりがちなことは？",w:1,a:{W:"調べものや読書で気づけば数時間",V:"誰かと話す、SNSを眺める",M:"何かを作る、いじる",S:"買い物やお店巡り",C:"部屋の片付けなど、決まったことを淡々と"}},
- {q:"友達から言われがちなことは？",w:1,a:{W:"説明がわかりやすい",V:"話していて楽しい",M:"器用だね",S:"いいもの見つけるの上手だね",C:"几帳面だね"}},
- {q:"ネットで長く見てしまうのは？",w:1,a:{W:"解説記事やまとめ",V:"動画やSNSの投稿",M:"作り方や制作過程",S:"口コミ、レビュー、セール情報",C:"比較表やランキング"}},
- {q:"自分の作業スタイルに近いのは？",w:1,a:{W:"一人で集中して考えをまとめる",V:"反応をもらいながら進める",M:"試行錯誤して形にする",S:"素早く判断して動く",C:"手順を決めて着実に進める"}},
- {q:"副業に求めることは？",w:2,a:{W:"積み上げて資産になる",V:"自分の名前が広がる",M:"自分の作ったものが評価される",S:"結果が早く出る",C:"安定して少しずつ稼ぐ"}},
- {q:"どちらかといえば苦手なのは？",w:1,a:{W:"長時間人と話すこと",V:"黙々と一人で作業すること",M:"数字の管理",S:"結果が出るまで待つこと",C:"自由すぎて指示がないこと"}},
- {q:"使える時間はどんな感じ？",w:1,a:{W:"夜にまとまった時間がとれる",V:"スキマ時間が多い",M:"休日に集中できる",S:"通勤や外出のついでに動ける",C:"平日の夜に短時間ずつ"}},
- {q:"理想の副業を一言でいうと？",w:2,a:{W:"書いたものが勝手に働いてくれる",V:"ファンがついてくれる",M:"作ったものが売れる",S:"仕入れて売って、利益が見える",C:"頼まれたことを確実に仕上げる"}}
+ {q:"臨時収入で10万円入った！最初にすることは？",w:1,a:{W:"使い道を決める前に、まず色々調べる",V:"とりあえず誰かに報告する",M:"前から欲しかった道具や材料を買う",S:"もっと増やせる使い道を探す",C:"決めてある予算どおりに振り分ける"}},
+ {q:"友達との旅行。気づくと担当しているのは？",w:1,a:{W:"行き先の下調べと、しおり作り",V:"写真係と盛り上げ役",M:"旅先の体験教室をねじ込む係",S:"安いプランと割引クーポン探し",C:"集合時間と予約の管理"}},
+ {q:"無人島にひとつだけ持っていくなら？",w:1,a:{W:"分厚い百科事典",V:"なぜか電波の入るスマホ",M:"なんでも作れる工具セット",S:"物々交換に使えそうな大量のアメ",C:"毎日の予定を書き込む手帳"}},
+ {q:"頼まれると、内心ちょっとうれしいのは？",w:1,a:{W:"「これってどういう意味？」と聞かれる",V:"飲み会や発表会の司会",M:"資料のデザインや飾りつけ",S:"「どこで買うのが一番安い？」の相談",C:"誰もやりたがらない面倒な手続き"}},
+ {q:"宝くじで1億円当選。それでも副業を続けるなら？",w:2,a:{W:"好きなことを書いて、誰かの役に立つ",V:"ファンと楽しく交流する",M:"作りたいものを好きなだけ作る",S:"儲かる商売をもっと大きくする",C:"信頼できる人の仕事を確実に支える"}},
+ {q:"これをされると、ちょっとモヤっとするのは？",w:1,a:{W:"根拠のない話を言い切られる",V:"話しかけても反応がうすい",M:"作ったものに「買えばいいのに」と言われる",S:"決めるべきことを先延ばしにされる",C:"「いい感じにやっといて」と丸投げされる"}},
+ {q:"あなたのスマホのホーム画面に一番近いのは？",w:1,a:{W:"ニュースと読書のアプリが並んでいる",V:"SNSのアプリが一軍",M:"写真加工やお絵かきのアプリが多い",S:"フリマとポイントのアプリがぎっしり",C:"フォルダ分けされていて整然としている"}},
+ {q:"1年後、副業でこうなっていたら最高なのは？",w:2,a:{W:"書いた記事が、寝ている間も読まれている",V:"「いつも見てます」と声をかけられる",M:"「次の新作、待ってます」と言われる",S:"仕入れと売上の数字が毎月伸びている",C:"「あなたに頼めば安心」と指名される"}}
 ];
 const MAX=Q.reduce((s,x)=>s+x.w,0);
+
+// ---- 2人の相性（メインタイプの組み合わせ15通り）[コンビ名, 相性%, ひとこと] ----
+const PAIR={
+ WW:["図書館コンビ",82,"調べものの量は最強。ただし2人とも公開ボタンを押さないので、締め切りを決め合うと一気に化けます。"],
+ WV:["台本と主演コンビ",96,"あなたたちが組むと、深い中身が人に届く形になります。書く人が台本を作り、話す人が広める黄金パターン。"],
+ WM:["取扱説明書と職人コンビ",85,"作ったものに、わかりやすい説明がつく組み合わせ。作品ページの説明文で売れ行きが変わります。"],
+ WS:["石橋と特急コンビ",64,"じっくり調べる人と、即決で動く人。ぶつかりやすいけれど、慎重さと速さを分担できれば失敗が減ります。"],
+ WC:["編集部コンビ",88,"書く人と、締め切りを守らせる人。記事の量産体制がいちばん早く整う組み合わせです。"],
+ VV:["深夜ラジオコンビ",78,"話しているだけで盛り上がる2人。ただし誰も編集も記録もしないので、録音ボタンだけは忘れずに。"],
+ VM:["実況と職人コンビ",62,"人前に出たい人と、黙々と作りたい人。真逆だからこそ、制作の裏側を発信するとファンがつきます。"],
+ VS:["実演販売コンビ",90,"見せ方がうまい人と、売れるものがわかる人。紹介した商品が売れていく、数字が見える組み合わせです。"],
+ VC:["自由人とマネージャーコンビ",66,"ノリで動く人と、手順を守る人。最初はかみ合わなくても、投稿の予定表を片方が作ると驚くほど続きます。"],
+ MM:["工房コンビ",80,"作品はどんどん増えます。売り場と値札を誰も作らないので、どちらかが販売ページ担当になりましょう。"],
+ MS:["作って売るコンビ",97,"作る人と売る人。仕入れなしで回る、副業コンビの理想形です。"],
+ MC:["量産ラインコンビ",87,"作る人のアイデアを、こなす人が手順にして量産。テンプレートやハンドメイドの出品数で差がつきます。"],
+ SS:["市場の目利きコンビ",75,"仕入れの目は2倍、在庫も2倍。「売れてから仕入れる」ルールをお互いに守れば強いです。"],
+ SC:["物販チームコンビ",93,"売るものを見つける人と、梱包・発送・記録を正確にこなす人。物販がそのまま仕組みになります。"],
+ CC:["完璧な事務所コンビ",84,"ミスはゼロ、締め切りも完璧。ただし誰も新しいことを言い出さないので、たまには冒険を。"]
+};
+function pairOf(a,b){
+  const key=[a.m,b.m].sort((x,y)=>KEYS.indexOf(x)-KEYS.indexOf(y)).join(""),P=PAIR[key];
+  // サブの素質が相手のメインと重なると、少しだけ相性が上がる
+  const score=Math.min(99,P[1]+(a.s===b.m?2:0)+(b.s===a.m?2:0));
+  return {name:P[0],score,text:P[2]};
+}
+
+// ---- レア度：全員が5つの選択肢を同じ確率で選ぶとしたとき、あるタイプの点が s 点以上になる確率 ----
+function tailProb(s){
+  let d=[1];
+  Q.forEach(x=>{const n=new Array(d.length+x.w).fill(0);d.forEach((p,v)=>{n[v]+=p*.8;n[v+x.w]+=p*.2});d=n});
+  return d.slice(s).reduce((a,b)=>a+b,0);
+}
+const TITLES_KEY="shindan-titles";
+function loadTitles(){try{return JSON.parse(localStorage.getItem(TITLES_KEY))||[]}catch(e){return []}}
 const TOTAL=Q.length+CQ.length;
 const CHEER={3:"いい調子！",5:"あと半分！",8:"ここからは条件の質問です",10:"ラスト1問！"};
 
 const $=id=>document.getElementById(id);
 const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let i=0,answers=[],conds=[];
+// 相性診断の招待（友達の結果コード）。診断中に再読み込みしても消えないよう sessionStorage にも置く
+const VS_KEY="shindan-vs";
+let vs=null;
+try{const v=sessionStorage.getItem(VS_KEY);if(v&&TYPES[v[0]]&&TYPES[v[1]])vs={m:v[0],s:v[1]}}catch(e){}
 
 function show(id){["start","quiz","loading","result"].forEach(s=>$(s).hidden=s!==id);document.querySelector("main").classList.toggle("wide",id==="result");scrollTo(0,0)}
 function shuffle(a){a=a.slice();for(let j=a.length-1;j>0;j--){const r=Math.random()*(j+1)|0;[a[j],a[r]]=[a[r],a[j]]}return a}
@@ -511,13 +611,27 @@ function analyze(){
   const r=rank(answers);
   const code=r.order[0]+r.order[1];
   const nodes=[...sil.children];let n=0;
-  anaTick=setInterval(()=>{nodes.forEach(x=>x.classList.remove("on"));nodes[n%nodes.length].classList.add("on");n++},180);
+  const msgs=["回答を分析しています…","相棒を探しています…","称号を決めています…"];
+  $("loadMsg").textContent=msgs[0];
+  anaTick=setInterval(()=>{nodes.forEach(x=>x.classList.remove("on"));nodes[n%nodes.length].classList.add("on");n++;$("loadMsg").textContent=msgs[Math.min(n/5|0,2)]},180);
   anaDone=setTimeout(()=>{
-    clearInterval(anaTick);track("quiz_complete",{result:code,cond:conds.join("")});
-    mine={m:r.order[0],s:r.order[1],sc:r.sc,c:conds.slice()};
-    try{localStorage.setItem(LAST_KEY,JSON.stringify(mine))}catch(e){}
-    showMine();
-  },reduced?300:2000);
+    clearInterval(anaTick);track("quiz_complete",{result:code,cond:conds.join(""),vs:vs?vs.m+vs.s:""});
+    mine={m:r.order[0],s:r.order[1],sc:r.sc,c:conds.slice(),vs};
+    const got=loadTitles();
+    const isNew=!got.includes(code);
+    if(isNew)got.push(code);
+    try{localStorage.setItem(LAST_KEY,JSON.stringify(mine));localStorage.setItem(TITLES_KEY,JSON.stringify(got));sessionStorage.removeItem(VS_KEY)}catch(e){}
+    mine.isNew=isNew;
+    vs=null;
+    showMine();confetti();
+  },reduced?300:2600);
+}
+
+function confetti(){
+  if(reduced)return;
+  const box=$("confetti"),colors=["#e2672f","#f7c948","#5cc28a","#2f6fed","#f4a3a3"];
+  box.innerHTML=Array.from({length:40},(_,n)=>`<i style="left:${Math.random()*100}%;background:${colors[n%5]};animation-delay:${Math.random()*.5}s"></i>`).join("");
+  setTimeout(()=>box.innerHTML="",2600);
 }
 
 // 条件（CQ の選択肢番号の配列）に合う副業を、メインタイプ優先で最大3つ選ぶ
@@ -557,6 +671,21 @@ function showPlan(id,main){
   $("rplan").querySelectorAll("a").forEach(a=>a.onclick=()=>track("affiliate_click",{type:main,job:id,link:a.textContent}));
 }
 
+// 接頭辞 pre の3ボタン（preX・preLine・preCopy）に共有先を設定する
+function setShare(pre,text,url,kind){
+  const tag="&hashtags="+encodeURIComponent("向いてる副業診断");
+  $(pre+"X").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url)+tag;
+  $(pre+"Line").href="https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text);
+  $(pre+"X").onclick=()=>track("share",{method:"x",kind});
+  $(pre+"Line").onclick=()=>track("share",{method:"line",kind});
+  const native=navigator.share&&matchMedia("(pointer:coarse)").matches,btn=$(pre+"Copy");
+  btn.onclick=async()=>{
+    if(native){track("share",{method:"native",kind});try{await navigator.share({text,url});return}catch(e){if(e.name==="AbortError")return}}
+    track("share",{method:"copy",kind});
+    try{await navigator.clipboard.writeText(text+"\n"+url);btn.textContent="コピーしました"}catch(e){prompt("コピーしてください",text+"\n"+url)}
+  };
+}
+
 function titleOf(main,sub){return TYPES[sub].adj+TYPES[main].role}
 function stars(n){return "★".repeat(n)+"☆".repeat(5-n)}
 
@@ -570,6 +699,18 @@ function showResult(main,sub,sc,mode,ci){
   $("rdesc").textContent=T.desc+` さらに「${TYPES[sub].short}」の素質もあり、${TYPES[sub].str[0]}を組み合わせられるのがあなたらしさです。`;
   $("rmore").href=`fukugyo/type/${T.slug}/`;$("rmore").textContent=`${T.short}タイプをくわしく見る →`;
   $("raru").innerHTML=T.aru.map(s=>`<li>${s}</li>`).join("");
+  $("serifTitle").textContent=`${T.short}タイプがよく言うセリフ`;
+  $("rserif").innerHTML=T.serif.map(s=>`<p>「${s}」</p>`).join("");
+  $("toriTitle").textContent=`${T.animal}の${T.chara}（${T.short}タイプ）の取扱説明書`;
+  $("rtori").innerHTML=T.tori.map(([h,t])=>`<dt>${h}</dt><dd>${t}</dd>`).join("");
+  // レア度は自分の結果（点数がある）ときだけ
+  if(sc){
+    const p=tailProb(sc[main])*100,pt=p<1?"1%未満":`約${Math.round(p)}%`;
+    $("rrare").innerHTML=p<=20
+      ?`レア度 ${"★".repeat(p<=2?5:p<=5?4:p<=10?3:2)}　${T.short}度がここまで高い回答は${pt}<small>※全員が同じ確率で選んだ場合の計算値</small>`
+      :`バランス型：素質がほどよく散らばった回答でした<small>${T.short}度がこの高さ以上になる回答は${pt}（計算値）</small>`;
+  }
+  $("rrare").hidden=!sc;
   $("rstr").innerHTML=T.str.map(s=>`<li>${s}</li>`).join("");
   $("rweak").textContent=T.weak;
   const pj=pickJobs(main,sub,ci);
@@ -595,6 +736,7 @@ function showResult(main,sub,sc,mode,ci){
 
   // r/XY/ は結果ごとのシェア画像を OGP に持つページ（tools/build-share.mjs で生成）。開くと ?r=XY に移る
   const url=new URL("r/"+main+sub+"/"+(ci?"?c="+ci.join(""):""),location.origin+location.pathname).href;
+  const inviteUrl=new URL("r/"+main+sub+"/?vs=1",location.origin+location.pathname).href;
   const text=`向いてる副業診断の結果、私は「${title}」でした！相棒は${T.animal}の${T.chara}。あなたはどの子？`;
   const native=navigator.share&&matchMedia("(pointer:coarse)").matches;
   const img=`assets/og/${main+sub}.png`;
@@ -624,6 +766,28 @@ function showResult(main,sub,sc,mode,ci){
     try{await navigator.clipboard.writeText(text+"\n"+url);$("copy").textContent="コピーしました"}
     catch(e){prompt("コピーしてください",text+"\n"+url)}
   };
+  // 相性診断：招待リンクから来て診断した人に、2人の相性を見せる
+  const v=mode==="own"&&mine&&mine.vs;
+  $("vsCard").hidden=!v;
+  if(v){
+    const P=pairOf({m:main,s:sub},v),ft=titleOf(v.m,v.s);
+    const ptext=`副業相性診断の結果、友達（${ft}）との相性は${P.score}%で「${P.name}」でした！あなたは私と何コンビ？`;
+    $("vsCard").innerHTML=`<h2>友達との副業相性</h2>
+      <div class="duo"><div>${charSVG(main,true)}あなた<br><b>${title}</b></div><span class="heart">♥</span><div>${charSVG(v.m,true)}友達<br><b>${ft}</b></div></div>
+      <p class="score">${P.score}%</p><p class="combo">${P.name}</p>
+      <p class="text">${P.text}${main===v.m&&sub===v.s?" しかも称号まで完全に一致。似た者どうしです。":""}</p>
+      <div class="share"><a class="x" id="vsX" target="_blank" rel="noopener">Xで共有</a><a class="line" id="vsLine" target="_blank" rel="noopener">LINEで送る</a><button id="vsCopy">コピー</button></div>`;
+    setShare("vs",ptext,inviteUrl,"pair");
+  }
+  $("inviteCard").hidden=mode!=="own";
+  if(mode==="own")setShare("inv",`向いてる副業診断で、私は「${title}」でした。私との副業の相性、診断してみて！`,inviteUrl,"invite");
+  // 称号コレクション（自分の結果のときだけ）
+  $("collCard").hidden=mode!=="own";
+  if(mode==="own"){
+    const got=loadTitles();
+    $("coll").innerHTML=KEYS.flatMap(m=>KEYS.filter(x=>x!==m).map(x=>m+x)).map(c=>got.includes(c)?`<span class="got">${titleOf(c[0],c[1])}</span>`:"<span>？？？</span>").join("");
+    $("collNote").textContent=`全20種のうち ${got.length} 種を獲得${mine.isNew&&got.length>1?"（新しい称号です！）":""}。答えを変えてもう一度診断すると、別の称号が出るかも。`;
+  }
   $("others").innerHTML=KEYS.map(k=>`<button data-k="${k}">${charSVG(k,k===main)}${TYPES[k].short}</button>`).join("");
   [...$("others").children].forEach(b=>b.onclick=()=>{
     const k=b.dataset.k;if(k===main)return;
@@ -659,7 +823,15 @@ function route(state,first){
   // 共有リンク（?r=メイン+サブ）から来た人には、その結果を見せてから診断へ誘導する
   const p=new URLSearchParams(location.search),r=p.get("r")||"",c=p.get("c")||"";
   const ci=/^[0-2]{3}$/.test(c)?[...c].map(Number):null;
-  if(r.length===2&&TYPES[r[0]]&&TYPES[r[1]]&&r[0]!==r[1]){showResult(r[0],r[1],null,"shared",ci);if(first)track("shared_view",{result:r});return}
+  const valid=r.length===2&&TYPES[r[0]]&&TYPES[r[1]]&&r[0]!==r[1];
+  if(valid&&p.get("vs")==="1"){
+    vs={m:r[0],s:r[1]};
+    try{sessionStorage.setItem(VS_KEY,r)}catch(e){}
+    $("invite").innerHTML=`${charSVG(r[0],true)}<span><b>友達から副業相性診断が届きました</b><br>友達は「${titleOf(r[0],r[1])}」でした。あなたも診断すると、2人の相性とコンビ名がわかります。</span>`;
+    $("invite").hidden=false;$("resume").hidden=true;
+    show("start");if(first)track("invite_view",{result:r});return;
+  }
+  if(valid){showResult(r[0],r[1],null,"shared",ci);if(first)track("shared_view",{result:r});return}
   $("resume").hidden=!mine;
   show("start");
 }
