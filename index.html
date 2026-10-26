@@ -117,7 +117,9 @@ ul{padding-left:1.2em;margin:.3em 0}
 .links a{display:block;margin:6px 0;color:var(--accent);font-weight:600}
 .more{color:var(--accent);font-weight:600;font-size:.9rem}
 .job .more{margin-left:12px}
-.share{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0}
+.share{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0 0}
+.shareCard .share a,.shareCard .share button{font-size:.82rem;white-space:nowrap}
+.shareCard img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}
 .share a,.share button{display:block;text-align:center;border-radius:10px;padding:11px 4px;font-size:.9rem;font-weight:600;text-decoration:none;border:1px solid var(--line);background:var(--card);color:var(--text)}
 .share .x{background:#111;color:#fff;border-color:#111}
 .share .line{background:#06c755;color:#fff;border-color:#06c755}
@@ -238,10 +240,16 @@ ul{padding-left:1.2em;margin:.3em 0}
       <div id="rpair"></div>
     </div>
 
-    <div class="share">
-      <a class="x" id="shareX" target="_blank" rel="noopener">Xで共有</a>
-      <a class="line" id="shareLine" target="_blank" rel="noopener">LINEで送る</a>
-      <button id="copy">リンクをコピー</button>
+    <div class="card shareCard">
+      <h2>結果をシェア</h2>
+      <img id="shareImg" width="1200" height="630" alt="">
+      <div class="share">
+        <a class="x" id="shareX" target="_blank" rel="noopener">Xで共有</a>
+        <a class="line" id="shareLine" target="_blank" rel="noopener">LINEで送る</a>
+        <button id="copy">リンクをコピー</button>
+      </div>
+      <button class="opt" id="saveImg" style="text-align:center;margin-bottom:0">結果画像を保存する</button>
+      <p class="sub" style="margin:6px 0 0;text-align:center">インスタのストーリーや画像投稿に使えます</p>
     </div>
     <button class="opt" id="again" style="text-align:center">もう一度診断する</button>
 
@@ -585,14 +593,27 @@ function showResult(main,sub,sc,mode,ci){
   $("rpair").innerHTML=`<div class="pair">${charSVG(g[0],true)}<div><b>最高の相棒：${TYPES[g[0]].animal}の${TYPES[g[0]].chara}（${TYPES[g[0]].short}）</b><br><span class="sub">${g[1]}</span></div></div>
     <div class="pair">${charSVG(o[0])}<div><b>真逆のタイプ：${TYPES[o[0]].animal}の${TYPES[o[0]].chara}（${TYPES[o[0]].short}）</b><br><span class="sub">${o[1]}</span></div></div>`;
 
-  const url=location.origin+location.pathname+"?r="+main+sub+(ci?"&c="+ci.join(""):"");
+  // r/XY/ は結果ごとのシェア画像を OGP に持つページ（tools/build-share.mjs で生成）。開くと ?r=XY に移る
+  const url=new URL("r/"+main+sub+"/"+(ci?"?c="+ci.join(""):""),location.origin+location.pathname).href;
   const text=`向いてる副業診断の結果、私は「${title}」でした！相棒は${T.animal}の${T.chara}。あなたはどの子？`;
+  const native=navigator.share&&matchMedia("(pointer:coarse)").matches;
+  const img=`assets/og/${main+sub}.png`;
+  $("shareImg").src=img;$("shareImg").alt=`診断結果の画像：${title}`;
+  $("saveImg").onclick=async()=>{
+    track("share",{method:"image",result:main+sub});
+    const name=`shindan-${TYPES[main].slug}.png`;
+    // スマホは共有シートに画像ごと渡す（そのまま写真に保存・ストーリーに投稿できる）
+    try{
+      const blob=await (await fetch(img)).blob(),file=new File([blob],name,{type:"image/png"});
+      if(native&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:text+"\n"+url});return}
+    }catch(e){if(e.name==="AbortError")return}
+    const a=document.createElement("a");a.href=img;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  };
   $("shareX").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url)+"&hashtags="+encodeURIComponent("向いてる副業診断");
   $("shareLine").href="https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text);
   $("shareX").onclick=()=>track("share",{method:"x",result:main+sub});
   $("shareLine").onclick=()=>track("share",{method:"line",result:main+sub});
   // スマホでは OS の共有シート（Instagram・メッセージなど）を開く。PC はコピー
-  const native=navigator.share&&matchMedia("(pointer:coarse)").matches;
   $("copy").textContent=native?"ほかのアプリ":"リンクをコピー";
   $("copy").onclick=async()=>{
     if(native){
