@@ -107,6 +107,8 @@ ul{padding-left:1.2em;margin:.3em 0}
 .pair{display:flex;gap:12px;align-items:center;margin:8px 0}
 .pair svg{width:56px;height:56px;flex:none}
 .links a{display:block;margin:6px 0;color:var(--accent);font-weight:600}
+.more{color:var(--accent);font-weight:600;font-size:.9rem}
+.job .more{margin-left:12px}
 .share{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0}
 .share a,.share button{display:block;text-align:center;border-radius:10px;padding:11px 4px;font-size:.9rem;font-weight:600;text-decoration:none;border:1px solid var(--line);background:var(--card);color:var(--text)}
 .share .x{background:#111;color:#fff;border-color:#111}
@@ -186,6 +188,7 @@ ul{padding-left:1.2em;margin:.3em 0}
       <h1 class="title" id="rtitle"></h1>
       <p class="catch" id="rcatch"></p>
       <p id="rdesc" style="text-align:left"></p>
+      <a class="more" id="rmore"></a>
     </div>
 
     <div id="startHere" class="center" hidden><a class="primary" href="./" id="tryMe">あなたも診断する</a></div>
@@ -240,6 +243,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     </div>
   </section>
 
+  <p class="center" style="margin-top:32px"><a class="more" href="fukugyo/guide/">タイプと副業の一覧を見る</a></p>
   <p class="pr" style="margin-top:32px">この診断は娯楽・参考用です。収益を保証するものではありません。</p>
   <details class="pr policy">
     <summary>プライバシーポリシー・免責事項</summary>
@@ -289,7 +293,7 @@ function charSVG(k,happy){return `<svg viewBox="0 0 120 120" role="img" aria-lab
 
 // ---- タイプ定義 ----
 const TYPES={
-  W:{chara:"フミ",animal:"フクロウ",short:"書く",role:"文筆家",adj:"物知りな",
+  W:{slug:"owl",chara:"フミ",animal:"フクロウ",short:"書く",role:"文筆家",adj:"物知りな",
      catch:"書いたものが、寝ている間も働く。",
      desc:"調べて整理して、文章にまとめるのが苦にならないタイプ。ブログや記事は元手がほぼ要らず、書いた分だけ資産として積み上がります。",
      aru:["買う前に口コミを30件読んでしまう","人に説明すると「わかりやすい」と言われる","気になったことは寝る前でも調べ始める"],
@@ -297,7 +301,7 @@ const TYPES={
      weak:"つまずきやすい点：完璧を目指して公開が遅れがち。6割の出来でまず出すのがコツです。",
      avoid:["せどり（仕入れて転売）","仕入れの即決と在庫を抱える不安が続く副業です。じっくり調べてから動くあなたには、判断の速さが求められる場面がストレスになりやすいです。"],
      good:["V","話すタイプの発信力と組むと、書いた記事がもっと読まれます。"],opp:["S","即決型の売るタイプとは、スピード感がまるで逆。"]},
-  V:{chara:"ピーチ",animal:"インコ",short:"話す・見せる",role:"発信者",adj:"愛されキャラの",
+  V:{slug:"parakeet",chara:"ピーチ",animal:"インコ",short:"話す・見せる",role:"発信者",adj:"愛されキャラの",
      catch:"あなたの声に、ファンがつく。",
      desc:"人とのやりとりや発信にエネルギーがわくタイプ。SNSや動画で人柄を出すことが強みになります。顔出しなしでも始められます。",
      aru:["面白いことがあると、すぐ誰かに話したくなる","SNSの反応がつくと素直にうれしい","一人作業が続くと元気がなくなる"],
@@ -305,7 +309,7 @@ const TYPES={
      weak:"つまずきやすい点：反応が少ない時期に落ち込みやすい。最初の30投稿は練習と割り切りましょう。",
      avoid:["データ入力・単純作業の代行","一人で黙々と同じ作業を続ける副業です。人の反応がエネルギー源のあなたは、収入が出ても続けるのがつらくなりやすいです。"],
      good:["W","書くタイプが台本や記事を作ると、発信の中身が深まります。"],opp:["C","手順どおりのこなすタイプとは、自由さの感覚が逆。"]},
-  M:{chara:"ポコ",animal:"ビーバー",short:"作る",role:"クリエイター",adj:"器用な",
+  M:{slug:"beaver",chara:"ポコ",animal:"ビーバー",short:"作る",role:"クリエイター",adj:"器用な",
      catch:"手を動かすほど、形が増える。",
      desc:"ものや仕組みを作るのが好きなタイプ。ハンドメイド、デザイン、テンプレートや簡単なツールを作って売る道があります。",
      aru:["説明書を読むより先に手が動く","100円ショップで材料を見ると何か作りたくなる","「器用だね」とよく言われる"],
@@ -313,7 +317,7 @@ const TYPES={
      weak:"つまずきやすい点：作ることに夢中で値付けや宣伝が後回しに。作品と同じだけ売り方も工夫しましょう。",
      avoid:["SNS発信・ライブ配信","毎日の投稿や人前での発信が中心の副業です。作る時間が削られるうえ、作品より自分を売る比重が大きく、あなたの強みが活きにくいです。"],
      good:["S","売るタイプの目利きと組むと、作ったものが売れる形になります。"],opp:["V","発信が得意な話すタイプとは、エネルギーの向きが逆。"]},
-  S:{chara:"コン",animal:"キツネ",short:"売る",role:"商売人",adj:"目利きの",
+  S:{slug:"fox",chara:"コン",animal:"キツネ",short:"売る",role:"商売人",adj:"目利きの",
      catch:"見つける目が、そのまま利益に。",
      desc:"お得な情報や掘り出し物に敏感なタイプ。フリマやせどりなど、仕入れて売る形は結果が早く、数字で見えます。",
      aru:["セール情報を見るとつい比べてしまう","「いいもの見つけるの上手だね」と言われる","迷うより先に動いていることが多い"],
@@ -321,7 +325,7 @@ const TYPES={
      weak:"つまずきやすい点：勢いで仕入れすぎること。最初は「売れてから仕入れる」ルールで。",
      avoid:["ブログアフィリエイト","収入が出るまで半年以上かかることも珍しくない副業です。結果の早さを大事にするあなたには、手応えのない期間が長すぎます。"],
      good:["M","作るタイプの商品を売れば、仕入れなしで回せます。"],opp:["W","じっくり積み上げる書くタイプとは、時間感覚が逆。"]},
-  C:{chara:"ハニ",animal:"ミツバチ",short:"こなす",role:"仕事人",adj:"堅実な",
+  C:{slug:"bee",chara:"ハニ",animal:"ミツバチ",short:"こなす",role:"仕事人",adj:"堅実な",
      catch:"積み重ねた信頼が、収入になる。",
      desc:"決まった手順を正確に進めるのが得意なタイプ。在宅の事務、データ入力、リサーチ代行など、クラウドソーシングが合います。",
      aru:["ToDoリストを消すのが気持ちいい","締め切りはきっちり守る","「几帳面だね」とよく言われる"],
@@ -547,6 +551,7 @@ function showResult(main,sub,sc,mode,ci){
   $("rtitle").innerHTML=[...title].map((c,n)=>`<span style="animation-delay:${.3+n*.06}s">${c}</span>`).join("");
   $("rcatch").textContent=T.catch;
   $("rdesc").textContent=T.desc+` さらに「${TYPES[sub].short}」の素質もあり、${TYPES[sub].str[0]}を組み合わせられるのがあなたらしさです。`;
+  $("rmore").href=`fukugyo/type/${T.slug}/`;$("rmore").textContent=`${T.short}タイプをくわしく見る →`;
   $("raru").innerHTML=T.aru.map(s=>`<li>${s}</li>`).join("");
   $("rstr").innerHTML=T.str.map(s=>`<li>${s}</li>`).join("");
   $("rweak").textContent=T.weak;
@@ -556,7 +561,7 @@ function showResult(main,sub,sc,mode,ci){
   $("rcond").hidden=!ci;
   $("rjobs").innerHTML=pj.list.map((j,n)=>`<div class="job" data-id="${j.id}"><b>${n+1}. ${j.name}${j.sub?`<span class="tag">${TYPES[sub].short}の素質から</span>`:""}</b>
     <div class="meta"><span>初期費用 ${j.costLabel}</span><span>週${j.h}時間〜</span><span>最初の収入まで ${j.first}</span><span>半年後の目安 ${j.month}</span><span>始めやすさ <span class="stars">${stars(j.ease)}</span></span></div>
-    <p class="real">${j.real}</p><button>30日プランを見る</button></div>`).join("");
+    <p class="real">${j.real}</p><button>30日プランを見る</button><a class="more" href="fukugyo/job/${j.id}/">くわしく →</a></div>`).join("");
   [...$("rjobs").children].forEach(el=>el.querySelector("button").onclick=()=>{showPlan(el.dataset.id,main);track("plan_view",{job:el.dataset.id});$("planCard").scrollIntoView({behavior:reduced?"auto":"smooth"})});
   $("rout").innerHTML=pj.out.length?`<div class="out">今の条件では外したもの<ul>${pj.out.map(([j,w])=>`<li>${j.name}（${w}）</li>`).join("")}</ul></div>`:"";
   showPlan(pj.list[0].id,main);

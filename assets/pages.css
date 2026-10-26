@@ -1,0 +1,53 @@
+/* タイプ別・副業別の解説ページ用。色と大きさは index.html と揃える */
+:root{--bg:#f7f5f0;--card:#fff;--text:#232220;--sub:#6b675f;--accent:#e2672f;--accent-soft:#fbe9df;--line:#e6e1d8;--good:#2f8f5b}
+@media (prefers-color-scheme:dark){:root{--bg:#1a1917;--card:#252421;--text:#efece6;--sub:#aaa59b;--accent:#f08a55;--accent-soft:#3a2a21;--line:#3a3833;--good:#5cc28a}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.7}
+main{max-width:720px;margin:0 auto;padding:16px 16px 64px;overflow-x:hidden}
+a{color:var(--accent)}
+h1{font-size:1.45rem;margin:.4em 0;line-height:1.4}
+h2{font-size:1.05rem;margin:0 0 .5em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
+.sub{color:var(--sub);font-size:.9rem}
+.pr{font-size:.78rem;color:var(--sub)}
+.crumbs{font-size:.8rem;color:var(--sub)}
+.crumbs a{color:var(--sub)}
+ul{padding-left:1.2em;margin:.3em 0}
+li{margin:.2em 0}
+.primary{display:inline-block;background:var(--accent);color:#fff;border-radius:999px;padding:13px 32px;font-weight:600;text-decoration:none}
+
+.hero{text-align:center}
+.hero svg{width:140px;height:140px}
+.hero .left{text-align:left}
+.catch{font-weight:600;color:var(--accent)}
+
+.jobs{display:grid;gap:10px}
+.job{display:block;border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--text);text-decoration:none}
+.job b{display:block}
+.job .more{display:block;margin-top:4px;font-size:.85rem;font-weight:600;color:var(--accent)}
+@media (hover:hover){.job:hover,.pair:hover{border-color:var(--accent)}}
+.meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.82rem;color:var(--sub)}
+.stars{color:var(--accent);letter-spacing:1px}
+
+.pair{display:flex;gap:12px;align-items:center;margin:8px 0;padding:8px;border:1px solid transparent;border-radius:10px;color:var(--text);text-decoration:none}
+.pair svg{width:56px;height:56px;flex:none}
+.titles{list-style:none;padding:0}
+.titles li{border-top:1px solid var(--line);padding:6px 0;display:flex;flex-wrap:wrap;gap:0 12px;align-items:baseline}
+.others{display:flex;justify-content:space-between;gap:4px}
+.others a{flex:1;text-align:center;border:1px solid var(--line);border-radius:10px;padding:6px 2px;color:var(--text);font-size:.75rem;text-decoration:none}
+.others svg{width:100%;height:auto;max-width:56px;display:block;margin:0 auto}
+
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{border-top:1px solid var(--line);padding:8px 4px;text-align:left;vertical-align:top}
+th{width:8em;font-weight:500;color:var(--sub)}
+.plan{list-style:none;padding:0;margin:8px 0}
+.plan li{display:flex;gap:10px;border-top:1px solid var(--line);padding:8px 0}
+.plan .day{flex:none;width:3.6em;font-size:.8rem;font-weight:600;color:var(--accent);padding-top:2px}
+.plan a,.aff a,.links a{font-weight:600}
+.aff{list-style:none;padding:0}
+.aff li{margin:6px 0}
+.faq dt{font-weight:600;margin-top:10px}
+.faq dd{margin:2px 0 0;color:var(--sub)}
+.cta{text-align:center;background:var(--accent-soft);border-color:var(--accent)}
+footer{margin-top:32px;text-align:center;font-size:.9rem}
