@@ -87,6 +87,8 @@ const cta=(href,text)=>`  <div class="cta card">
     <a class="primary" href="${href("")}" data-track="page_to_quiz">無料で診断する</a>
   </div>`;
 
+// URL が #REPLACE_… のままの枠は出さない（index.html の結果画面と同じ）
+const live=k=>k&&!LINKS[k][1].startsWith("#REPLACE");
 const affLinks=keys=>keys.length?`<ul class="aff">${keys.map(k=>`<li><a href="${LINKS[k][1]}" target="_blank" rel="sponsored noopener" data-track="affiliate_click">${esc(LINKS[k][0])} →</a></li>`).join("")}</ul>
     <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>`:"";
 
@@ -163,7 +165,7 @@ ${cta(href,`あなたは${T.short}タイプ？`)}
 // ---- 副業別ページ ----
 function jobPage(j){
   const T=TYPES[j.t],X=JOB_EXTRA[j.id],path=jobPath(j);
-  const linkKeys=[...new Set(j.plan.map(p=>p[2]).filter(Boolean))];
+  const linkKeys=[...new Set(j.plan.map(p=>p[2]).filter(live))];
   const same=JOBS.filter(x=>x.t===j.t&&x.id!==j.id);
   const title=`${j.name}の始め方と最初の30日プラン｜${NAME}`;
   const desc=`${j.name}の初期費用（${j.costLabel}）、必要な時間（週${j.h}時間〜）、最初の収入までの期間（${j.first}）、半年後の目安（${j.month}）と、最初の30日でやることを解説します。`;
@@ -196,7 +198,7 @@ function jobPage(j){
 
   <section class="card">
     <h2>最初の30日プラン</h2>
-    <ol class="plan">${j.plan.map(([d,text,lk])=>`<li><span class="day">${d}日目</span><span>${esc(text)}${lk?`<br><a href="${LINKS[lk][1]}" target="_blank" rel="sponsored noopener" data-track="affiliate_click">${esc(LINKS[lk][0])} →</a>`:""}</span></li>`).join("")}</ol>
+    <ol class="plan">${j.plan.map(([d,text,lk])=>`<li><span class="day">${d}日目</span><span>${esc(text)}${live(lk)?`<br><a href="${LINKS[lk][1]}" target="_blank" rel="sponsored noopener" data-track="affiliate_click">${esc(LINKS[lk][0])} →</a>`:""}</span></li>`).join("")}</ol>
     ${linkKeys.length?`<p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>`:""}
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
   </section>
