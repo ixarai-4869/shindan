@@ -33,6 +33,7 @@ h2{font-size:1.05rem;margin:0 0 .5em}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
 .sub{color:var(--sub);font-size:.9rem}
 .pr{font-size:.78rem;color:var(--sub)}
+.policy{margin-top:8px}.policy summary{cursor:pointer}.policy h3{font-size:.85rem;margin:14px 0 4px}.policy p{margin:0 0 8px;line-height:1.7}.policy a{color:inherit}
 button{font:inherit;cursor:pointer}
 .opts{counter-reset:o}
 .opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin:8px 0;transition:border-color .15s,background .15s,transform .15s}
@@ -240,6 +241,17 @@ ul{padding-left:1.2em;margin:.3em 0}
   </section>
 
   <p class="pr" style="margin-top:32px">この診断は娯楽・参考用です。収益を保証するものではありません。</p>
+  <details class="pr policy">
+    <summary>プライバシーポリシー・免責事項</summary>
+    <h3>アクセス解析について</h3>
+    <p>当サイトはサイトの改善のため、Googleによるアクセス解析ツール「Google アナリティクス」を使用しています。Google アナリティクスはCookieを使用してトラフィックデータを収集しますが、個人を特定する情報は含みません。収集を拒否したい場合は、ブラウザの設定でCookieを無効にしてください。詳しくは<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">Googleのポリシー</a>をご覧ください。</p>
+    <h3>広告について</h3>
+    <p>当サイトはアフィリエイトプログラム（A8.net、もしもアフィリエイト等）に参加しており、紹介した商品・サービスの申し込みや購入があった場合に報酬を受け取ることがあります。Amazonのアソシエイトとして、当サイトは適格販売により収入を得ています。広告主のサービスに関するお問い合わせは、各サービスへ直接お願いします。</p>
+    <h3>診断データについて</h3>
+    <p>診断の回答と結果、30日プランのチェックはお使いの端末（ブラウザのlocalStorage）にのみ保存され、運営者のサーバーには送信されません。</p>
+    <h3>免責事項</h3>
+    <p>掲載している費用・期間・収入は一般的な目安であり、正確性や収益を保証するものではありません。当サイトの情報を利用したことで生じた損害について、運営者は責任を負いかねます。</p>
+  </details>
 </main>
 
 <script>
@@ -318,7 +330,7 @@ const TYPES={
 };
 const KEYS=Object.keys(TYPES);
 
-// ---- アフィリエイトリンク（#REPLACE_… を本番のURLに差し替える） ----
+// ---- アフィリエイトリンク（#REPLACE_… を本番のURLに差し替える。#REPLACE_ のままの枠は表示しない） ----
 const LINKS={
   BLOG:["ブログをはじめる（レンタルサーバー）","#REPLACE_BLOG"],
   ASP:["アフィリエイト（ASP）に無料登録","#REPLACE_ASP"],
@@ -512,7 +524,7 @@ function showPlan(id,main){
   $("planTitle").textContent=`${j.name}：最初の30日プラン`;
   const prog=()=>$("planProg").textContent=`${done.size} / ${j.plan.length} 完了`+(done.size===j.plan.length?"　30日、おつかれさまでした！":"");
   prog();
-  $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${lk?`<a href="${LINKS[lk][1]}" target="_blank" rel="sponsored noopener">${LINKS[lk][0]} →</a>`:""}</li>`).join("");
+  $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${lk&&!LINKS[lk][1].startsWith("#REPLACE")?`<a href="${LINKS[lk][1]}" target="_blank" rel="sponsored noopener">${LINKS[lk][0]} →</a>`:""}</li>`).join("");
   $("rplan").querySelectorAll("input").forEach(c=>c.onchange=()=>{
     const n=+c.dataset.n;c.checked?done.add(n):done.delete(n);
     c.parentNode.classList.toggle("done",c.checked);
