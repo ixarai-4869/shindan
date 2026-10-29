@@ -51,3 +51,4 @@ th{width:8em;font-weight:500;color:var(--sub)}
 .faq dd{margin:2px 0 0;color:var(--sub)}
 .cta{text-align:center;background:var(--accent-soft);border-color:var(--accent)}
 footer{margin-top:32px;text-align:center;font-size:.9rem}
+.job .sub{display:block;margin-top:2px}
