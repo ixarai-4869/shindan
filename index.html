@@ -23,7 +23,9 @@
 <script>
 // GA4 の測定ID（G-XXXXXXX）を入れると計測が有効になる。空のままなら何も読み込まない。
 const GA_ID="G-PX3Q72XL5G";
-if(GA_ID){
+// URL に ?notrack=1 をつけて一度開くと、そのブラウザからのアクセスは計測しない（運営者の自分用。?notrack=0 で解除）
+const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
+if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
