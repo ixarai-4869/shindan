@@ -47,11 +47,16 @@ function page({path,title,desc,crumbs,body}){
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${SITE}${path}">
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="${NAME}">
+<meta property="og:site_name" content="ミニ診断">
+<meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${SITE}${path}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="${SITE}ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="向いてる副業診断。フクロウ、インコ、ビーバー、キツネ、ミツバチの5キャラ">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1917" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E">
@@ -59,7 +64,8 @@ function page({path,title,desc,crumbs,body}){
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
 <script>
 const GA_ID="${GA_ID}";
-if(GA_ID){
+const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
+if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
