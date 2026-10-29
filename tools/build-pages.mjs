@@ -7,6 +7,7 @@ import {dirname,join} from "node:path";
 import {fileURLToPath} from "node:url";
 import vm from "node:vm";
 import {TYPE_EXTRA,JOB_EXTRA} from "./pages-data.mjs";
+import {COLUMNS} from "./column-data.mjs";
 
 const ROOT=join(dirname(fileURLToPath(import.meta.url)),"..");
 const SITE="https://mini-shindan.com/";
@@ -23,11 +24,15 @@ const {TYPES,LINKS,JOBS,charSVG}=D;
 const KEYS=Object.keys(TYPES);
 for(const k of KEYS)if(!TYPE_EXTRA[k])throw new Error(`pages-data.mjs にタイプ ${k} の文章がありません`);
 for(const j of JOBS)if(!JOB_EXTRA[j.id])throw new Error(`pages-data.mjs に副業 ${j.id} の文章がありません`);
+const JOB_BY_ID=Object.fromEntries(JOBS.map(j=>[j.id,j]));
+for(const c of COLUMNS)for(const id of [...c.jobs,...c.sections.flatMap(([,b])=>b.flatMap(x=>x.jobs||[]))])if(!JOB_BY_ID[id])throw new Error(`column-data.mjs の ${c.slug} にある副業 ${id} が JOBS にありません`);
 
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
 const typePath=k=>`${BASE}type/${TYPES[k].slug}/`;
 const jobPath=j=>`${BASE}job/${j.id}/`;
 const GUIDE=`${BASE}guide/`;
+const COLUMN=`${BASE}column/`;
+const columnPath=c=>`${COLUMN}${c.slug}/`;
 const typeLabel=k=>`${TYPES[k].animal}の${TYPES[k].chara}（${TYPES[k].short}タイプ）`;
 const titleOf=(main,sub)=>TYPES[sub].adj+TYPES[main].role;
 const stars=n=>"★".repeat(n)+"☆".repeat(5-n);
@@ -78,7 +83,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <nav class="crumbs" aria-label="パンくずリスト">${crumbs.map(([n,p],i)=>i<crumbs.length-1?`<a href="${href(p)}">${esc(n)}</a>`:`<span aria-current="page">${esc(n)}</span>`).join(" › ")}</nav>
 ${body(href)}
   <footer>
-    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a></p>
+    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href(COLUMN)}">副業の悩みコラム</a></p>
     <p class="pr">費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。この診断は娯楽・参考用です。</p>
   </footer>
 </main>
@@ -230,6 +235,7 @@ ${linkKeys.length?`
   </section>
   </article>
 
+${related(href,COLUMNS.filter(c=>c.jobs.includes(j.id)))}
 ${cta(href,`${j.name}があなたに向いているか、診断で確かめる`)}
 
   <section class="card">
@@ -254,7 +260,67 @@ ${KEYS.map(k=>`
     </div>
   </section>`).join("")}
 
+  <section class="card">
+    <h2>副業の悩みコラム</h2>
+    ${columnList(href,COLUMNS)}
+  </section>
+
 ${cta(href,"あなたはどのタイプ？")}
+`});
+}
+
+// ---- コラム ----
+const columnList=(href,list)=>`<ul class="links">${list.map(c=>`<li><a href="${href(columnPath(c))}">${esc(c.title)}</a></li>`).join("")}</ul>`;
+const related=(href,list)=>list.length?`  <section class="card">
+    <h2>関連コラム</h2>
+    ${columnList(href,list)}
+  </section>
+`:"";
+const jobCards=(href,ids)=>`<div class="jobs">${ids.map(id=>{const j=JOB_BY_ID[id];return `
+      <a class="job" href="${href(jobPath(j))}"><b>${esc(j.name)}</b>${jobMeta(j)}<span class="more">始め方を見る →</span></a>`}).join("")}
+    </div>`;
+function block(href,b){
+  if(typeof b==="string")return `<p>${esc(b)}</p>`;
+  if(b.ul)return `<ul>${b.ul.map(s=>`<li>${esc(s)}</li>`).join("")}</ul>`;
+  if(b.ol)return `<ol>${b.ol.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>`;
+  if(b.jobs)return jobCards(href,b.jobs);
+  if(b.aff)return affLinks(b.aff.filter(live));
+  if(b.note)return `<p class="sub">${esc(b.note)}</p>`;
+  throw new Error("column-data.mjs に知らない形の中身があります: "+JSON.stringify(b));
+}
+function columnPage(c){
+  const path=columnPath(c);
+  return page({path,title:`${c.title}｜${NAME}`,desc:c.desc,crumbs:[[NAME,""],["副業の悩みコラム",COLUMN],[c.short,path]],body:href=>`
+  <article>
+  <header class="card">
+    <h1>${esc(c.title)}</h1>
+    <p>${esc(c.lead)}</p>
+  </header>
+${c.sections.map(([h,bs])=>`
+  <section class="card">
+    <h2>${esc(h)}</h2>
+    ${bs.map(b=>block(href,b)).join("\n    ")}
+  </section>`).join("")}
+  </article>
+
+${cta(href,"自分に向いてる副業を、診断で確かめる")}
+
+  <section class="card">
+    <h2>ほかのコラム</h2>
+    ${columnList(href,COLUMNS.filter(x=>x!==c))}
+  </section>
+`});
+}
+function columnIndex(){
+  const title=`副業の悩みコラム｜${NAME}`;
+  const desc=`副業を始める前の「何から始める？」「会社にバレる？」「経費はどこまで？」などの悩みに答えるコラムの一覧です。`;
+  return page({path:COLUMN,title,desc,crumbs:[[NAME,""],["副業の悩みコラム",COLUMN]],body:href=>`
+  <h1>副業の悩みコラム</h1>
+  <p class="sub">副業を始める前と、始めたばかりのころによくある悩みに答えます。</p>
+${COLUMNS.map(c=>`
+  <a class="job card" href="${href(columnPath(c))}"><b>${esc(c.title)}</b><span class="sub">${esc(c.desc)}</span><span class="more">読む →</span></a>`).join("")}
+
+${cta(href,"あなたに向いてる副業は？")}
 `});
 }
 
@@ -265,6 +331,8 @@ const write=(path,content)=>{const f=join(ROOT,path,"index.html");mkdirSync(dirn
 write(GUIDE,guidePage());
 KEYS.forEach(k=>write(typePath(k),typePage(k)));
 JOBS.forEach(j=>write(jobPath(j),jobPage(j)));
+write(COLUMN,columnIndex());
+COLUMNS.forEach(c=>write(columnPath(c),columnPage(c)));
 
 writeFileSync(join(ROOT,"sitemap.xml"),`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
