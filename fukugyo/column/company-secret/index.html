@@ -27,9 +27,9 @@ const GA_ID="G-PX3Q72XL5G";
 const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
 if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
-  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID,/[?&]debug=1/.test(location.search)?{debug_mode:true}:{});
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,a.dataset.placement?{job_id:a.dataset.jobId||"",service_name:a.dataset.service,placement:a.dataset.placement,page:location.pathname}:{page:location.pathname,link:a.textContent.trim(),place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -61,7 +61,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <p>会社員の副業で、所得（収入から経費を引いた額）が年20万円以下なら、所得税の確定申告は不要とされています。ただし、住民税の申告は別に必要です。</p>
     <p>住民税の申告をしないと、あとから市区町村から問い合わせが来ることがあります。20万円以下でも、市区町村への住民税の申告は忘れずに行いましょう。</p>
     <p>申告のときに困らないよう、副業の入金は最初から生活費の口座と分けておくのがおすすめです。年間の収入がひと目でわかり、20万円を超えたかどうかもすぐ確認できます。</p>
-    <div class="aff"><a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEQHQ+OESKY+47L8+61C2Q" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="BIZ" data-place="column"><span class="svc-t"><b>FREENANCE（フリーナンス）</b><span>副業の報酬を受け取る口座を生活費と分けられる</span></span><span class="svc-b">FREENANCEの口座を無料で開設</span></a><a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BGAV3+2WSB8Y+35XE+601S2" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="TAX" data-place="column"><span class="svc-t"><b>やよいの白色申告 オンライン</b><span>初期費用・月額0円で、経費の記録から申告書づくりまでできる</span></span><span class="svc-b">やよいの白色申告を無料で始める</span></a></div>
+    <div class="aff"><a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEQHQ+OESKY+47L8+61C2Q" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-service="FREENANCE（フリーナンス）" data-placement="column"><span class="svc-t"><b>FREENANCE（フリーナンス）</b><span>副業の報酬を受け取る口座を生活費と分けられる</span></span><span class="svc-b">FREENANCEの口座を無料で開設</span></a><a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BGAV3+2WSB8Y+35XE+601S2" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-service="やよいの白色申告 オンライン" data-placement="column"><span class="svc-t"><b>やよいの白色申告 オンライン</b><span>初期費用・月額0円で、経費の記録から申告書づくりまでできる</span></span><span class="svc-b">やよいの白色申告を無料で始める</span></a></div>
     <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>
   </section>
   <section class="card">

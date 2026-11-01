@@ -27,9 +27,9 @@ const GA_ID="G-PX3Q72XL5G";
 const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
 if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
-  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID,/[?&]debug=1/.test(location.search)?{debug_mode:true}:{});
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,a.dataset.placement?{job_id:a.dataset.jobId||"",service_name:a.dataset.service,placement:a.dataset.placement,page:location.pathname}:{page:location.pathname,link:a.textContent.trim(),place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -48,7 +48,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <section class="card first">
     <p class="kicker">今日やる最初の一歩</p>
     <p>作品販売サービスに無料で出品する</p>
-    <a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="MARKET" data-place="first_step"><span class="svc-t"><b>クラウディア（出品）</b><span>作ったものやスキルを無料で出品できる</span></span><span class="svc-b">クラウディアに無料で出品</span></a>
+    <a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="first_step_click" data-service="クラウディア（出品）" data-placement="job_top" data-job-id="template"><span class="svc-t"><b>クラウディア（出品）</b><span>作ったものやスキルを無料で出品できる</span></span><span class="svc-b">クラウディアに無料で出品</span></a>
     <p class="pr">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>
   </section>
 
@@ -74,7 +74,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
 
   <section class="card">
     <h2>最初の30日プラン</h2>
-    <ol class="plan"><li><span class="day">1日目</span><span>無料のデザインツールに登録し、テンプレートを3つ触ってみる</span></li><li><span class="day">3日目</span><span>自分が欲しかったもの（家計簿、名刺など）を1つ作る</span></li><li><span class="day">7日目</span><span>作品販売サービスに無料で出品する<a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="MARKET" data-place="plan"><span class="svc-t"><b>クラウディア（出品）</b><span>作ったものやスキルを無料で出品できる</span></span><span class="svc-b">クラウディアに無料で出品</span></a></span></li><li><span class="day">14日目</span><span>作品を合計5つに。同じジャンルで揃える</span></li><li><span class="day">21日目</span><span>売れている人の作品名と説明文を見て、自分の説明を直す</span></li><li><span class="day">30日目</span><span>10作品を目標に。見られた作品の傾向をメモする</span></li></ol>
+    <ol class="plan"><li><span class="day">1日目</span><span>無料のデザインツールに登録し、テンプレートを3つ触ってみる</span></li><li><span class="day">3日目</span><span>自分が欲しかったもの（家計簿、名刺など）を1つ作る</span></li><li><span class="day">7日目</span><span>作品販売サービスに無料で出品する<a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-service="クラウディア（出品）" data-placement="plan_step" data-job-id="template"><span class="svc-t"><b>クラウディア（出品）</b><span>作ったものやスキルを無料で出品できる</span></span><span class="svc-b">クラウディアに無料で出品</span></a></span></li><li><span class="day">14日目</span><span>作品を合計5つに。同じジャンルで揃える</span></li><li><span class="day">21日目</span><span>売れている人の作品名と説明文を見て、自分の説明を直す</span></li><li><span class="day">30日目</span><span>10作品を目標に。見られた作品の傾向をメモする</span></li></ol>
     <p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
   </section>

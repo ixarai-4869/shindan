@@ -27,9 +27,9 @@ const GA_ID="G-PX3Q72XL5G";
 const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
 if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
-  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID,/[?&]debug=1/.test(location.search)?{debug_mode:true}:{});
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,a.dataset.placement?{job_id:a.dataset.jobId||"",service_name:a.dataset.service,placement:a.dataset.placement,page:location.pathname}:{page:location.pathname,link:a.textContent.trim(),place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -84,7 +84,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <h2>最初の1件を取るコツ</h2>
     <ul><li>プロフィールに、対応できる曜日と時間を具体的に書く</li><li>最初は単価より、評価（実績）を3〜5件集めることを優先する</li><li>応募文は、相手の募集文の言葉を使って短く書く</li></ul>
     <p>クラウドソーシングには、未経験歓迎の案件が多くあります。登録は無料です。</p>
-    <div class="aff"><a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="CROWD" data-place="column"><span class="svc-t"><b>クラウディア</b><span>ライター・入力・事務など在宅の案件を無料で探せる</span></span><span class="svc-b">クラウディアに無料登録</span></a></div>
+    <div class="aff"><a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-service="クラウディア" data-placement="column"><span class="svc-t"><b>クラウディア</b><span>ライター・入力・事務など在宅の案件を無料で探せる</span></span><span class="svc-b">クラウディアに無料登録</span></a></div>
     <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>
   </section>
   </article>
