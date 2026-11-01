@@ -13,6 +13,9 @@ import {COMPARE} from "./compare-data.mjs";
 import {SEASONS,FEATURES} from "./season-data.mjs";
 import {UNSEI,TSUMAZUKI} from "./quiz-data.mjs";
 import {CONT} from "./continue-data.mjs";
+import {GUIDES,GUIDE_BANNED} from "./guide-data.mjs";
+import {NEWS} from "./news-data.mjs";
+import {COMICS} from "./comics-data.mjs";
 
 const ROOT=join(dirname(fileURLToPath(import.meta.url)),"..");
 const SITE="https://mini-shindan.com/";
@@ -96,7 +99,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <nav class="crumbs" aria-label="パンくずリスト">${crumbs.map(([n,p],i)=>i<crumbs.length-1?`<a href="${href(p)}">${esc(n)}</a>`:`<span aria-current="page">${esc(n)}</span>`).join(" › ")}</nav>
 ${body(href)}
   <footer>
-    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href(COLUMN)}">副業の悩みコラム</a>・<a href="${href(ZUKAN)}">称号図鑑</a>・<a href="${href(TOOLS_DIR)}">ミニ計算ツール</a>・<a href="${href(TSUMAZUKI.slug)}">つまずきタイプ診断</a>${PUB.length?`・<a href="${href(CONDS)}">条件から探す</a>`:""}</p>
+    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href(COLUMN)}">副業の悩みコラム</a>・<a href="${href(ZUKAN)}">称号図鑑</a>・<a href="${href(TOOLS_DIR)}">ミニ計算ツール</a>・<a href="${href(TSUMAZUKI.slug)}">つまずきタイプ診断</a>・<a href="${href(CHARS)}">キャラクター</a>・<a href="${href(NEWSP)}">更新履歴</a>${PUB.length?`・<a href="${href(CONDS)}">条件から探す</a>`:""}</p>
     <p><a href="${href(PRIVACY)}">プライバシーポリシー・免責事項</a>・<a href="${href(ABOUT)}">運営者情報・広告について</a></p>
     <p class="pr">費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。この診断は娯楽・参考用です。</p>
   </footer>
@@ -190,10 +193,11 @@ function typePage(k){
   </section>
   </article>
 
-${k==="W"&&serverCmp?cmpCard(href,serverCmp,"ブログを始めるときに迷いやすい、レンタルサーバーの選び方を比べました。"):""}${cta(href,`あなたは${T.short}タイプ？`)}
+${guideHtml(guidesFor(k))}${k==="W"&&serverCmp?cmpCard(href,serverCmp,"ブログを始めるときに迷いやすい、レンタルサーバーの選び方を比べました。"):""}${cta(href,`あなたは${T.short}タイプ？`)}
 
   <section class="card">
     <h2>ほかのタイプ</h2>
+    <p class="sub"><a href="${href(CHARS)}#c-${T.slug}">${esc(T.chara)}のキャラクター紹介と相性表</a></p>
     <div class="others">${KEYS.map(s=>s===k?"":`<a href="${href(typePath(s))}">${charSVG(s)}${esc(TYPES[s].short)}</a>`).join("")}</div>
   </section>
 `});
@@ -449,6 +453,99 @@ const seasonScript=()=>`<script>
 })();
 </script>`;
 
+// ---- キャラクターのページ（C10）・更新履歴（C11）・ガイドカード（C9） ----
+const CHARS="characters/",NEWSP="news/",COMICSP=`${CHARS}comics/`;
+const PAIR_DATA=vm.runInNewContext(html.slice(html.indexOf("const PAIR={"),html.indexOf("function pairOf"))+";PAIR");
+const pairOfKeys=(a,b)=>{const key=[a,b].sort((x,y)=>KEYS.indexOf(x)-KEYS.indexOf(y)).join("");return PAIR_DATA[key]};
+const comicsPub=PREVIEW&&!COMICS.length?[{slug:"sample",date:"2026-01-01",title:"（確認用の仮データ）",chara:["W","V"],panels:[{who:"W",text:"テスト"},{who:"V",text:"テスト"},{who:"",text:"テスト"},{who:"W",text:"テスト"}]}]:COMICS;
+const comicPath=c=>`${COMICSP}${c.slug}/`;
+function charactersPage(){
+  const path=CHARS;
+  const title=`キャラクター紹介と相性表｜${NAME}`;
+  const desc="診断に出てくる5匹のキャラ（フクロウのフミ、インコのピーチ、ビーバーのポコ、キツネのコン、ミツバチのハニ）の性格・口ぐせ・得意と苦手、5×5の相性表をまとめました。";
+  return page({path,title,desc,ptype:"characters",crumbs:[[NAME,""],["キャラクター",path]],body:href=>`
+  <article>
+  <header class="card hero season-hero">
+    <div class="zk-line">${KEYS.map(k=>charSVG(k,true)).join("")}</div>
+    <h1>キャラクター紹介</h1>
+    <p class="left">診断に出てくる5匹の相棒です。タイプ別のページと、称号図鑑にもつながっています。</p>
+  </header>
+${KEYS.map(k=>{const T=TYPES[k];return `  <section class="card" id="c-${T.slug}">
+    <div class="pair">${charSVG(k,true)}<span><b>${esc(T.animal)}の「${esc(T.chara)}」</b><br><span class="sub">${esc(T.short)}タイプ（${esc(T.role)}）</span></span></div>
+    <p class="catch">${esc(T.catch)}</p>
+    <h2>性格</h2><p>${esc(T.desc)}</p>
+    <h2>口ぐせ</h2><ul>${T.serif.map(s=>`<li>「${esc(s)}」</li>`).join("")}</ul>
+    <h2>得意なこと</h2><ul>${T.str.map(s=>`<li>${esc(s)}</li>`).join("")}</ul>
+    <h2>苦手なこと</h2><p>${esc(T.weak.replace(/^つまずきやすい点：/,""))}</p>
+    <p><a href="${href(typePath(k))}">${esc(T.short)}タイプをくわしく見る</a>・<a href="${href(ZUKAN)}#zk-${T.slug}">${esc(T.chara)}の称号を図鑑で見る</a></p>
+  </section>`}).join("\n")}
+  <section class="card">
+    <h2>相性表（5×5）</h2>
+    <p class="sub">メインタイプどうしの組み合わせです。パーセントはこのサイトの診断上の目安で、娯楽・参考用です。</p>
+    <div class="tbl"><table><thead><tr><th></th>${KEYS.map(k=>`<th>${esc(TYPES[k].chara)}</th>`).join("")}</tr></thead><tbody>
+${KEYS.map(a=>`<tr><th>${esc(TYPES[a].chara)}</th>${KEYS.map(b=>{const P=pairOfKeys(a,b);return `<td><b>${esc(P[0])}</b><br>${P[1]}%</td>`}).join("")}</tr>`).join("\n")}
+    </tbody></table></div>
+    <p class="sub">診断の結果では、友達と診断すると、2人のコンビ名と一言が出ます。</p>
+  </section>
+  ${comicsPub.length?`<section class="card"><h2>キャラの4コマ・掛け合い</h2><ul class="links">${comicsPub.map(c=>`<li><a href="${href(comicPath(c))}">${esc(c.title)}</a>（${esc(c.date)}）</li>`).join("")}</ul></section>`:""}
+${cta(href,"あなたはどの子？")}
+  </article>
+`});
+}
+function comicPage(c){
+  return page({path:comicPath(c),title:`${c.title}｜キャラの4コマ｜${NAME}`,desc:`${c.title}。${c.chara.map(k=>TYPES[k].chara).join("と")}の掛け合い。`,ptype:"characters",crumbs:[[NAME,""],["キャラクター",CHARS],[c.title,comicPath(c)]],body:href=>`
+  <article>
+  <header class="card hero"><div class="zk-line">${c.chara.map(k=>charSVG(k,true)).join("")}</div><h1>${esc(c.title)}</h1><p class="sub">${esc(c.date)}</p></header>
+  <section class="card">${c.panels.map((p,i)=>`<div class="panel"><span class="sub">${i+1}コマ目</span><p>${p.who?`<b>${esc(TYPES[p.who].chara)}</b>「${esc(p.text)}」`:esc(p.text)}</p></div>`).join("")}</section>
+  <p><a href="${href(CHARS)}">キャラクター紹介へ</a></p>
+  </article>
+`});
+}
+const newsPath=n=>`${NEWSP}${n.slug}/`;
+const KIND={update:"更新",diary:"開発日誌"};
+function newsIndex(){
+  return page({path:NEWSP,title:`更新履歴・開発日誌｜${NAME}`,desc:"機能やコンテンツの追加の記録と、短い開発日誌です。",ptype:"news",crumbs:[[NAME,""],["更新履歴",NEWSP]],body:href=>`
+  <article>
+  <header class="card hero">${charSVG("C",true)}<h1>更新履歴・開発日誌</h1><p class="left">サイトに追加した機能とコンテンツの記録です。</p></header>
+  <section class="card"><ul class="news">${[...NEWS].sort((a,b)=>b.date.localeCompare(a.date)).map(n=>`<li><span class="sub">${esc(n.date)}　${KIND[n.kind]||"更新"}</span><br><a href="${href(newsPath(n))}">${esc(n.title)}</a></li>`).join("")}</ul></section>
+  </article>
+`});
+}
+function newsPage(n){
+  return page({path:newsPath(n),title:`${n.title}｜更新履歴｜${NAME}`,desc:n.body[0],ptype:"news",crumbs:[[NAME,""],["更新履歴",NEWSP],[n.title,newsPath(n)]],body:href=>`
+  <article class="card">
+  <p class="sub">${esc(n.date)}　${KIND[n.kind]||"更新"}</p>
+  <h1>${esc(n.title)}</h1>
+  ${n.body.map(p=>`<p>${esc(p)}</p>`).join("")}
+  ${n.href?`<p><a href="${href(n.href)}">関連ページを見る</a></p>`:""}
+  <p><a href="${href(NEWSP)}">更新履歴の一覧へ</a></p>
+  </article>
+`});
+}
+// ガイドカード（自社商品）。商品が無い間は何も出さない
+const GUIDES_PUB=(()=>{
+  const g=(PREVIEW&&!GUIDES.length)?[{id:"sample",enabled:true,title:"（確認用の仮データ）",types:[],price:"1,000円",url:"https://example.com/",summary:"確認用です。"}]:GUIDES;
+  const on=g.filter(x=>x.enabled);
+  for(const x of on){if(!PREVIEW&&(GUIDE_BANNED.test(x.title)||GUIDE_BANNED.test(x.summary)))throw new Error(`guide-data.mjs の ${x.id} に、収入や成果を約束する表現があります`);if(!x.title||!x.price||!/^https:\/\//.test(x.url))throw new Error(`guide-data.mjs の ${x.id} に title・price・https の url が必要です`)}
+  return on;
+})();
+const guideHtml=(gs)=>gs.length?`<section class="card guide-card" aria-label="自社のガイド">${gs.map(x=>`<div class="guide"><p class="kicker">自社のガイド（広告ではありません）</p><h2>${esc(x.title)}</h2><p>${esc(x.summary)}</p><p><b>${esc(x.price)}</b>　<a class="primary" href="${esc(x.url)}" target="_blank" rel="noopener" data-track="guide_click" data-place="${esc(x.id)}">販売ページを見る</a></p></div>`).join("")}</section>`:"";
+const guidesFor=k=>GUIDES_PUB.filter(x=>!x.types.length||x.types.includes(k));
+const guideScript=()=>GUIDES_PUB.length?`<script>
+window.renderGuide=function(k){
+  var G=${JSON.stringify(GUIDES_PUB.map(x=>({id:x.id,title:x.title,types:x.types,price:x.price,url:x.url,summary:x.summary})))},el=document.getElementById("guideSlot");if(!el)return;
+  var list=G.filter(function(x){return!x.types.length||x.types.indexOf(k)>=0});
+  el.innerHTML="";if(!list.length){el.hidden=true;return}
+  list.forEach(function(x){var d=document.createElement("div");d.className="guide";
+    var p=document.createElement("p");p.className="sub";p.textContent="自社のガイド（広告ではありません）";
+    var h=document.createElement("h2");h.textContent=x.title;var s=document.createElement("p");s.textContent=x.summary;
+    var l=document.createElement("p"),b=document.createElement("b");b.textContent=x.price+"　";var a=document.createElement("a");a.className="primary";a.href=x.url;a.target="_blank";a.rel="noopener";a.textContent="販売ページを見る";
+    a.onclick=function(){if(window.track)track("guide_click",{guide:x.id})};
+    l.appendChild(b);l.appendChild(a);d.appendChild(p);d.appendChild(h);d.appendChild(s);d.appendChild(l);el.appendChild(d)});
+  el.hidden=false;
+};
+</script>`:"";
+
 function landing(){
   const first=j=>j.plan.slice(0,3);
   const ex=JOB_BY_ID.writer; // 結果の実例：Webライター（書くタイプ）
@@ -472,10 +569,10 @@ function landing(){
     <div class="lp-all">${JOBS.map(j=>`<a href="${jobPath(j)}">${esc(j.name)}</a>`).join("")}</div>
     <h2 style="margin-top:22px">副業の悩みコラム</h2>
     <ul class="cols">${COLUMNS.map(c=>`<li><a href="${columnPath(c)}">${esc(c.title)}</a></li>`).join("")}</ul>
-    <p><a class="more" href="${COLUMN}">コラムをすべて見る</a>・<a class="more" href="${GUIDE}">タイプと副業の一覧</a>・<a class="more" href="${ZUKAN}">称号図鑑</a>・<a class="more" href="${TOOLS_DIR}">ミニ計算ツール</a>・<a class="more" href="${TSUMAZUKI.slug}">つまずきタイプ診断</a>${PUB.length?`・<a class="more" href="${CONDS}">条件から探す</a>`:""}</p>
+    <p><a class="more" href="${COLUMN}">コラムをすべて見る</a>・<a class="more" href="${GUIDE}">タイプと副業の一覧</a>・<a class="more" href="${ZUKAN}">称号図鑑</a>・<a class="more" href="${TOOLS_DIR}">ミニ計算ツール</a>・<a class="more" href="${TSUMAZUKI.slug}">つまずきタイプ診断</a>・<a class="more" href="${CHARS}">キャラクター</a>・<a class="more" href="${NEWSP}">更新履歴</a>${PUB.length?`・<a class="more" href="${CONDS}">条件から探す</a>`:""}</p>
     <h2 style="margin-top:22px">よくある質問</h2>
     <dl>${FAQ.map(([q,a])=>`<dt>${esc(q)}</dt><dd>${esc(a)}</dd>`).join("")}</dl>
-    ${seasonScript()}
+    ${seasonScript()}${guideScript()}
     <script type="application/ld+json">${JSON.stringify({"@context":"https://schema.org","@type":"FAQPage",mainEntity:FAQ.map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))})}</script>`;
 }
 {
@@ -1074,6 +1171,8 @@ write(unseiPath,unseiPage());write(UNSEI_TOP,unseiTop());
 FEATS.forEach(f=>write(featPath(f),featurePage(f)));
 write(TSUMAZUKI.slug,tsumazukiPage());
 CONT_PUB.forEach(id=>write(contPath(id),contPage(id)));
+write(CHARS,charactersPage());comicsPub.forEach(c=>write(comicPath(c),comicPage(c)));
+write(NEWSP,newsIndex());NEWS.forEach(n=>write(newsPath(n),newsPage(n)));
 write(PRIVACY,privacyPage());write(ABOUT,aboutPage());
 
 writeFileSync(join(ROOT,"sitemap.xml"),`<?xml version="1.0" encoding="UTF-8"?>

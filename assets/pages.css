@@ -123,3 +123,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,s
 .qz-link:disabled{color:var(--sub);text-decoration:none;cursor:default}
 .banner{background:var(--accent-soft);border-radius:12px;padding:12px 14px;margin:12px 0;font-size:.9rem;text-align:left}
 @media (prefers-reduced-motion:reduce){.unsei-char svg{animation:none}.qz-bar i{transition:none}}
+
+/* キャラクター・更新履歴・ガイドカード */
+.news{list-style:none;padding:0}
+.news li{padding:10px 0;border-top:1px solid var(--line)}
+.news li:first-child{border-top:0}
+.panel{padding:8px 0;border-top:1px dashed var(--line)}
+.panel:first-child{border-top:0}
+.guide-card,#guideSlot .guide{border:2px solid var(--line)}
+#guideSlot .guide{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+#guideSlot[hidden]{display:none}
+[data-season="newyear"] .season-hero{border:2px solid var(--accent)}
