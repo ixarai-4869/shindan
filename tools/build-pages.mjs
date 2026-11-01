@@ -32,6 +32,7 @@ const typePath=k=>`${BASE}type/${TYPES[k].slug}/`;
 const jobPath=j=>`${BASE}job/${j.id}/`;
 const GUIDE=`${BASE}guide/`;
 const COLUMN=`${BASE}column/`;
+const PRIVACY="privacy/",ABOUT="about/";
 const columnPath=c=>`${COLUMN}${c.slug}/`;
 const typeLabel=k=>`${TYPES[k].animal}の${TYPES[k].chara}（${TYPES[k].short}タイプ）`;
 const titleOf=(main,sub)=>TYPES[sub].adj+TYPES[main].role;
@@ -84,6 +85,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
 ${body(href)}
   <footer>
     <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href(COLUMN)}">副業の悩みコラム</a></p>
+    <p><a href="${href(PRIVACY)}">プライバシーポリシー・免責事項</a>・<a href="${href(ABOUT)}">運営者情報・広告について</a></p>
     <p class="pr">費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。この診断は娯楽・参考用です。</p>
   </footer>
 </main>
@@ -331,6 +333,96 @@ ${cta(href,"あなたに向いてる副業は？")}
 `});
 }
 
+
+// ---- プライバシーポリシー・運営者情報（独立ページ） ----
+const contactMail="info@mini-shindan.com";
+function privacyPage(){
+  return page({path:PRIVACY,title:`プライバシーポリシー・免責事項｜${NAME}`,desc:`${NAME}（ミニ診断）のアクセス解析・広告・診断データの扱い、お問い合わせ先、免責事項です。`,crumbs:[[NAME,""],["プライバシーポリシー・免責事項",PRIVACY]],body:href=>`
+  <article class="card">
+    <h1>プライバシーポリシー・免責事項</h1>
+    <h2>アクセス解析について</h2>
+    <p>当サイトはサイトの改善のため、Googleによるアクセス解析ツール「Google アナリティクス」を使用しています。Google アナリティクスはCookieを使用してトラフィックデータを収集しますが、個人を特定する情報は含みません。収集を拒否したい場合は、ブラウザの設定でCookieを無効にしてください。詳しくは<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">Googleのポリシー</a>をご覧ください。</p>
+    <h2>広告について</h2>
+    <p>当サイトはアフィリエイトプログラム（A8.net、もしもアフィリエイト等）に参加しており、紹介した商品・サービスの申し込みや購入があった場合に報酬を受け取ることがあります。Amazonのアソシエイトとして、当サイトは適格販売により収入を得ています。広告主のサービスに関するお問い合わせは、各サービスへ直接お願いします。くわしくは<a href="${href(ABOUT)}">運営者情報・広告について</a>をご覧ください。</p>
+    <h2>診断データについて</h2>
+    <p>診断の回答と結果、30日プランのチェックはお使いの端末（ブラウザのlocalStorage）にのみ保存され、運営者のサーバーには送信されません。ブラウザのデータを消すと、保存した結果とチェックも消えます。</p>
+    <h2>お問い合わせ</h2>
+    <p>当サイトへのお問い合わせは、<a href="mailto:${contactMail}">${contactMail}</a> までお願いします。</p>
+    <h2>免責事項</h2>
+    <p>掲載している費用・期間・収入は一般的な目安であり、正確性や収益を保証するものではありません。当サイトの情報を利用したことで生じた損害について、運営者は責任を負いかねます。この診断は娯楽・参考用です。</p>
+  </article>
+`});
+}
+function aboutPage(){
+  return page({path:ABOUT,title:`運営者情報・広告について｜${NAME}`,desc:`${NAME}（ミニ診断）の運営者情報、お問い合わせ先、広告（アフィリエイト）に関する方針です。`,crumbs:[[NAME,""],["運営者情報・広告について",ABOUT]],body:href=>`
+  <article class="card">
+    <h1>運営者情報・広告について</h1>
+    <h2>運営者情報</h2>
+    <table>
+      <tr><th>サイト名</th><td>ミニ診断（${NAME}）</td></tr>
+      <tr><th>お問い合わせ</th><td><a href="mailto:${contactMail}">${contactMail}</a></td></tr>
+      <tr><th>サイトの内容</th><td>11問の質問から、タイプと向いてる副業、最初の30日プランを案内する無料の診断サイトです。登録は不要です。</td></tr>
+    </table>
+    <h2>広告（アフィリエイト）について</h2>
+    <p>当サイトは、A8.netなどのアフィリエイトプログラムを利用しています。サービス名つきのカードや「PR」と書かれたリンクは広告で、そこから申し込みや購入があると、運営者に報酬が入ることがあります。利用者の料金が増えることはありません。</p>
+    <h2>広告を選ぶときの方針</h2>
+    <ul>
+      <li>成果の条件が「無料登録」「無料体験」「出品」など、利用者に大きな負担のないものを中心に選びます。</li>
+      <li>診断の結果や副業の紹介は、広告の有無で変えていません。</li>
+      <li>広告リンクは「PR」の表示またはサービス名のカードにして、通常のリンクと区別できるようにします。</li>
+      <li>収入の目安は一般的な範囲で、必ず稼げるとは書きません。</li>
+    </ul>
+    <p class="sub">くわしくは<a href="${href(PRIVACY)}">プライバシーポリシー・免責事項</a>をご覧ください。</p>
+  </article>
+`});
+}
+
+// ---- トップページのランディング部分（index.html の landing:begin〜end の間を作り直す） ----
+const FAQ=[
+  ["診断は無料ですか？","はい、無料です。診断も、結果も、30日プランも、お金はかかりません。"],
+  ["登録は必要ですか？","いいえ、登録もログインも不要です。メールアドレスなどの入力もありません。"],
+  ["結果は保存されますか？","結果と30日プランのチェックは、お使いの端末（ブラウザ）の中だけに保存されます。運営者のサーバーには送られません。ブラウザのデータを消すと、保存した結果も消えます。"],
+  ["どれくらい時間がかかりますか？","11問で、約2分です。選択肢をタップするだけで進みます。"],
+  ["診断結果は当たりますか？","この診断は娯楽・参考用です。タイプは回答の傾向から決めているもので、向き不向きを断定するものではありません。副業を選ぶときのきっかけにしてください。"],
+  ["副業で必ず稼げますか？","いいえ。収入は始め方や続けた期間で大きく変わり、最初の数か月はほとんど収入がないのがふつうです。サイトに書いている金額は一般的な目安で、収益を保証するものではありません。"],
+  ["広告が含まれているのはなぜですか？","サイトの運営費のため、アフィリエイト広告を載せています。広告リンクには「PR」を表示しています。診断の結果は広告の有無で変えていません。"]
+];
+function landing(){
+  const first=j=>j.plan.slice(0,3);
+  const ex=JOB_BY_ID.writer; // 結果の実例：Webライター（書くタイプ）
+  const top=[...JOBS].sort((a,b)=>b.ease-a.ease||a.cost-b.cost).slice(0,6);
+  return `<h2>この診断でわかること</h2>
+    <div class="lp-3">
+      <div><b>1. あなたの副業タイプ</b>11問の回答から、5タイプと「第2の素質」で称号を決めます（全20種）。
+        <p class="ex">結果の例：${esc(typeLabel("W"))}。「${esc(TYPES.W.catch)}」</p></div>
+      <div><b>2. 今のあなたにできる副業</b>時間・お金・顔出しの条件で絞り込み、初期費用や収入の目安もそのまま見られます。
+        <p class="ex">例：${esc(ex.name)}（初期費用 ${esc(ex.costLabel)}・週${ex.h}時間〜・半年後の目安 ${esc(ex.month)}）</p></div>
+      <div><b>3. 最初の30日プラン</b>日ごとにやることを並べ、チェックをつけて進められます。
+        <p class="ex">例（${esc(ex.name)}）：${first(ex).map(([d,t])=>`${d}日目 ${esc(t)}`).join(" → ")}</p></div>
+    </div>
+    <h2 style="margin-top:22px">5つのタイプ</h2>
+    <p class="lead">タップすると、それぞれの特徴と向いてる副業を読めます。</p>
+    <div class="lp-types">${KEYS.map(k=>`<a href="${typePath(k)}">${charSVG(k)}<b>${esc(TYPES[k].short)}</b><br>${esc(TYPES[k].animal)}</a>`).join("")}</div>
+    <h2 style="margin-top:22px">始めやすい副業</h2>
+    <p class="lead">「始めやすさ」の評価が高い順に並べています（人気ランキングではありません）。</p>
+    <div class="lp-jobs">${top.map(j=>`<a class="lp-job" href="${jobPath(j)}"><b>${esc(j.name)}</b><div class="meta"><span>初期費用 ${esc(j.costLabel)}</span><span>週${j.h}時間〜</span><span>半年後の目安 ${esc(j.month)}</span><span>始めやすさ <span class="stars">${stars(j.ease)}</span></span></div></a>`).join("")}</div>
+    <p class="sub" style="margin:12px 0 4px">すべての副業（${JOBS.length}種類）</p>
+    <div class="lp-all">${JOBS.map(j=>`<a href="${jobPath(j)}">${esc(j.name)}</a>`).join("")}</div>
+    <h2 style="margin-top:22px">副業の悩みコラム</h2>
+    <ul class="cols">${COLUMNS.map(c=>`<li><a href="${columnPath(c)}">${esc(c.title)}</a></li>`).join("")}</ul>
+    <p><a class="more" href="${COLUMN}">コラムをすべて見る</a>・<a class="more" href="${GUIDE}">タイプと副業の一覧</a></p>
+    <h2 style="margin-top:22px">よくある質問</h2>
+    <dl>${FAQ.map(([q,a])=>`<dt>${esc(q)}</dt><dd>${esc(a)}</dd>`).join("")}</dl>
+    <script type="application/ld+json">${JSON.stringify({"@context":"https://schema.org","@type":"FAQPage",mainEntity:FAQ.map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))})}</script>`;
+}
+{
+  const a="<!--landing:begin-->",b="<!--landing:end-->";
+  const i=html.indexOf(a),j=html.indexOf(b);
+  if(i<0||j<0)throw new Error("index.html に landing:begin / landing:end がありません");
+  const out=html.slice(0,i+a.length)+"\n"+landing()+"\n"+html.slice(j);
+  if(out!==html)writeFileSync(join(ROOT,"index.html"),out);
+}
+
 // ---- 書き出し ----
 rmSync(join(ROOT,BASE),{recursive:true,force:true});
 const out=[];
@@ -340,6 +432,7 @@ KEYS.forEach(k=>write(typePath(k),typePage(k)));
 JOBS.forEach(j=>write(jobPath(j),jobPage(j)));
 write(COLUMN,columnIndex());
 COLUMNS.forEach(c=>write(columnPath(c),columnPage(c)));
+write(PRIVACY,privacyPage());write(ABOUT,aboutPage());
 
 writeFileSync(join(ROOT,"sitemap.xml"),`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
