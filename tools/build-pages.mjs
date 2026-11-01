@@ -8,6 +8,7 @@ import {fileURLToPath} from "node:url";
 import vm from "node:vm";
 import {TYPE_EXTRA,JOB_EXTRA} from "./pages-data.mjs";
 import {COLUMNS} from "./column-data.mjs";
+import {CONDITIONS,HUB_LEAD,ZUKAN_LEAD} from "./conditions-data.mjs";
 
 const ROOT=join(dirname(fileURLToPath(import.meta.url)),"..");
 const SITE="https://mini-shindan.com/";
@@ -32,6 +33,12 @@ const typePath=k=>`${BASE}type/${TYPES[k].slug}/`;
 const jobPath=j=>`${BASE}job/${j.id}/`;
 const GUIDE=`${BASE}guide/`;
 const COLUMN=`${BASE}column/`;
+const ZUKAN=`${BASE}zukan/`;
+const CONDS=`${BASE}conditions/`;
+const condPath=c=>`${CONDS}${c.slug}/`;
+// 文章が揃った条件だけ公開する（未入稿のページは作らない）。確認用に CONDITIONS_PREVIEW=1 で仮文を入れられる（コミットしない）
+const PREVIEW=process.env.CONDITIONS_PREVIEW==="1";
+const PUB=CONDITIONS.map(c=>PREVIEW&&!c.intro.length?{...c,intro:["（確認用の仮文）"],fail:["（確認用の仮文）"],note:"（確認用の仮文）"}:c).filter(c=>c.intro.length&&c.fail.length&&c.note);
 const PRIVACY="privacy/",ABOUT="about/";
 const columnPath=c=>`${COLUMN}${c.slug}/`;
 const typeLabel=k=>`${TYPES[k].animal}の${TYPES[k].chara}（${TYPES[k].short}タイプ）`;
@@ -40,7 +47,7 @@ const stars=n=>"★".repeat(n)+"☆".repeat(5-n);
 
 // ---- 共通の枠 ----
 // path はサイトルートからのパス（末尾 /）。リンクは相対パスにして github.io/shindan/ でも動くようにする
-function page({path,title,desc,crumbs,body}){
+function page({path,title,desc,crumbs,body,ptype=""}){
   const up="../".repeat(path.split("/").filter(Boolean).length);
   const href=p=>up+p;
   const ld={"@context":"https://schema.org","@type":"BreadcrumbList",itemListElement:crumbs.map(([n,p],i)=>({"@type":"ListItem",position:i+1,name:n,item:SITE+p}))};
@@ -73,7 +80,7 @@ const GA_ID="${GA_ID}";
 const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
 if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
-  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID,/[?&]debug=1/.test(location.search)?{debug_mode:true}:{});
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID,Object.assign(/[?&]debug=1/.test(location.search)?{debug_mode:true}:{},${JSON.stringify(ptype?{page_type:ptype}:{})}));
 }
 document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,a.dataset.placement?{job_id:a.dataset.jobId||"",service_name:a.dataset.service,placement:a.dataset.placement,page:location.pathname}:{page:location.pathname,link:a.textContent.trim(),place:a.dataset.place||""})});
 </script>
@@ -84,7 +91,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <nav class="crumbs" aria-label="パンくずリスト">${crumbs.map(([n,p],i)=>i<crumbs.length-1?`<a href="${href(p)}">${esc(n)}</a>`:`<span aria-current="page">${esc(n)}</span>`).join(" › ")}</nav>
 ${body(href)}
   <footer>
-    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href(COLUMN)}">副業の悩みコラム</a></p>
+    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href(COLUMN)}">副業の悩みコラム</a>・<a href="${href(ZUKAN)}">称号図鑑</a>${PUB.length?`・<a href="${href(CONDS)}">条件から探す</a>`:""}</p>
     <p><a href="${href(PRIVACY)}">プライバシーポリシー・免責事項</a>・<a href="${href(ABOUT)}">運営者情報・広告について</a></p>
     <p class="pr">費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。この診断は娯楽・参考用です。</p>
   </footer>
@@ -267,7 +274,12 @@ ${KEYS.map(k=>`
     </div>
   </section>`).join("")}
 
-  <section class="card">
+  ${PUB.length?`<section class="card">
+    <h2>条件から探す</h2>
+    <p><a href="${href(CONDS)}">顔出しなし・初期費用0円・週3時間以内など、条件から副業を探す</a></p>
+  </section>
+
+`:""}  <section class="card">
     <h2>副業の悩みコラム</h2>
     ${columnList(href,COLUMNS)}
   </section>
@@ -410,7 +422,7 @@ function landing(){
     <div class="lp-all">${JOBS.map(j=>`<a href="${jobPath(j)}">${esc(j.name)}</a>`).join("")}</div>
     <h2 style="margin-top:22px">副業の悩みコラム</h2>
     <ul class="cols">${COLUMNS.map(c=>`<li><a href="${columnPath(c)}">${esc(c.title)}</a></li>`).join("")}</ul>
-    <p><a class="more" href="${COLUMN}">コラムをすべて見る</a>・<a class="more" href="${GUIDE}">タイプと副業の一覧</a></p>
+    <p><a class="more" href="${COLUMN}">コラムをすべて見る</a>・<a class="more" href="${GUIDE}">タイプと副業の一覧</a>・<a class="more" href="${ZUKAN}">称号図鑑</a>${PUB.length?`・<a class="more" href="${CONDS}">条件から探す</a>`:""}</p>
     <h2 style="margin-top:22px">よくある質問</h2>
     <dl>${FAQ.map(([q,a])=>`<dt>${esc(q)}</dt><dd>${esc(a)}</dd>`).join("")}</dl>
     <script type="application/ld+json">${JSON.stringify({"@context":"https://schema.org","@type":"FAQPage",mainEntity:FAQ.map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))})}</script>`;
@@ -423,6 +435,117 @@ function landing(){
   if(out!==html)writeFileSync(join(ROOT,"index.html"),out);
 }
 
+// ---- 条件別ランディング ----
+const condCta=(href,c)=>`  <div class="cta card">
+    <p><b>${c?`「${esc(c.short)}」も条件にして診断する`:"あなたに向いてる副業を診断する"}</b></p>
+    <p class="sub">11問・約2分・登録不要。${c&&c.quiz?"この条件は、条件の質問にあらかじめ選んだ状態で始まります（変更もできます）。":"あなたのタイプと、今の時間とお金で始められる副業、最初の30日プランがわかります。"}</p>
+    <a class="primary" href="${href("")}${c&&c.quiz?`?cond=${c.slug}`:""}" data-track="page_to_quiz">無料で診断する</a>
+  </div>`;
+const specLine=j=>`<div class="meta"><span>初期費用 ${esc(j.costLabel)}</span><span>週${j.h}時間〜</span><span>半年後の目安 ${esc(j.month)}</span><span>始めやすさ <span class="stars">${stars(j.ease)}</span></span></div>`;
+function conditionPage(c){
+  const path=condPath(c),ok=JOBS.filter(c.ok),ng=JOBS.filter(j=>!c.ok(j));
+  const T=TYPES[c.chara];
+  const title=`${c.title}｜${NAME}`;
+  const desc=`${c.title}を${JOBS.length}種類から${ok.length}つ紹介。初期費用・必要な時間・収入の目安つきで、向かない副業とその理由、失敗しやすい点も正直にまとめました。`;
+  return page({path,title,desc,ptype:"condition",crumbs:[[NAME,""],["条件から探す",CONDS],[c.short,path]],body:href=>`
+  <article>
+  <header class="card hero">
+    ${charSVG(c.chara,true)}
+    <p class="sub">${esc(T.animal)}の「${esc(T.chara)}」より</p>
+    <h1>${esc(c.title)}</h1>
+    <p class="catch">${esc(T.catch)}</p>
+    <div class="left">${c.intro.map(p=>`<p>${esc(p)}</p>`).join("")}</div>
+  </header>
+
+  <section class="card">
+    <h2>条件に合う副業（${ok.length}つ）</h2>
+    <p class="sub">${JOBS.length}種類のうち、${esc(c.rule)}を、診断と同じ基準で選びました。</p>
+    <div class="jobs">${ok.map(j=>`
+      <a class="job" href="${href(jobPath(j))}"><b>${esc(j.name)}</b>${specLine(j)}${c.okNote&&c.okNote(j)?`<span class="sub">※${esc(c.okNote(j))}</span>`:""}<span class="more">始め方を見る →</span></a>`).join("")}
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>この条件に合わない副業（${ng.length}つ）</h2>
+    <p class="sub">条件だけで選ぶと、あとでつらくなる副業です。理由も書いておきます。</p>
+    ${ng.length?`<ul class="ngs">${ng.map(j=>`<li><a href="${href(jobPath(j))}">${esc(j.name)}</a><span class="sub">：${esc(c.why(j))}</span></li>`).join("")}</ul>`:`<p>${JOBS.length}種類すべてが条件に合います。</p>`}
+  </section>
+
+  <section class="card">
+    <h2>この条件で失敗しやすい点</h2>
+    <ul>${c.fail.map(s=>`<li>${esc(s)}</li>`).join("")}</ul>
+    <p>${esc(c.note)}</p>
+  </section>
+
+${condCta(href,c)}
+  <p class="sub"><a href="${href(CONDS)}">ほかの条件から探す</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a></p>
+  </article>
+`});
+}
+function conditionHub(){
+  const path=CONDS;
+  const title=`条件から副業を探す（顔出しなし・初期費用0円など）｜${NAME}`;
+  const desc=`顔出しなし、初期費用0円、週3時間以内、スマホだけなど、条件から向いてる副業を探せます。${JOBS.length}種類の副業を診断と同じ基準で絞り込んでいます。`;
+  return page({path,title,desc,ptype:"condition",crumbs:[[NAME,""],["条件から探す",path]],body:href=>`
+  <article>
+  <header class="card hero">
+    ${charSVG("S",true)}
+    <h1>条件から副業を探す</h1>
+    ${HUB_LEAD?`<p class="left">${esc(HUB_LEAD)}</p>`:""}
+  </header>
+  <section class="card">
+    <div class="jobs">${PUB.map(c=>`
+      <a class="job cond" href="${href(condPath(c))}">${charSVG(c.chara)}<span><b>${esc(c.title)}</b><span class="sub">${JOBS.filter(c.ok).length}つの副業</span></span></a>`).join("")}
+    </div>
+  </section>
+${condCta(href,null)}
+  </article>
+`});
+}
+
+// ---- 称号図鑑 ----
+function zukanPage(){
+  const path=ZUKAN;
+  const title=`称号図鑑｜全20種の副業タイプ称号一覧｜${NAME}`;
+  const desc=`${NAME}で出会える全20種の称号を、5タイプのキャラ別に紹介。診断すると獲得した称号が図鑑に記録され、集めた数が分かります。`;
+  const cards=(m,href)=>KEYS.filter(s=>s!==m).map(s=>`
+      <a class="zk" href="${href(typePath(m))}" data-code="${m}${s}">${charSVG(m)}<span class="zk-t"><b>${esc(titleOf(m,s))}</b><span class="sub">「${esc(TYPES[s].short)}」の素質：${esc(TYPES[s].str[0])}も強み</span></span><span class="zk-h">${esc(TYPES[m].animal)} × ${esc(TYPES[s].short)}の素質</span></a>`).join("");
+  return page({path,title,desc,ptype:"zukan",crumbs:[[NAME,""],["称号図鑑",path]],body:href=>`
+  <article>
+  <header class="card hero">
+    <div class="zk-line">${KEYS.map(k=>charSVG(k,true)).join("")}</div>
+    <h1>称号図鑑</h1>
+    <p class="catch" id="zkCount">全20種</p>
+    ${ZUKAN_LEAD?`<p class="left">${esc(ZUKAN_LEAD)}</p>`:""}
+    <p class="left sub">称号は「メインのタイプ」と「第2の素質」の組み合わせで決まります（5タイプ × 4素質 = 全20種）。どの称号が出る確率も同じ約5%です（全員が同じ確率で回答した場合の計算値）。診断した端末にだけ、獲得状況が記録されます。</p>
+    <p class="zk-badge" id="zkBadge" hidden>全20種コンプリート！</p>
+  </header>
+${KEYS.map(m=>`
+  <section class="card" id="zk-${TYPES[m].slug}">
+    <a class="pair" href="${href(typePath(m))}">${charSVG(m,true)}<span><b>${esc(typeLabel(m))}</b><br><span class="sub">${esc(TYPES[m].catch)}</span></span></a>
+    <div class="zk-grid">${cards(m,href)}
+    </div>
+  </section>`).join("")}
+
+${condCta(href,null)}
+  </article>
+  <script>
+  (function(){
+    var got=[];try{var a=JSON.parse(localStorage.getItem("shindan-titles"));if(Array.isArray(a))got=a}catch(e){}
+    var cards=document.querySelectorAll(".zk"),n=0,rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+    cards.forEach(function(el,i){
+      var on=got.indexOf(el.dataset.code)>=0;
+      if(on){n++;el.classList.add("got");if(!rm)el.style.animationDelay=(n*.05)+"s"}
+      else{el.classList.add("lock");el.querySelector(".zk-t").innerHTML="<b>？？？</b>";el.setAttribute("aria-label","未獲得の称号："+el.querySelector(".zk-h").textContent)}
+    });
+    document.getElementById("zkCount").textContent="獲得 "+n+" ／ 20";
+    if(n===cards.length)document.getElementById("zkBadge").hidden=false;
+    if(window.gtag)gtag("event","zukan_view",{got:n});
+  })();
+  </script>
+`});
+}
+
 // ---- 書き出し ----
 rmSync(join(ROOT,BASE),{recursive:true,force:true});
 const out=[];
@@ -432,6 +555,8 @@ KEYS.forEach(k=>write(typePath(k),typePage(k)));
 JOBS.forEach(j=>write(jobPath(j),jobPage(j)));
 write(COLUMN,columnIndex());
 COLUMNS.forEach(c=>write(columnPath(c),columnPage(c)));
+write(ZUKAN,zukanPage());
+if(PUB.length){write(CONDS,conditionHub());PUB.forEach(c=>write(condPath(c),conditionPage(c)))}
 write(PRIVACY,privacyPage());write(ABOUT,aboutPage());
 
 writeFileSync(join(ROOT,"sitemap.xml"),`<?xml version="1.0" encoding="UTF-8"?>

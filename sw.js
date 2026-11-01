@@ -2,7 +2,7 @@
 // 結果とチェックはブラウザの localStorage にあるので、トップページ（index.html）と画像・CSS がキャッシュにあれば読める。
 // 外部サイト（広告リンク先、Google アナリティクスなど）は扱わず、そのままネットワークへ。
 // キャッシュの中身を変えたいときは VERSION を上げる。
-const VERSION="v1";
+const VERSION="v2";
 const CORE=`shindan-core-${VERSION}`,RUN=`shindan-run-${VERSION}`;
 const PRECACHE=["./","assets/icons/icon-192.png","assets/icons/icon-512.png"];
 
