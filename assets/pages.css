@@ -1,3 +1,4 @@
+[hidden]{display:none!important}
 /* タイプ別・副業別の解説ページ用。色と大きさは index.html と揃える */
 :root{--bg:#f7f5f0;--card:#fff;--text:#232220;--sub:#57534c;--accent:#b8460f;--on-accent:#fff;color-scheme:light dark;--accent-soft:#fbe9df;--line:#e6e1d8;--good:#2f8f5b}
 @media (prefers-color-scheme:dark){:root{--bg:#1a1917;--card:#252421;--text:#efece6;--sub:#c2bdb3;--accent:#f08a55;--on-accent:#1a1917;--accent-soft:#3a2a21;--line:#3a3833;--good:#5cc28a}}
