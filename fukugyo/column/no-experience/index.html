@@ -29,7 +29,7 @@ if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim()})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -40,6 +40,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <article>
   <header class="card">
     <h1>在宅でできる未経験OKの副業5選｜初期費用0円から</h1>
+    <p class="sub"><time datetime="2026-10-29">2026年10月29日更新</time></p>
     <p>特別なスキルがなくても、家から始められる副業はあります。初期費用0円で、最初の1件まで短いものを5つ選びました。</p>
   </header>
 
@@ -47,6 +48,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <h2>未経験で選ぶときの3つの基準</h2>
     <ol><li>初期費用が0円か、ごく少ない</li><li>やることの手順がはっきりしている</li><li>最初の収入まで1か月前後</li></ol>
     <p>この3つを満たす副業なら、合わなかったときもやめやすく、損がほとんど出ません。</p>
+    <div class="cta mid"><p><b>5つのうち、あなたに向いているのはどれ？</b></p><p class="sub">11問・約2分・登録不要。今の時間とお金で始められる副業と、最初の30日プランがわかります。</p><a class="primary" href="../../../" data-track="page_to_quiz" data-place="column_mid">無料で診断する</a></div>
   </section>
   <section class="card">
     <h2>1. 不用品のフリマ販売</h2>
@@ -82,7 +84,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <h2>最初の1件を取るコツ</h2>
     <ul><li>プロフィールに、対応できる曜日と時間を具体的に書く</li><li>最初は単価より、評価（実績）を3〜5件集めることを優先する</li><li>応募文は、相手の募集文の言葉を使って短く書く</li></ul>
     <p>クラウドソーシングには、未経験歓迎の案件が多くあります。登録は無料です。</p>
-    <ul class="aff"><li><a href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY" target="_blank" rel="sponsored noopener" data-track="affiliate_click">クラウドソーシングに無料登録 →</a></li></ul>
+    <div class="aff"><a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="CROWD" data-place="column"><span class="svc-t"><b>クラウディア</b><span>ライター・入力・事務など在宅の案件を無料で探せる</span></span><span class="svc-b">クラウディアに無料登録</span></a></div>
     <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>
   </section>
   </article>

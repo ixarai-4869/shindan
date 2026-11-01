@@ -109,6 +109,16 @@ ul{padding-left:1.2em;margin:.3em 0}
 .plan input{width:20px;height:20px;margin:3px 0 0;flex:none;accent-color:var(--accent)}
 .plan .day{flex:none;width:3.6em;font-size:.8rem;font-weight:600;color:var(--accent);padding-top:2px}
 .plan .done span:last-child{color:var(--sub);text-decoration:line-through}
+.svc{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border:1px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:10px 12px;margin:8px 0 2px;color:var(--text);text-decoration:none}
+.svc-t{display:flex;flex-direction:column;min-width:12em;flex:1}
+.svc-t span{font-size:.82rem;color:var(--sub)}
+.svc-b{background:var(--accent);color:#fff;border-radius:999px;padding:7px 16px;font-weight:600;font-size:.88rem;white-space:nowrap}
+.plan a.svc{display:flex;margin:8px 0 2px 30px;color:var(--text);font-weight:400;font-size:1rem}
+.svc-b{color:#fff}
+.first{border:2px solid var(--accent)}
+.first h2{margin-top:2px}
+.kicker{margin:0;font-size:.8rem;font-weight:700;color:var(--accent);letter-spacing:.05em}
+.step1 .day{font-weight:700;color:var(--accent);margin-right:8px}
 .plan a{display:inline-block;margin:4px 0 0 calc(30px + 3.6em);color:var(--accent);font-weight:600;font-size:.9rem}
 .row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.9rem}
 .row b{width:6.5em;font-weight:500}
@@ -231,6 +241,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     </div>
 
     <div class="card vs" id="vsCard" hidden></div>
+    <div class="card first" id="firstStep" hidden></div>
 
     <div id="startHere" class="center" hidden><a class="primary" href="./" id="tryMe">あなたも診断する</a></div>
     <div id="backMine" class="center" hidden><button class="primary" id="backMineBtn">さっきの結果に戻る</button></div>
@@ -263,6 +274,8 @@ ul{padding-left:1.2em;margin:.3em 0}
       <h2 id="planTitle"></h2>
       <p class="sub" id="planProg"></p>
       <ul class="plan" id="rplan"></ul>
+      <button class="opt" id="planCal" style="text-align:center">予定をカレンダーに入れて、毎日リマインドを受け取る</button>
+      <p class="sub" style="margin:0 0 8px;text-align:center">今日から各ステップの日の20時に、スマホやPCのカレンダーで通知されます（登録不要）</p>
       <p class="pr" style="margin-bottom:0">チェックはこの端末に保存されます。PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
     </div>
     <div class="card">
@@ -312,7 +325,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     </div>
   </section>
 
-  <p class="center" style="margin-top:32px"><a class="more" href="fukugyo/guide/">タイプと副業の一覧を見る</a>・<a class="more" href="fukugyo/column/">副業の悩みコラム</a></p>
+  <p class="center" id="footLinks" style="margin-top:32px"><a class="more" href="fukugyo/guide/">タイプと副業の一覧を見る</a>・<a class="more" href="fukugyo/column/">副業の悩みコラム</a></p>
   <p class="pr" style="margin-top:32px">この診断は娯楽・参考用です。収益を保証するものではありません。</p>
   <details class="pr policy">
     <summary>プライバシーポリシー・免責事項</summary>
@@ -418,17 +431,21 @@ const KEYS=Object.keys(TYPES);
 
 // ---- アフィリエイトリンク（#REPLACE_… を本番のURLに差し替える。#REPLACE_ のままの枠は表示しない） ----
 const LINKS={
-  BLOG:["ブログをはじめる（レンタルサーバー）","#REPLACE_BLOG"],
-  ASP:["アフィリエイト（ASP）に無料登録","https://px.a8.net/svt/ejp?a8mat=4BEPPX+FWR0QA+0K+105NKI"],
-  VIDEO:["動画編集ソフト・ツール","#REPLACE_VIDEO"],
-  MARKET:["スキル・作品販売サービス","https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6"],
-  TOOL:["デザイン・制作ツール","#REPLACE_TOOL"],
-  FURIMA:["フリマ・オークションの相場を調べる（無料登録）","https://px.a8.net/svt/ejp?a8mat=4BEPPX+DTQEIA+2990+6ARKY"],
-  SHIP:["梱包資材・発送用品を楽天市場で探す","https://rpx.a8.net/svt/ejp?a8mat=4BEPPX+AEHOAA+2HOM+6B70I&rakuten=y&a8ejpredirect=http%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa26102675013_4BEPPX_AEHOAA_2HOM_6B70I%3Fpc%3Dhttp%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F"],
-  CROWD:["クラウドソーシングに無料登録","https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY"],
-  BIZ:["フリーランス向けの報酬受け取り・保険（無料登録）","https://px.a8.net/svt/ejp?a8mat=4BEQHQ+OESKY+47L8+61C2Q"],
-  LEARN:["在宅ワーク向け学習サービス","#REPLACE_LEARN"]
+  // svc=サービス名, label=ボタンの文言, why=選ぶ理由（一言）, url=広告リンク
+  BLOG:{svc:"レンタルサーバー",label:"レンタルサーバーを見る",why:"ブログを自分のものとして育てられる",url:"#REPLACE_BLOG"},
+  ASP:{svc:"A8.net",label:"A8.netに無料登録",why:"国内最大級のASP。紹介できる広告を無料で探せる",url:"https://px.a8.net/svt/ejp?a8mat=4BEPPX+FWR0QA+0K+105NKI"},
+  VIDEO:{svc:"動画編集ソフト",label:"動画編集ソフトを見る",why:"最初の1本を作るための道具",url:"#REPLACE_VIDEO"},
+  MARKET:{svc:"クラウディア（出品）",label:"クラウディアに無料で出品",why:"作ったものやスキルを無料で出品できる",url:"https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6"},
+  TOOL:{svc:"デザイン・制作ツール",label:"ツールを見る",why:"無料で作品づくりを始められる",url:"#REPLACE_TOOL"},
+  FURIMA:{svc:"オークファン",label:"オークファンに無料登録",why:"フリマ・オークションの落札相場をまとめて調べられる",url:"https://px.a8.net/svt/ejp?a8mat=4BEPPX+DTQEIA+2990+6ARKY"},
+  CROWD:{svc:"クラウディア",label:"クラウディアに無料登録",why:"ライター・入力・事務など在宅の案件を無料で探せる",url:"https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY"},
+  BIZ:{svc:"FREENANCE（フリーナンス）",label:"FREENANCEの口座を無料で開設",why:"副業の報酬を受け取る口座を生活費と分けられる",url:"https://px.a8.net/svt/ejp?a8mat=4BEQHQ+OESKY+47L8+61C2Q"},
+  LEARN:{svc:"在宅ワーク向け学習サービス",label:"学習サービスを見る",why:"足りないスキルを1つだけ短く学べる",url:"#REPLACE_LEARN"},
+  TAX:{svc:"確定申告ソフト",label:"確定申告ソフトを見る",why:"経費の記録から申告書づくりまでまとめてできる",url:"#REPLACE_TAX"}
 };
+const live=k=>!!(k&&LINKS[k]&&!LINKS[k].url.startsWith("#REPLACE"));
+// サービス名＋選ぶ理由＋ボタンのカード。place は計測用（どこに置いたリンクか）
+function svcCard(k,place,extra){const L=LINKS[k];return `<a class="svc" href="${L.url}" target="_blank" rel="sponsored noopener" data-key="${k}" data-place="${place}"${extra||""}><span class="svc-t"><b>${L.svc}</b><span>${L.why}</span></span><span class="svc-b">${L.label}</span></a>`}
 
 // ---- 副業カタログ ----
 // cost: 必要な初期費用（0=0円, 1=1万円まで, 2=5万円くらいまで）
@@ -461,19 +478,19 @@ const JOBS=[
   plan:[[1,"無料のデザインツールに登録し、テンプレートを3つ触ってみる","TOOL"],[3,"自分が欲しかったもの（家計簿、名刺など）を1つ作る"],[7,"作品販売サービスに無料で出品する","MARKET"],[14,"作品を合計5つに。同じジャンルで揃える"],[21,"売れている人の作品名と説明文を見て、自分の説明を直す"],[30,"10作品を目標に。見られた作品の傾向をメモする"]]},
  {id:"handmade",t:"M",name:"ハンドメイド販売",cost:1,costLabel:"数千円〜1万円",h:4,face:0,first:"1か月前後",month:"月0〜2万円",ease:3,
   real:"材料費と販売手数料（10%前後）を引くと、利益は売値の3〜5割が目安です。写真の撮り方で売れ行きが大きく変わります。",
-  plan:[[1,"作れるものを3つ書き出し、一番材料費が安いものを選ぶ"],[3,"試作品を1つ作り、材料費と作業時間を記録する"],[7,"自然光で写真を撮り、作品販売サービスに出品する","MARKET"],[10,"梱包資材を用意しておく","SHIP"],[14,"出品を3点に。同じジャンルの人気作品の値段を調べる"],[21,"売れなければ写真と作品名を変えてみる"],[30,"時給を計算し、値段か作り方を見直す"]]},
+  plan:[[1,"作れるものを3つ書き出し、一番材料費が安いものを選ぶ"],[3,"試作品を1つ作り、材料費と作業時間を記録する"],[7,"自然光で写真を撮り、作品販売サービスに出品する","MARKET"],[10,"梱包資材を用意しておく"],[14,"出品を3点に。同じジャンルの人気作品の値段を調べる"],[21,"売れなければ写真と作品名を変えてみる"],[30,"時給を計算し、値段か作り方を見直す"]]},
  {id:"nocode",t:"M",name:"ノーコード制作代行",cost:0,costLabel:"0円",h:5,face:0,first:"1〜2か月",month:"月1〜5万円",ease:2,
   real:"プログラミングなしでホームページや予約フォームを作る仕事です。作例がないと受注は難しいので、まず自分用に1つ作ります。",
   plan:[[1,"ノーコードのサイト作成ツールに登録し、チュートリアルを1つ終える","TOOL"],[5,"自分用の紹介ページを1つ作り、作例にする"],[10,"知り合いのお店や団体のページを、無料か格安で1つ作る"],[14,"クラウドソーシングに登録し、作例を載せる","CROWD"],[21,"小さめの制作案件に3件応募する"],[25,"報酬の受け取り方と、仕事のミスに備える保険を調べる","BIZ"],[30,"1件あたりの作業時間を記録し、料金を決める"]]},
  {id:"furima",t:"S",name:"不用品のフリマ販売",cost:0,costLabel:"0円",h:1,face:0,first:"1週間前後",month:"数千円〜1万円（一時的）",ease:5,
   real:"家の不用品が尽きたら終わる、練習用の副業です。売れる流れを体で覚えたら、次の仕入れ型に進むかを決めましょう。",
-  plan:[[1,"フリマアプリに登録し、家の不用品を5つ選ぶ","FURIMA"],[2,"同じ商品の売れた価格を調べ、少し下の値段で3つ出品する"],[4,"梱包資材を用意しておく","SHIP"],[7,"売れたら発送。売れなければ写真と値段を見直す"],[14,"残りも出品し、売れやすいカテゴリをメモする"],[30,"売上と手間を振り返り、仕入れに進むか決める"]]},
+  plan:[[1,"フリマアプリに登録し、家の不用品を5つ選ぶ"],[2,"同じ商品の売れた価格を調べ、少し下の値段で3つ出品する","FURIMA"],[4,"梱包資材を用意しておく"],[7,"売れたら発送。売れなければ写真と値段を見直す"],[14,"残りも出品し、売れやすいカテゴリをメモする"],[30,"売上と手間を振り返り、仕入れに進むか決める"]]},
  {id:"sedori",t:"S",name:"せどり（仕入れて転売）",cost:2,costLabel:"3〜5万円",h:5,face:0,first:"1か月前後",month:"月1〜5万円",ease:3,
   real:"仕入れ資金が必要で、売れ残ると赤字になります。中古品を継続的に仕入れて売るには古物商許可が必要です。",
-  plan:[[1,"フリマで不用品を3つ売り、出品と発送の流れを体験する","FURIMA"],[5,"古物商許可が必要かを確認する（中古品を仕入れるなら必要）"],[7,"売れた価格の履歴を見ながら、仕入れ候補を10個リストにする"],[10,"1万円以内で3点だけ仕入れる（売れてから次を仕入れる）","SHIP"],[21,"売れた商品と売れない商品を比べ、ルールを書き出す"],[30,"利益率と回転の早さから、続けるカテゴリを1つに絞る"]]},
+  plan:[[1,"フリマで不用品を3つ売り、出品と発送の流れを体験する"],[5,"古物商許可が必要かを確認する（中古品を仕入れるなら必要）"],[7,"売れた価格の履歴を見ながら、仕入れ候補を10個リストにする","FURIMA"],[10,"1万円以内で3点だけ仕入れる（売れてから次を仕入れる）"],[21,"売れた商品と売れない商品を比べ、ルールを書き出す"],[30,"利益率と回転の早さから、続けるカテゴリを1つに絞る"]]},
  {id:"used",t:"S",name:"古着・古本の目利き転売",cost:1,costLabel:"数千円〜1万円",h:3,face:0,first:"1か月前後",month:"月0〜2万円",ease:3,
   real:"1点の利益は数百円〜数千円。詳しいジャンルが1つあると強いです。継続して仕入れるなら古物商許可が必要です。",
-  plan:[[1,"詳しいジャンルを1つ決め、フリマで売れた価格を20件調べる","FURIMA"],[3,"近くのリサイクルショップを2店回り、値段の差を見る"],[7,"5,000円以内で3点仕入れて出品する","SHIP"],[14,"売れた理由をメモし、仕入れ値の上限を決める"],[21,"古物商許可について調べ、続けるなら申請の準備をする"],[30,"1か月の利益と作業時間から、続けるか判断する"]]},
+  plan:[[1,"詳しいジャンルを1つ決め、フリマで売れた価格を20件調べる","FURIMA"],[3,"近くのリサイクルショップを2店回り、値段の差を見る"],[7,"5,000円以内で3点仕入れて出品する"],[14,"売れた理由をメモし、仕入れ値の上限を決める"],[21,"古物商許可について調べ、続けるなら申請の準備をする"],[30,"1か月の利益と作業時間から、続けるか判断する"]]},
  {id:"data",t:"C",name:"データ入力・事務代行",cost:0,costLabel:"0円",h:3,face:0,first:"2週間前後",month:"月5,000〜2万円",ease:5,
   real:"時給に直すと数百円の案件も多いです。最初は単価より実績づくりと割り切り、評価がたまったら単価の高い案件に移ります。",
   plan:[[1,"クラウドソーシングに登録し、本人確認を済ませる","CROWD"],[2,"プロフィールに使えるソフトと作業スピードを具体的に書く"],[3,"タスク形式の簡単な作業を3件こなす"],[7,"プロジェクト形式の入力案件に3件応募する"],[14,"1件目を納品し、評価をもらう"],[21,"評価を添えて、単価が少し高い案件に応募する"],[25,"報酬の受け取り方と、仕事のミスに備える保険を調べる","BIZ"],[30,"1か月の時給を計算し、伸ばしたいスキルを決める","LEARN"]]},
@@ -550,7 +567,7 @@ const VS_KEY="shindan-vs";
 let vs=null;
 try{const v=sessionStorage.getItem(VS_KEY);if(v&&TYPES[v[0]]&&TYPES[v[1]])vs={m:v[0],s:v[1]}}catch(e){}
 
-function show(id){["start","quiz","loading","result"].forEach(s=>$(s).hidden=s!==id);document.querySelector("main").classList.toggle("wide",id==="result");scrollTo(0,0)}
+function show(id){["start","quiz","loading","result"].forEach(s=>$(s).hidden=s!==id);$("footLinks").hidden=id==="quiz"||id==="loading";document.querySelector("main").classList.toggle("wide",id==="result");scrollTo(0,0)}
 function shuffle(a){a=a.slice();for(let j=a.length-1;j>0;j--){const r=Math.random()*(j+1)|0;[a[j],a[r]]=[a[r],a[j]]}return a}
 
 // 質問ごとに履歴を積むので、スマホの「戻る」ジェスチャーやブラウザの戻るで前の質問に戻れる
@@ -657,20 +674,65 @@ const PLAN_KEY="shindan-plan-";
 function loadDone(id){try{return JSON.parse(localStorage.getItem(PLAN_KEY+id))||[]}catch(e){return []}}
 function saveDone(id,d){try{localStorage.setItem(PLAN_KEY+id,JSON.stringify(d))}catch(e){}}
 
-function showPlan(id,main){
+// 広告リンクのクリックを、結果タイプ・副業・置き場所・リンク先ごとに計測する
+function bindAff(root,main,sub,job){
+  root.querySelectorAll("a[data-key]").forEach(a=>a.onclick=()=>track("affiliate_click",{link_key:a.dataset.key,place:a.dataset.place,type:main,result:main+sub,job:a.dataset.job||job}));
+}
+
+// 結果のすぐ下に置く「今日やる最初の一歩」。おすすめ順に、広告リンク付きのステップがある副業を探す
+function showFirstStep(list,main,sub,mode){
+  let hit=null;
+  if(mode==="own")for(const j of list){const st=j.plan.find(x=>live(x[2]));if(st){hit=[j,st];break}}
+  $("firstStep").hidden=!hit;
+  if(!hit)return;
+  const [j,[d,text,k]]=hit;
+  $("firstStep").innerHTML=`<p class="kicker">今日やる最初の一歩</p>
+    <h2>${j.name}を始めるなら、まずこれだけ</h2>
+    <p class="step1">${text}</p>
+    ${svcCard(k,"first_step",` data-job="${j.id}"`)}
+    <p class="pr" style="margin:6px 0 0">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>`;
+  bindAff($("firstStep"),main,sub,j.id);
+}
+
+// 30日プランを端末のカレンダーに入れる（.ics）。登録なしでリマインドを受け取れる
+let curPlan=null;
+function planIcs(){
+  const j=JOB[curPlan.id],t=new Date(),pad=n=>String(n).padStart(2,"0");
+  const ymd=d=>d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());
+  const esc=v=>v.replace(/[\\,;]/g,m=>"\\"+m);
+  const url=location.origin+location.pathname;
+  const ev=j.plan.map(([d,text],n)=>{
+    const day=new Date(t.getFullYear(),t.getMonth(),t.getDate()+d-1);
+    return ["BEGIN:VEVENT",`UID:shindan-${j.id}-${n}-${ymd(t)}@mini-shindan.com`,`DTSTAMP:${ymd(t)}T000000Z`,
+      `DTSTART:${ymd(day)}T200000`,"DURATION:PT30M",`SUMMARY:${esc(`【${j.name} ${d}日目】${text}`)}`,
+      `DESCRIPTION:${esc("向いてる副業診断の30日プランです。チェックはこちら: "+url)}`,
+      "BEGIN:VALARM","ACTION:DISPLAY","TRIGGER:PT0M",`DESCRIPTION:${esc(text)}`,"END:VALARM","END:VEVENT"].join("\r\n");
+  });
+  return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//mini-shindan//plan//JA","CALSCALE:GREGORIAN",...ev,"END:VCALENDAR"].join("\r\n")+"\r\n";
+}
+$("planCal").onclick=()=>{
+  if(!curPlan)return;
+  track("plan_calendar",{job:curPlan.id,result:curPlan.main+curPlan.sub});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([planIcs()],{type:"text/calendar"}));
+  a.download=`30days-${curPlan.id}.ics`;document.body.appendChild(a);a.click();a.remove();
+};
+
+function showPlan(id,main,sub){
+  curPlan={id,main,sub};
   const j=JOB[id],done=new Set(loadDone(id));
   [...$("rjobs").children].forEach(el=>el.classList.toggle("sel",el.dataset.id===id));
   $("planTitle").textContent=`${j.name}：最初の30日プラン`;
   const prog=()=>$("planProg").textContent=`${done.size} / ${j.plan.length} 完了`+(done.size===j.plan.length?"　30日、おつかれさまでした！":"");
   prog();
-  $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${lk&&!LINKS[lk][1].startsWith("#REPLACE")?`<a href="${LINKS[lk][1]}" target="_blank" rel="sponsored noopener">${LINKS[lk][0]} →</a>`:""}</li>`).join("");
+  $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${live(lk)?svcCard(lk,"plan"):""}</li>`).join("");
   $("rplan").querySelectorAll("input").forEach(c=>c.onchange=()=>{
     const n=+c.dataset.n;c.checked?done.add(n):done.delete(n);
     c.parentNode.classList.toggle("done",c.checked);
     saveDone(id,[...done]);prog();
     if(c.checked)track("plan_check",{job:id,step:n+1});
   });
-  $("rplan").querySelectorAll("a").forEach(a=>a.onclick=()=>track("affiliate_click",{type:main,job:id,link:a.textContent}));
+  bindAff($("rplan"),main,sub,id);
 }
 
 // 接頭辞 pre の3ボタン（preX・preLine・preCopy）に共有先を設定する
@@ -722,9 +784,10 @@ function showResult(main,sub,sc,mode,ci){
   $("rjobs").innerHTML=pj.list.map((j,n)=>`<div class="job" data-id="${j.id}"><b>${n+1}. ${j.name}${j.sub?`<span class="tag">${TYPES[sub].short}の素質から</span>`:""}</b>
     <div class="meta"><span>初期費用 ${j.costLabel}</span><span>週${j.h}時間〜</span><span>最初の収入まで ${j.first}</span><span>半年後の目安 ${j.month}</span><span>始めやすさ <span class="stars">${stars(j.ease)}</span></span></div>
     <p class="real">${j.real}</p><button>30日プランを見る</button><a class="more" href="fukugyo/job/${j.id}/">くわしく →</a></div>`).join("");
-  [...$("rjobs").children].forEach(el=>el.querySelector("button").onclick=()=>{showPlan(el.dataset.id,main);track("plan_view",{job:el.dataset.id});$("planCard").scrollIntoView({behavior:reduced?"auto":"smooth"})});
+  [...$("rjobs").children].forEach(el=>el.querySelector("button").onclick=()=>{showPlan(el.dataset.id,main,sub);track("plan_view",{job:el.dataset.id});$("planCard").scrollIntoView({behavior:reduced?"auto":"smooth"})});
   $("rout").innerHTML=pj.out.length?`<div class="out">今の条件では外したもの<ul>${pj.out.map(([j,w])=>`<li>${j.name}（${w}）</li>`).join("")}</ul></div>`:"";
-  showPlan(pj.list[0].id,main);
+  showPlan(pj.list[0].id,main,sub);
+  showFirstStep(pj.list,main,sub,mode);
   $("ravoidName").textContent=T.avoid[0];
   $("ravoid").textContent=T.avoid[1];
   if(sc){

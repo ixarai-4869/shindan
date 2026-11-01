@@ -29,7 +29,7 @@ if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim()})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -44,6 +44,13 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <div class="meta"><span>初期費用 0円</span><span>週2時間〜</span><span>最初の収入まで 1〜3か月</span><span>半年後の目安 月0〜1万円</span><span>始めやすさ <span class="stars">★★★★☆</span></span></div>
     <p>1点数百円の世界なので、収入は作品数に比例します。最初の10作品は売れなくても普通です。</p>
   </header>
+
+  <section class="card first">
+    <p class="kicker">今日やる最初の一歩</p>
+    <p>作品販売サービスに無料で出品する</p>
+    <a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="MARKET" data-place="first_step"><span class="svc-t"><b>クラウディア（出品）</b><span>作ったものやスキルを無料で出品できる</span></span><span class="svc-b">クラウディアに無料で出品</span></a>
+    <p class="pr">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>
+  </section>
 
   <section class="card">
     <h2>デザイン・テンプレート販売の目安</h2>
@@ -67,15 +74,9 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
 
   <section class="card">
     <h2>最初の30日プラン</h2>
-    <ol class="plan"><li><span class="day">1日目</span><span>無料のデザインツールに登録し、テンプレートを3つ触ってみる</span></li><li><span class="day">3日目</span><span>自分が欲しかったもの（家計簿、名刺など）を1つ作る</span></li><li><span class="day">7日目</span><span>作品販売サービスに無料で出品する<br><a href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click">スキル・作品販売サービス →</a></span></li><li><span class="day">14日目</span><span>作品を合計5つに。同じジャンルで揃える</span></li><li><span class="day">21日目</span><span>売れている人の作品名と説明文を見て、自分の説明を直す</span></li><li><span class="day">30日目</span><span>10作品を目標に。見られた作品の傾向をメモする</span></li></ol>
+    <ol class="plan"><li><span class="day">1日目</span><span>無料のデザインツールに登録し、テンプレートを3つ触ってみる</span></li><li><span class="day">3日目</span><span>自分が欲しかったもの（家計簿、名刺など）を1つ作る</span></li><li><span class="day">7日目</span><span>作品販売サービスに無料で出品する<a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="MARKET" data-place="plan"><span class="svc-t"><b>クラウディア（出品）</b><span>作ったものやスキルを無料で出品できる</span></span><span class="svc-b">クラウディアに無料で出品</span></a></span></li><li><span class="day">14日目</span><span>作品を合計5つに。同じジャンルで揃える</span></li><li><span class="day">21日目</span><span>売れている人の作品名と説明文を見て、自分の説明を直す</span></li><li><span class="day">30日目</span><span>10作品を目標に。見られた作品の傾向をメモする</span></li></ol>
     <p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
-  </section>
-
-  <section class="card">
-    <h2>デザイン・テンプレート販売を始めるのに使うサービス</h2>
-    <ul class="aff"><li><a href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click">スキル・作品販売サービス →</a></li></ul>
-    <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>
   </section>
 
   <section class="card">

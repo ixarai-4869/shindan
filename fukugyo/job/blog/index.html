@@ -29,7 +29,7 @@ if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim()})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -44,6 +44,13 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <div class="meta"><span>初期費用 月1,000円前後</span><span>週5時間〜</span><span>最初の収入まで 3〜6か月</span><span>半年後の目安 月0〜5,000円</span><span>始めやすさ <span class="stars">★★★☆☆</span></span></div>
     <p>最初の3か月はほぼ0円が普通です。検索から読まれ始めるのは30〜50記事あたりから。半年で月1万円を超える人は少数です。</p>
   </header>
+
+  <section class="card first">
+    <p class="kicker">今日やる最初の一歩</p>
+    <p>ASPに登録して、テーマに合う商品を3つ探す</p>
+    <a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+FWR0QA+0K+105NKI" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="ASP" data-place="first_step"><span class="svc-t"><b>A8.net</b><span>国内最大級のASP。紹介できる広告を無料で探せる</span></span><span class="svc-b">A8.netに無料登録</span></a>
+    <p class="pr">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>
+  </section>
 
   <section class="card">
     <h2>ブログアフィリエイトの目安</h2>
@@ -68,15 +75,9 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
 
   <section class="card">
     <h2>最初の30日プラン</h2>
-    <ol class="plan"><li><span class="day">1日目</span><span>書けそうなテーマを10個書き出し、一番続けられそうなものを選ぶ</span></li><li><span class="day">3日目</span><span>レンタルサーバーを契約し、ブログを開設する</span></li><li><span class="day">4日目</span><span>ASPに登録して、テーマに合う商品を3つ探す<br><a href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+FWR0QA+0K+105NKI" target="_blank" rel="sponsored noopener" data-track="affiliate_click">アフィリエイト（ASP）に無料登録 →</a></span></li><li><span class="day">7日目</span><span>1本目の記事（2,000字）を公開する</span></li><li><span class="day">14日目</span><span>記事を合計4本にする。週2本ペースを体に覚えさせる</span></li><li><span class="day">21日目</span><span>検索キーワードを意識した記事を1本書く</span></li><li><span class="day">30日目</span><span>記事8本を目標に。読まれた記事があれば同じ方向で続ける</span></li></ol>
+    <ol class="plan"><li><span class="day">1日目</span><span>書けそうなテーマを10個書き出し、一番続けられそうなものを選ぶ</span></li><li><span class="day">3日目</span><span>レンタルサーバーを契約し、ブログを開設する</span></li><li><span class="day">4日目</span><span>ASPに登録して、テーマに合う商品を3つ探す<a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+FWR0QA+0K+105NKI" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="ASP" data-place="plan"><span class="svc-t"><b>A8.net</b><span>国内最大級のASP。紹介できる広告を無料で探せる</span></span><span class="svc-b">A8.netに無料登録</span></a></span></li><li><span class="day">7日目</span><span>1本目の記事（2,000字）を公開する</span></li><li><span class="day">14日目</span><span>記事を合計4本にする。週2本ペースを体に覚えさせる</span></li><li><span class="day">21日目</span><span>検索キーワードを意識した記事を1本書く</span></li><li><span class="day">30日目</span><span>記事8本を目標に。読まれた記事があれば同じ方向で続ける</span></li></ol>
     <p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
-  </section>
-
-  <section class="card">
-    <h2>ブログアフィリエイトを始めるのに使うサービス</h2>
-    <ul class="aff"><li><a href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+FWR0QA+0K+105NKI" target="_blank" rel="sponsored noopener" data-track="affiliate_click">アフィリエイト（ASP）に無料登録 →</a></li></ul>
-    <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>
   </section>
 
   <section class="card">

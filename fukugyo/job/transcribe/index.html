@@ -29,7 +29,7 @@ if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim()})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -44,6 +44,13 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <div class="meta"><span>初期費用 0円</span><span>週2時間〜</span><span>最初の収入まで 2週間前後</span><span>半年後の目安 月5,000〜2万円</span><span>始めやすさ <span class="stars">★★★★☆</span></span></div>
     <p>文字起こしは音声1分あたり数十円からが多く、慣れるまでは時間がかかります。速く正確になるほど時給が上がります。</p>
   </header>
+
+  <section class="card first">
+    <p class="kicker">今日やる最初の一歩</p>
+    <p>クラウドソーシングに登録する</p>
+    <a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="CROWD" data-place="first_step"><span class="svc-t"><b>クラウディア</b><span>ライター・入力・事務など在宅の案件を無料で探せる</span></span><span class="svc-b">クラウディアに無料登録</span></a>
+    <p class="pr">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>
+  </section>
 
   <section class="card">
     <h2>リサーチ・文字起こしの目安</h2>
@@ -69,15 +76,9 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
 
   <section class="card">
     <h2>最初の30日プラン</h2>
-    <ol class="plan"><li><span class="day">1日目</span><span>クラウドソーシングに登録する<br><a href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY" target="_blank" rel="sponsored noopener" data-track="affiliate_click">クラウドソーシングに無料登録 →</a></span></li><li><span class="day">2日目</span><span>無料の文字起こし練習として、短い動画を5分ぶん書き起こし、かかった時間を測る</span></li><li><span class="day">5日目</span><span>文字起こしかリサーチの案件に3件応募する</span></li><li><span class="day">10日目</span><span>1件目を納品し、評価をもらう</span></li><li><span class="day">21日目</span><span>よく使う言い回しを辞書登録して、作業を速くする</span></li><li><span class="day">25日目</span><span>報酬の受け取り方と、仕事のミスに備える保険を調べる<br><a href="https://px.a8.net/svt/ejp?a8mat=4BEQHQ+OESKY+47L8+61C2Q" target="_blank" rel="sponsored noopener" data-track="affiliate_click">フリーランス向けの報酬受け取り・保険（無料登録） →</a></span></li><li><span class="day">30日目</span><span>時給を計算し、得意な分野の案件に絞る</span></li></ol>
+    <ol class="plan"><li><span class="day">1日目</span><span>クラウドソーシングに登録する<a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="CROWD" data-place="plan"><span class="svc-t"><b>クラウディア</b><span>ライター・入力・事務など在宅の案件を無料で探せる</span></span><span class="svc-b">クラウディアに無料登録</span></a></span></li><li><span class="day">2日目</span><span>無料の文字起こし練習として、短い動画を5分ぶん書き起こし、かかった時間を測る</span></li><li><span class="day">5日目</span><span>文字起こしかリサーチの案件に3件応募する</span></li><li><span class="day">10日目</span><span>1件目を納品し、評価をもらう</span></li><li><span class="day">21日目</span><span>よく使う言い回しを辞書登録して、作業を速くする</span></li><li><span class="day">25日目</span><span>報酬の受け取り方と、仕事のミスに備える保険を調べる<a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEQHQ+OESKY+47L8+61C2Q" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="BIZ" data-place="plan"><span class="svc-t"><b>FREENANCE（フリーナンス）</b><span>副業の報酬を受け取る口座を生活費と分けられる</span></span><span class="svc-b">FREENANCEの口座を無料で開設</span></a></span></li><li><span class="day">30日目</span><span>時給を計算し、得意な分野の案件に絞る</span></li></ol>
     <p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
-  </section>
-
-  <section class="card">
-    <h2>リサーチ・文字起こしを始めるのに使うサービス</h2>
-    <ul class="aff"><li><a href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+BZNACY+4F8I+BZ8OY" target="_blank" rel="sponsored noopener" data-track="affiliate_click">クラウドソーシングに無料登録 →</a></li><li><a href="https://px.a8.net/svt/ejp?a8mat=4BEQHQ+OESKY+47L8+61C2Q" target="_blank" rel="sponsored noopener" data-track="affiliate_click">フリーランス向けの報酬受け取り・保険（無料登録） →</a></li></ul>
-    <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>
   </section>
 
   <section class="card">

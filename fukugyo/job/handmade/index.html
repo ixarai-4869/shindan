@@ -29,7 +29,7 @@ if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim()})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -44,6 +44,13 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <div class="meta"><span>初期費用 数千円〜1万円</span><span>週4時間〜</span><span>最初の収入まで 1か月前後</span><span>半年後の目安 月0〜2万円</span><span>始めやすさ <span class="stars">★★★☆☆</span></span></div>
     <p>材料費と販売手数料（10%前後）を引くと、利益は売値の3〜5割が目安です。写真の撮り方で売れ行きが大きく変わります。</p>
   </header>
+
+  <section class="card first">
+    <p class="kicker">今日やる最初の一歩</p>
+    <p>自然光で写真を撮り、作品販売サービスに出品する</p>
+    <a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="MARKET" data-place="first_step"><span class="svc-t"><b>クラウディア（出品）</b><span>作ったものやスキルを無料で出品できる</span></span><span class="svc-b">クラウディアに無料で出品</span></a>
+    <p class="pr">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>
+  </section>
 
   <section class="card">
     <h2>ハンドメイド販売の目安</h2>
@@ -67,15 +74,9 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
 
   <section class="card">
     <h2>最初の30日プラン</h2>
-    <ol class="plan"><li><span class="day">1日目</span><span>作れるものを3つ書き出し、一番材料費が安いものを選ぶ</span></li><li><span class="day">3日目</span><span>試作品を1つ作り、材料費と作業時間を記録する</span></li><li><span class="day">7日目</span><span>自然光で写真を撮り、作品販売サービスに出品する<br><a href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click">スキル・作品販売サービス →</a></span></li><li><span class="day">10日目</span><span>梱包資材を用意しておく<br><a href="https://rpx.a8.net/svt/ejp?a8mat=4BEPPX+AEHOAA+2HOM+6B70I&rakuten=y&a8ejpredirect=http%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa26102675013_4BEPPX_AEHOAA_2HOM_6B70I%3Fpc%3Dhttp%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F" target="_blank" rel="sponsored noopener" data-track="affiliate_click">梱包資材・発送用品を楽天市場で探す →</a></span></li><li><span class="day">14日目</span><span>出品を3点に。同じジャンルの人気作品の値段を調べる</span></li><li><span class="day">21日目</span><span>売れなければ写真と作品名を変えてみる</span></li><li><span class="day">30日目</span><span>時給を計算し、値段か作り方を見直す</span></li></ol>
+    <ol class="plan"><li><span class="day">1日目</span><span>作れるものを3つ書き出し、一番材料費が安いものを選ぶ</span></li><li><span class="day">3日目</span><span>試作品を1つ作り、材料費と作業時間を記録する</span></li><li><span class="day">7日目</span><span>自然光で写真を撮り、作品販売サービスに出品する<a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="MARKET" data-place="plan"><span class="svc-t"><b>クラウディア（出品）</b><span>作ったものやスキルを無料で出品できる</span></span><span class="svc-b">クラウディアに無料で出品</span></a></span></li><li><span class="day">10日目</span><span>梱包資材を用意しておく</span></li><li><span class="day">14日目</span><span>出品を3点に。同じジャンルの人気作品の値段を調べる</span></li><li><span class="day">21日目</span><span>売れなければ写真と作品名を変えてみる</span></li><li><span class="day">30日目</span><span>時給を計算し、値段か作り方を見直す</span></li></ol>
     <p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
-  </section>
-
-  <section class="card">
-    <h2>ハンドメイド販売を始めるのに使うサービス</h2>
-    <ul class="aff"><li><a href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6" target="_blank" rel="sponsored noopener" data-track="affiliate_click">スキル・作品販売サービス →</a></li><li><a href="https://rpx.a8.net/svt/ejp?a8mat=4BEPPX+AEHOAA+2HOM+6B70I&rakuten=y&a8ejpredirect=http%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa26102675013_4BEPPX_AEHOAA_2HOM_6B70I%3Fpc%3Dhttp%253A%252F%252Fwww.rakuten.co.jp%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F" target="_blank" rel="sponsored noopener" data-track="affiliate_click">梱包資材・発送用品を楽天市場で探す →</a></li></ul>
-    <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>
   </section>
 
   <section class="card">
