@@ -59,6 +59,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,s
 .opt:focus-visible{border-color:var(--accent);outline:2px solid var(--accent);outline-offset:1px}
 /* タッチ端末では :hover が押した後も残るので、マウスのときだけ効かせる */
 @media (hover:hover){.opt:hover{border-color:var(--accent)}}
+.opt.preset{border-color:var(--accent)}.presetTag{display:block;color:var(--accent);font-size:.75rem;margin-top:2px}
 .opt.picked{background:var(--accent-soft);border-color:var(--accent);transform:scale(.98)}
 .opt.picked::after{content:"✓";margin-left:auto;padding-left:10px;color:var(--accent);font-weight:700}
 .opts.chosen .opt:not(.picked){opacity:.45;transition:opacity .15s}
@@ -412,6 +413,7 @@ ul{padding-left:1.2em;margin:.3em 0}
       <h2>称号コレクション</h2>
       <p class="sub" id="collNote"></p>
       <div class="coll" id="coll"></div>
+      <p class="sub" style="margin:8px 0 0"><a href="fukugyo/zukan/">称号図鑑で全20種を見る</a></p>
     </div>
     <button class="opt" id="again" style="text-align:center">もう一度診断する</button>
 
@@ -455,14 +457,14 @@ ul{padding-left:1.2em;margin:.3em 0}
     <div class="lp-all"><a href="fukugyo/job/writer/">Webライター</a><a href="fukugyo/job/blog/">ブログアフィリエイト</a><a href="fukugyo/job/note/">note・有料記事</a><a href="fukugyo/job/sns/">SNS発信＋商品紹介</a><a href="fukugyo/job/sns-agent/">SNS運用代行</a><a href="fukugyo/job/voice/">顔出しなしの動画・音声配信</a><a href="fukugyo/job/live/">ライブ配信</a><a href="fukugyo/job/template/">デザイン・テンプレート販売</a><a href="fukugyo/job/handmade/">ハンドメイド販売</a><a href="fukugyo/job/nocode/">ノーコード制作代行</a><a href="fukugyo/job/furima/">不用品のフリマ販売</a><a href="fukugyo/job/sedori/">せどり（仕入れて転売）</a><a href="fukugyo/job/used/">古着・古本の目利き転売</a><a href="fukugyo/job/data/">データ入力・事務代行</a><a href="fukugyo/job/secretary/">オンライン秘書</a><a href="fukugyo/job/transcribe/">リサーチ・文字起こし</a></div>
     <h2 style="margin-top:22px">副業の悩みコラム</h2>
     <ul class="cols"><li><a href="fukugyo/column/first-step/">副業は何から始める？未経験でも迷わない3ステップ</a></li><li><a href="fukugyo/column/company-secret/">副業は会社にバレる？住民税のしくみと始める前の確認ポイント</a></li><li><a href="fukugyo/column/expenses/">副業の経費はどこまで？認められやすいもの・認められないもの</a></li><li><a href="fukugyo/column/10000-yen/">副業で月1万円は現実的？種類別の期間と時間の目安</a></li><li><a href="fukugyo/column/no-experience/">在宅でできる未経験OKの副業5選｜初期費用0円から</a></li></ul>
-    <p><a class="more" href="fukugyo/column/">コラムをすべて見る</a>・<a class="more" href="fukugyo/guide/">タイプと副業の一覧</a></p>
+    <p><a class="more" href="fukugyo/column/">コラムをすべて見る</a>・<a class="more" href="fukugyo/guide/">タイプと副業の一覧</a>・<a class="more" href="fukugyo/zukan/">称号図鑑</a></p>
     <h2 style="margin-top:22px">よくある質問</h2>
     <dl><dt>診断は無料ですか？</dt><dd>はい、無料です。診断も、結果も、30日プランも、お金はかかりません。</dd><dt>登録は必要ですか？</dt><dd>いいえ、登録もログインも不要です。メールアドレスなどの入力もありません。</dd><dt>結果は保存されますか？</dt><dd>結果と30日プランのチェックは、お使いの端末（ブラウザ）の中だけに保存されます。運営者のサーバーには送られません。ブラウザのデータを消すと、保存した結果も消えます。</dd><dt>どれくらい時間がかかりますか？</dt><dd>11問で、約2分です。選択肢をタップするだけで進みます。</dd><dt>診断結果は当たりますか？</dt><dd>この診断は娯楽・参考用です。タイプは回答の傾向から決めているもので、向き不向きを断定するものではありません。副業を選ぶときのきっかけにしてください。</dd><dt>副業で必ず稼げますか？</dt><dd>いいえ。収入は始め方や続けた期間で大きく変わり、最初の数か月はほとんど収入がないのがふつうです。サイトに書いている金額は一般的な目安で、収益を保証するものではありません。</dd><dt>広告が含まれているのはなぜですか？</dt><dd>サイトの運営費のため、アフィリエイト広告を載せています。広告リンクには「PR」を表示しています。診断の結果は広告の有無で変えていません。</dd></dl>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"診断は無料ですか？","acceptedAnswer":{"@type":"Answer","text":"はい、無料です。診断も、結果も、30日プランも、お金はかかりません。"}},{"@type":"Question","name":"登録は必要ですか？","acceptedAnswer":{"@type":"Answer","text":"いいえ、登録もログインも不要です。メールアドレスなどの入力もありません。"}},{"@type":"Question","name":"結果は保存されますか？","acceptedAnswer":{"@type":"Answer","text":"結果と30日プランのチェックは、お使いの端末（ブラウザ）の中だけに保存されます。運営者のサーバーには送られません。ブラウザのデータを消すと、保存した結果も消えます。"}},{"@type":"Question","name":"どれくらい時間がかかりますか？","acceptedAnswer":{"@type":"Answer","text":"11問で、約2分です。選択肢をタップするだけで進みます。"}},{"@type":"Question","name":"診断結果は当たりますか？","acceptedAnswer":{"@type":"Answer","text":"この診断は娯楽・参考用です。タイプは回答の傾向から決めているもので、向き不向きを断定するものではありません。副業を選ぶときのきっかけにしてください。"}},{"@type":"Question","name":"副業で必ず稼げますか？","acceptedAnswer":{"@type":"Answer","text":"いいえ。収入は始め方や続けた期間で大きく変わり、最初の数か月はほとんど収入がないのがふつうです。サイトに書いている金額は一般的な目安で、収益を保証するものではありません。"}},{"@type":"Question","name":"広告が含まれているのはなぜですか？","acceptedAnswer":{"@type":"Answer","text":"サイトの運営費のため、アフィリエイト広告を載せています。広告リンクには「PR」を表示しています。診断の結果は広告の有無で変えていません。"}}]}</script>
 <!--landing:end-->
   </section>
 
-  <p class="center" id="footLinks" style="margin-top:32px"><a class="more" href="fukugyo/guide/">タイプと副業の一覧を見る</a>・<a class="more" href="fukugyo/column/">副業の悩みコラム</a></p>
+  <p class="center" id="footLinks" style="margin-top:32px"><a class="more" href="fukugyo/guide/">タイプと副業の一覧を見る</a>・<a class="more" href="fukugyo/column/">副業の悩みコラム</a>・<a class="more" href="fukugyo/zukan/">称号図鑑</a></p>
   <footer class="foot" id="siteFoot">
     <p class="pr">この診断は娯楽・参考用です。収益を保証するものではありません。</p>
     <p><a href="privacy/">プライバシーポリシー・免責事項</a>・<a href="about/">運営者情報・広告について</a></p>
@@ -585,52 +587,52 @@ function svcCard(k,place,job){const L=LINKS[k];return `<a class="svc" href="${L.
 // h: 最低限ほしい週の時間, face: 0=顔も声も出さない, 1=声出しが必要, 2=顔出しが必要
 // plan: 最初の30日 [日目, やること, リンクキー?]
 const JOBS=[
- {id:"writer",t:"W",name:"Webライター",cost:0,costLabel:"0円",h:3,face:0,first:"2〜4週間",month:"月1〜3万円",ease:4,
+ {id:"writer",t:"W",name:"Webライター",cost:0,costLabel:"0円",h:3,face:0,first:"2〜4週間",month:"月1〜3万円",ease:4,wk:1,ph:0,hm:1,
   real:"最初は文字単価0.5〜1円の案件が中心で、3,000字書いて1,500〜3,000円ほど。実績が5件たまると単価を上げやすくなります。",
   plan:[[1,"クラウドソーシングに登録し、プロフィールに得意なテーマを3つ書く","CROWD"],[2,"「初心者歓迎」のライティング案件を10件読み、よく求められる条件をメモする"],[3,"見本記事を1本（1,500字）書いて、プロフィールに載せる"],[5,"案件に3件応募する。応募文は案件ごとに一言変える"],[10,"受注できなければ応募をさらに5件。テーマを1つ絞り直す"],[14,"最初の1本を納品し、評価をもらう"],[21,"同じクライアントに継続できるか聞いてみる"],[25,"報酬の受け取り方と、仕事のミスに備える保険を調べる","BIZ"],[30,"1か月の時給を計算し、次に狙う単価を決める"]]},
- {id:"blog",t:"W",name:"ブログアフィリエイト",cost:1,costLabel:"月1,000円前後",h:5,face:0,first:"3〜6か月",month:"月0〜5,000円",ease:3,
+ {id:"blog",t:"W",name:"ブログアフィリエイト",cost:1,costLabel:"月1,000円前後",h:5,face:0,first:"3〜6か月",month:"月0〜5,000円",ease:3,wk:1,ph:0,hm:1,
   real:"最初の3か月はほぼ0円が普通です。検索から読まれ始めるのは30〜50記事あたりから。半年で月1万円を超える人は少数です。",
   plan:[[1,"書けそうなテーマを10個書き出し、一番続けられそうなものを選ぶ"],[3,"レンタルサーバーを契約し、ブログを開設する","BLOG"],[4,"ASPに登録して、テーマに合う商品を3つ探す","ASP"],[7,"1本目の記事（2,000字）を公開する"],[14,"記事を合計4本にする。週2本ペースを体に覚えさせる"],[21,"検索キーワードを意識した記事を1本書く"],[30,"記事8本を目標に。読まれた記事があれば同じ方向で続ける"]]},
- {id:"note",t:"W",name:"note・有料記事",cost:0,costLabel:"0円",h:2,face:0,first:"1〜3か月",month:"月0〜1万円",ease:3,
+ {id:"note",t:"W",name:"note・有料記事",cost:0,costLabel:"0円",h:2,face:0,first:"1〜3か月",month:"月0〜1万円",ease:3,wk:1,ph:1,hm:1,
   real:"フォロワーがいない状態では有料記事はほぼ売れません。無料記事で読者を集めてから、一部を有料にするのが現実的です。",
   plan:[[1,"noteに登録し、自分が人より詳しいことを3つ書き出す"],[3,"無料記事を1本公開する（体験談が読まれやすい）"],[7,"無料記事を合計3本に。スキが多い記事を確認する"],[14,"反応が良いテーマで、もう一段くわしい記事を書く"],[21,"Xなどで記事を紹介し、読者を増やす"],[30,"一番反応が良いテーマで、300〜500円の有料記事を1本出す"]]},
- {id:"sns",t:"V",name:"SNS発信＋商品紹介",cost:0,costLabel:"0円",h:2,face:0,first:"3〜6か月",month:"月0〜1万円",ease:4,
+ {id:"sns",t:"V",name:"SNS発信＋商品紹介",cost:0,costLabel:"0円",h:2,face:0,first:"3〜6か月",month:"月0〜1万円",ease:4,wk:0,ph:1,hm:1,
   real:"フォロワー1,000人ほどまでは収入はほぼありません。毎日投稿を3か月続けられるかが分かれ目です。",
   plan:[[1,"発信のテーマを1つ決め、専用アカウントを作る"],[2,"同じテーマで伸びているアカウントを5つ見て、型をメモする"],[3,"毎日1投稿を始める（30日続けるのが目標）"],[5,"無料の運用ツールに登録し、予約投稿を試す","SNS"],[10,"反応が良かった投稿を3つ選び、共通点を書き出す"],[14,"ASPに登録し、テーマに合う商品を探す","ASP"],[21,"商品の正直な感想を1投稿してみる（PR表記を忘れずに）"],[30,"30投稿を振り返り、次の1か月のテーマを決める"]]},
- {id:"sns-agent",t:"V",name:"SNS運用代行",cost:0,costLabel:"0円",h:5,face:0,first:"1〜2か月",month:"月2〜5万円",ease:3,
+ {id:"sns-agent",t:"V",name:"SNS運用代行",cost:0,costLabel:"0円",h:5,face:0,first:"1〜2か月",month:"月2〜5万円",ease:3,wk:0,ph:0,hm:1,
   real:"お店や個人事業主のアカウントを代わりに運用する仕事です。自分のアカウントで伸ばした実績を見せられると受注しやすくなります。",
   plan:[[1,"クラウドソーシングに登録し、SNS運用の案件を10件読む","CROWD"],[3,"自分のアカウントで、投稿の作り方の見本を3つ作る"],[7,"身近なお店に「無料で1か月お手伝い」を提案してみる"],[14,"代行した投稿の反応を数字でまとめ、実績にする"],[21,"実績を添えて、有料の案件に3件応募する"],[30,"月額いくらで何投稿するか、自分の料金表を作る"]]},
- {id:"voice",t:"V",name:"顔出しなしの動画・音声配信",cost:1,costLabel:"0〜1万円（マイク）",h:5,face:1,first:"6か月〜",month:"月0〜1万円",ease:2,
+ {id:"voice",t:"V",name:"顔出しなしの動画・音声配信",cost:1,costLabel:"0〜1万円（マイク）",h:5,face:1,first:"6か月〜",month:"月0〜1万円",ease:2,wk:1,ph:0,hm:1,
   real:"YouTubeの広告収入は、登録者1,000人などの条件を満たすまでゼロです。最初の半年は練習期間と考えるのが現実的です。",
   plan:[[1,"テーマを1つ決め、同じジャンルの人気チャンネルを5つ見る"],[3,"動画編集ツールを用意し、使い方の動画を1本見る","VIDEO"],[7,"1本目（3分以内）を作って公開する"],[14,"2本目、3本目を公開。サムネイルを毎回変えて比べる"],[21,"再生が多かった動画の要素を書き出す"],[30,"週1本のペースを決め、次の5本のネタを用意する"]]},
- {id:"live",t:"V",name:"ライブ配信",cost:0,costLabel:"0円",h:3,face:2,first:"1〜3か月",month:"月0〜3万円",ease:3,
+ {id:"live",t:"V",name:"ライブ配信",cost:0,costLabel:"0円",h:3,face:2,first:"1〜3か月",month:"月0〜3万円",ease:3,wk:0,ph:1,hm:1,
   real:"投げ銭の収入は、毎回来てくれる常連の数でほぼ決まります。決まった時間に配信を続けることが一番の近道です。",
   plan:[[1,"配信アプリを2つ試し、合いそうな方を選ぶ"],[3,"配信する曜日と時間を決めて、プロフィールに書く"],[5,"1回目の配信（30分）をする。来た人の名前をメモする"],[14,"週3回の配信を続け、話題のリストを作る"],[21,"常連さんが喜んだ話題を中心に、配信の型を決める"],[30,"1か月の配信回数と収入を記録し、続けるか判断する"]]},
- {id:"template",t:"M",name:"デザイン・テンプレート販売",cost:0,costLabel:"0円",h:2,face:0,first:"1〜3か月",month:"月0〜1万円",ease:4,
+ {id:"template",t:"M",name:"デザイン・テンプレート販売",cost:0,costLabel:"0円",h:2,face:0,first:"1〜3か月",month:"月0〜1万円",ease:4,wk:1,ph:0,hm:1,
   real:"1点数百円の世界なので、収入は作品数に比例します。最初の10作品は売れなくても普通です。",
   plan:[[1,"無料のデザインツールに登録し、テンプレートを3つ触ってみる","TOOL"],[3,"自分が欲しかったもの（家計簿、名刺など）を1つ作る"],[7,"作品販売サービスに無料で出品する","MARKET"],[14,"作品を合計5つに。同じジャンルで揃える"],[21,"売れている人の作品名と説明文を見て、自分の説明を直す"],[30,"10作品を目標に。見られた作品の傾向をメモする"]]},
- {id:"handmade",t:"M",name:"ハンドメイド販売",cost:1,costLabel:"数千円〜1万円",h:4,face:0,first:"1か月前後",month:"月0〜2万円",ease:3,
+ {id:"handmade",t:"M",name:"ハンドメイド販売",cost:1,costLabel:"数千円〜1万円",h:4,face:0,first:"1か月前後",month:"月0〜2万円",ease:3,wk:1,ph:0,hm:0,
   real:"材料費と販売手数料（10%前後）を引くと、利益は売値の3〜5割が目安です。写真の撮り方で売れ行きが大きく変わります。",
   plan:[[1,"作れるものを3つ書き出し、一番材料費が安いものを選ぶ"],[3,"試作品を1つ作り、材料費と作業時間を記録する"],[7,"自然光で写真を撮り、作品販売サービスに出品する","HANDMADE"],[10,"梱包資材を用意しておく"],[14,"出品を3点に。同じジャンルの人気作品の値段を調べる"],[21,"売れなければ写真と作品名を変えてみる"],[25,"売れ始めたら、手数料を比べて自分のネットショップも検討する","SHOP"],[30,"時給を計算し、値段か作り方を見直す"]]},
- {id:"nocode",t:"M",name:"ノーコード制作代行",cost:0,costLabel:"0円",h:5,face:0,first:"1〜2か月",month:"月1〜5万円",ease:2,
+ {id:"nocode",t:"M",name:"ノーコード制作代行",cost:0,costLabel:"0円",h:5,face:0,first:"1〜2か月",month:"月1〜5万円",ease:2,wk:0,ph:0,hm:1,
   real:"プログラミングなしでホームページや予約フォームを作る仕事です。作例がないと受注は難しいので、まず自分用に1つ作ります。",
   plan:[[1,"ノーコードのサイト作成ツールに登録し、チュートリアルを1つ終える","TOOL"],[5,"自分用の紹介ページを1つ作り、作例にする"],[10,"知り合いのお店や団体のページを、無料か格安で1つ作る"],[14,"クラウドソーシングに登録し、作例を載せる","CROWD"],[21,"小さめの制作案件に3件応募する"],[25,"報酬の受け取り方と、仕事のミスに備える保険を調べる","BIZ"],[30,"1件あたりの作業時間を記録し、料金を決める"]]},
- {id:"furima",t:"S",name:"不用品のフリマ販売",cost:0,costLabel:"0円",h:1,face:0,first:"1週間前後",month:"数千円〜1万円（一時的）",ease:5,
+ {id:"furima",t:"S",name:"不用品のフリマ販売",cost:0,costLabel:"0円",h:1,face:0,first:"1週間前後",month:"数千円〜1万円（一時的）",ease:5,wk:1,ph:1,hm:0,
   real:"家の不用品が尽きたら終わる、練習用の副業です。売れる流れを体で覚えたら、次の仕入れ型に進むかを決めましょう。",
   plan:[[1,"フリマアプリに登録し、家の不用品を5つ選ぶ"],[2,"同じ商品の売れた価格を調べ、少し下の値段で3つ出品する","FURIMA"],[4,"梱包資材を用意しておく"],[7,"売れたら発送。売れなければ写真と値段を見直す"],[14,"残りも出品し、売れやすいカテゴリをメモする"],[30,"売上と手間を振り返り、仕入れに進むか決める"]]},
- {id:"sedori",t:"S",name:"せどり（仕入れて転売）",cost:2,costLabel:"3〜5万円",h:5,face:0,first:"1か月前後",month:"月1〜5万円",ease:3,
+ {id:"sedori",t:"S",name:"せどり（仕入れて転売）",cost:2,costLabel:"3〜5万円",h:5,face:0,first:"1か月前後",month:"月1〜5万円",ease:3,wk:0,ph:0,hm:0,
   real:"仕入れ資金が必要で、売れ残ると赤字になります。中古品を継続的に仕入れて売るには古物商許可が必要です。",
   plan:[[1,"フリマで不用品を3つ売り、出品と発送の流れを体験する"],[5,"古物商許可が必要かを確認する（中古品を仕入れるなら必要）"],[7,"売れた価格の履歴を見ながら、仕入れ候補を10個リストにする","FURIMA"],[10,"1万円以内で3点だけ仕入れる（売れてから次を仕入れる）"],[21,"売れた商品と売れない商品を比べ、ルールを書き出す"],[30,"利益率と回転の早さから、続けるカテゴリを1つに絞る"]]},
- {id:"used",t:"S",name:"古着・古本の目利き転売",cost:1,costLabel:"数千円〜1万円",h:3,face:0,first:"1か月前後",month:"月0〜2万円",ease:3,
+ {id:"used",t:"S",name:"古着・古本の目利き転売",cost:1,costLabel:"数千円〜1万円",h:3,face:0,first:"1か月前後",month:"月0〜2万円",ease:3,wk:1,ph:0,hm:0,
   real:"1点の利益は数百円〜数千円。詳しいジャンルが1つあると強いです。継続して仕入れるなら古物商許可が必要です。",
   plan:[[1,"詳しいジャンルを1つ決め、フリマで売れた価格を20件調べる","FURIMA"],[3,"近くのリサイクルショップを2店回り、値段の差を見る"],[7,"5,000円以内で3点仕入れて出品する"],[14,"売れた理由をメモし、仕入れ値の上限を決める"],[21,"古物商許可について調べ、続けるなら申請の準備をする"],[30,"1か月の利益と作業時間から、続けるか判断する"]]},
- {id:"data",t:"C",name:"データ入力・事務代行",cost:0,costLabel:"0円",h:3,face:0,first:"2週間前後",month:"月5,000〜2万円",ease:5,
+ {id:"data",t:"C",name:"データ入力・事務代行",cost:0,costLabel:"0円",h:3,face:0,first:"2週間前後",month:"月5,000〜2万円",ease:5,wk:0,ph:0,hm:1,
   real:"時給に直すと数百円の案件も多いです。最初は単価より実績づくりと割り切り、評価がたまったら単価の高い案件に移ります。",
   plan:[[1,"クラウドソーシングに登録し、本人確認を済ませる","CROWD"],[2,"プロフィールに使えるソフトと作業スピードを具体的に書く"],[3,"タスク形式の簡単な作業を3件こなす"],[7,"プロジェクト形式の入力案件に3件応募する"],[14,"1件目を納品し、評価をもらう"],[21,"評価を添えて、単価が少し高い案件に応募する"],[25,"報酬の受け取り方と、仕事のミスに備える保険を調べる","BIZ"],[30,"1か月の時給を計算し、伸ばしたいスキルを決める","LEARN"]]},
- {id:"secretary",t:"C",name:"オンライン秘書",cost:0,costLabel:"0円",h:7,face:0,first:"1か月前後",month:"月3〜8万円",ease:3,
+ {id:"secretary",t:"C",name:"オンライン秘書",cost:0,costLabel:"0円",h:7,face:0,first:"1か月前後",month:"月3〜8万円",ease:3,wk:0,ph:0,hm:1,
   real:"週10時間ほどの稼働を求められることが多く、その分収入は安定しやすいです。事務の経験がそのまま強みになります。",
   plan:[[1,"本業や過去の事務経験を、できる作業のリストにまとめる"],[3,"クラウドソーシングに登録し、秘書・アシスタント案件を読む","CROWD"],[7,"表計算やスケジュール管理など、足りないスキルを1つ学ぶ","LEARN"],[10,"案件に3件応募する。対応できる曜日と時間を明記する"],[21,"受注したら、毎日の作業報告を習慣にする"],[25,"報酬の受け取り方と、仕事のミスに備える保険を調べる","BIZ"],[30,"継続契約と時給を見直す"]]},
- {id:"transcribe",t:"C",name:"リサーチ・文字起こし",cost:0,costLabel:"0円",h:2,face:0,first:"2週間前後",month:"月5,000〜2万円",ease:4,
+ {id:"transcribe",t:"C",name:"リサーチ・文字起こし",cost:0,costLabel:"0円",h:2,face:0,first:"2週間前後",month:"月5,000〜2万円",ease:4,wk:1,ph:0,hm:1,
   real:"文字起こしは音声1分あたり数十円からが多く、慣れるまでは時間がかかります。速く正確になるほど時給が上がります。",
   plan:[[1,"クラウドソーシングに登録する","CROWD"],[2,"無料の文字起こし練習として、短い動画を5分ぶん書き起こし、かかった時間を測る"],[5,"文字起こしかリサーチの案件に3件応募する"],[10,"1件目を納品し、評価をもらう"],[21,"よく使う言い回しを辞書登録して、作業を速くする"],[25,"報酬の受け取り方と、仕事のミスに備える保険を調べる","BIZ"],[30,"時給を計算し、得意な分野の案件に絞る"]]}
 ];
@@ -695,6 +697,8 @@ const CHEER={3:"いい調子！",5:"あと半分！",8:"ここからは条件の
 const $=id=>document.getElementById(id);
 const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let i=0,answers=[],conds=[];
+// 条件別ページ(?cond=)から来たとき、条件の質問であらかじめ印をつける（回答は自動では進めない）
+const PRESET=(()=>{try{return {"no-face":{2:1},"no-voice":{2:0},"zero-cost":{1:0}}[new URLSearchParams(location.search).get("cond")]||null}catch(e){return null}})();
 // 相性診断の招待（友達の結果コード）。診断中に再読み込みしても消えないよう sessionStorage にも置く
 const VS_KEY="shindan-vs";
 let vs=null;
@@ -728,11 +732,13 @@ function render(){
   $("back").disabled=i===0;
   $("qlabel").hidden=!isCond;
   const box=$("opts");box.innerHTML="";box.classList.remove("chosen");
+  const pre=isCond&&PRESET&&PRESET[i-Q.length];
   const add=(text,fn)=>{const b=document.createElement("button");b.className="opt";b.textContent=text;b.onclick=()=>fn(b);box.appendChild(b)};
   if(isCond){
     const c=CQ[i-Q.length];
     $("q").textContent=c.q;
     c.o.forEach(([text],n)=>add(text,b=>pick(n,b)));
+    if(pre!=null&&box.children[pre]){box.children[pre].classList.add("preset");box.children[pre].insertAdjacentHTML("beforeend",'<small class="presetTag">条件ページで選んだ条件</small>')}
   }else{
     $("q").textContent=Q[i].q;
     shuffle(KEYS).forEach(k=>add(Q[i].a[k],b=>pick(k,b)));
