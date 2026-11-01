@@ -351,6 +351,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     <div class="card" id="planCard">
       <h2 id="planTitle"></h2>
       <p class="sub" id="planProg"></p>
+      <p class="sub" id="planNext" hidden><a id="planNextA" href="#">31〜90日の継続プランを見る</a></p>
       <ul class="plan" id="rplan"></ul>
       <button class="opt" id="planCal" style="text-align:center">予定をカレンダーに入れて、毎日リマインドを受け取る</button>
       <p class="sub" style="margin:0 0 8px;text-align:center">今日から各ステップの日の20時に、スマホやPCのカレンダーで通知されます（登録不要）</p>
@@ -459,7 +460,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     <div class="lp-all"><a href="fukugyo/job/writer/">Webライター</a><a href="fukugyo/job/blog/">ブログアフィリエイト</a><a href="fukugyo/job/note/">note・有料記事</a><a href="fukugyo/job/sns/">SNS発信＋商品紹介</a><a href="fukugyo/job/sns-agent/">SNS運用代行</a><a href="fukugyo/job/voice/">顔出しなしの動画・音声配信</a><a href="fukugyo/job/live/">ライブ配信</a><a href="fukugyo/job/template/">デザイン・テンプレート販売</a><a href="fukugyo/job/handmade/">ハンドメイド販売</a><a href="fukugyo/job/nocode/">ノーコード制作代行</a><a href="fukugyo/job/furima/">不用品のフリマ販売</a><a href="fukugyo/job/sedori/">せどり（仕入れて転売）</a><a href="fukugyo/job/used/">古着・古本の目利き転売</a><a href="fukugyo/job/data/">データ入力・事務代行</a><a href="fukugyo/job/secretary/">オンライン秘書</a><a href="fukugyo/job/transcribe/">リサーチ・文字起こし</a></div>
     <h2 style="margin-top:22px">副業の悩みコラム</h2>
     <ul class="cols"><li><a href="fukugyo/column/first-step/">副業は何から始める？未経験でも迷わない3ステップ</a></li><li><a href="fukugyo/column/company-secret/">副業は会社にバレる？住民税のしくみと始める前の確認ポイント</a></li><li><a href="fukugyo/column/expenses/">副業の経費はどこまで？認められやすいもの・認められないもの</a></li><li><a href="fukugyo/column/10000-yen/">副業で月1万円は現実的？種類別の期間と時間の目安</a></li><li><a href="fukugyo/column/no-experience/">在宅でできる未経験OKの副業5選｜初期費用0円から</a></li></ul>
-    <p><a class="more" href="fukugyo/column/">コラムをすべて見る</a>・<a class="more" href="fukugyo/guide/">タイプと副業の一覧</a>・<a class="more" href="fukugyo/zukan/">称号図鑑</a>・<a class="more" href="tools/">ミニ計算ツール</a>・<a class="more" href="fukugyo/conditions/">条件から探す</a></p>
+    <p><a class="more" href="fukugyo/column/">コラムをすべて見る</a>・<a class="more" href="fukugyo/guide/">タイプと副業の一覧</a>・<a class="more" href="fukugyo/zukan/">称号図鑑</a>・<a class="more" href="tools/">ミニ計算ツール</a>・<a class="more" href="tsumazuki/">つまずきタイプ診断</a>・<a class="more" href="fukugyo/conditions/">条件から探す</a></p>
     <h2 style="margin-top:22px">よくある質問</h2>
     <dl><dt>診断は無料ですか？</dt><dd>はい、無料です。診断も、結果も、30日プランも、お金はかかりません。</dd><dt>登録は必要ですか？</dt><dd>いいえ、登録もログインも不要です。メールアドレスなどの入力もありません。</dd><dt>結果は保存されますか？</dt><dd>結果と30日プランのチェックは、お使いの端末（ブラウザ）の中だけに保存されます。運営者のサーバーには送られません。ブラウザのデータを消すと、保存した結果も消えます。</dd><dt>どれくらい時間がかかりますか？</dt><dd>11問で、約2分です。選択肢をタップするだけで進みます。</dd><dt>診断結果は当たりますか？</dt><dd>この診断は娯楽・参考用です。タイプは回答の傾向から決めているもので、向き不向きを断定するものではありません。副業を選ぶときのきっかけにしてください。</dd><dt>副業で必ず稼げますか？</dt><dd>いいえ。収入は始め方や続けた期間で大きく変わり、最初の数か月はほとんど収入がないのがふつうです。サイトに書いている金額は一般的な目安で、収益を保証するものではありません。</dd><dt>広告が含まれているのはなぜですか？</dt><dd>サイトの運営費のため、アフィリエイト広告を載せています。広告リンクには「PR」を表示しています。診断の結果は広告の有無で変えていません。</dd></dl>
     <script>
@@ -480,7 +481,7 @@ ul{padding-left:1.2em;margin:.3em 0}
 <!--landing:end-->
   </section>
 
-  <p class="center" id="footLinks" style="margin-top:32px"><a class="more" href="fukugyo/guide/">タイプと副業の一覧を見る</a>・<a class="more" href="fukugyo/column/">副業の悩みコラム</a>・<a class="more" href="fukugyo/zukan/">称号図鑑</a>・<a class="more" href="tools/">ミニ計算ツール</a></p>
+  <p class="center" id="footLinks" style="margin-top:32px"><a class="more" href="fukugyo/guide/">タイプと副業の一覧を見る</a>・<a class="more" href="fukugyo/column/">副業の悩みコラム</a>・<a class="more" href="fukugyo/zukan/">称号図鑑</a>・<a class="more" href="tools/">ミニ計算ツール</a>・<a class="more" href="tsumazuki/">つまずきタイプ診断</a></p>
   <footer class="foot" id="siteFoot">
     <p class="pr">この診断は娯楽・参考用です。収益を保証するものではありません。</p>
     <p><a href="privacy/">プライバシーポリシー・免責事項</a>・<a href="about/">運営者情報・広告について</a></p>
@@ -836,6 +837,8 @@ try{const v=JSON.parse(localStorage.getItem(LAST_KEY));if(v&&TYPES[v.m]&&TYPES[v
 function showMine(){showResult(mine.m,mine.s,mine.sc,"own",mine.c)}
 
 const PLAN_KEY="shindan-plan-";
+// 31〜90日の継続プランがある副業（tools/continue-data.mjs と同じ。build-pages.mjs が食い違いを検出する）
+const CONT_IDS=["writer","blog","furima"];
 function loadDone(id){try{return JSON.parse(localStorage.getItem(PLAN_KEY+id))||[]}catch(e){return []}}
 function saveDone(id,d){try{localStorage.setItem(PLAN_KEY+id,JSON.stringify(d))}catch(e){}}
 
@@ -891,12 +894,15 @@ function showPlan(id,main,sub){
   $("planTitle").textContent=`${j.name}：最初の30日プラン`;
   const prog=()=>$("planProg").textContent=`${done.size} / ${j.plan.length} 完了`+(done.size===j.plan.length?"　30日、おつかれさまでした！":"");
   prog();
+  const nx=CONT_IDS.includes(id)&&done.size===j.plan.length;
+  $("planNext").hidden=!nx;if(nx)$("planNextA").href=`fukugyo/plan/${id}/`;
   $("planPr").hidden=!j.plan.some(x=>live(x[2]));
   $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${live(lk)?svcCard(lk,"plan_step",id):""}</li>`).join("");
   $("rplan").querySelectorAll("input").forEach(c=>c.onchange=()=>{
     const n=+c.dataset.n;c.checked?done.add(n):done.delete(n);
     c.parentNode.classList.toggle("done",c.checked);
     saveDone(id,[...done]);prog();
+    const nx2=CONT_IDS.includes(id)&&done.size===j.plan.length;$("planNext").hidden=!nx2;if(nx2)$("planNextA").href=`fukugyo/plan/${id}/`;
     track("plan_check",{job_id:id,done_count:done.size});
   });
   bindAff($("rplan"),main,sub);
@@ -1094,6 +1100,8 @@ function route(state,first){
     show("start");if(first)track("invite_view",{result:r});return;
   }
   if(valid){showResult(r[0],r[1],null,"shared",ci);if(first)track("shared_view",{result:r});return}
+  // 「30日プランを見直す」リンク（?plan=1）：前回の結果があれば、結果とプランをそのまま開く
+  if(p.get("plan")==="1"&&mine){history.pushState({r:1},"");showMine();return}
   $("resume").hidden=!mine;
   show("start");
 }
