@@ -39,8 +39,8 @@ if(GA_ID&&!NOTRACK){
 function track(name,params){if(window.gtag)gtag("event",name,params||{})}
 </script>
 <style>
-:root{--bg:#f7f5f0;--card:#fff;--text:#232220;--sub:#6b675f;--accent:#b8460f;--on-accent:#fff;color-scheme:light dark;--accent-soft:#fbe9df;--line:#e6e1d8;--good:#2f8f5b}
-@media (prefers-color-scheme:dark){:root{--bg:#1a1917;--card:#252421;--text:#efece6;--sub:#aaa59b;--accent:#f08a55;--on-accent:#1a1917;--accent-soft:#3a2a21;--line:#3a3833;--good:#5cc28a}}
+:root{--bg:#f7f5f0;--card:#fff;--text:#232220;--sub:#57534c;--accent:#b8460f;--on-accent:#fff;color-scheme:light dark;--accent-soft:#fbe9df;--line:#e6e1d8;--good:#2f8f5b}
+@media (prefers-color-scheme:dark){:root{--bg:#1a1917;--card:#252421;--text:#efece6;--sub:#c2bdb3;--accent:#f08a55;--on-accent:#1a1917;--accent-soft:#3a2a21;--line:#3a3833;--good:#5cc28a}}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{-webkit-tap-highlight-color:transparent;margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.7}
@@ -49,7 +49,7 @@ h1{font-size:1.5rem;margin:.4em 0;line-height:1.4}
 h2{font-size:1.05rem;margin:0 0 .5em}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
 .sub{color:var(--sub);font-size:.9rem}
-.pr{font-size:.78rem;color:var(--sub)}
+.pr{font-size:.8rem;color:var(--sub)}
 .policy{margin-top:8px}.policy summary{cursor:pointer}.policy h3{font-size:.85rem;margin:14px 0 4px}.policy p{margin:0 0 8px;line-height:1.7}.policy a{color:inherit}
 button{font:inherit;cursor:pointer}
 .opts{counter-reset:o}
@@ -355,7 +355,7 @@ ul{padding-left:1.2em;margin:.3em 0}
         <button class="opt" id="installBtn" style="text-align:center" hidden>ホーム画面に追加して、いつでもプランを開く</button>
         <p class="sub" id="installIos" style="margin:0 0 8px" hidden>ホーム画面に追加すると、アプリのようにプランを開けます。Safariの共有ボタンから「ホーム画面に追加」を選んでください。</p>
       </div>
-      <p class="pr" style="margin-bottom:0">チェックはこの端末に保存されます。PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
+      <p class="pr" style="margin-bottom:0">チェックはこの端末に保存されます。<span id="planPr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</span></p>
     </div>
     <div class="card shareCard" id="shareCard">
       <h2>結果をシェア</h2>
@@ -562,7 +562,7 @@ const KEYS=Object.keys(TYPES);
 // ---- アフィリエイトリンク（#REPLACE_… を本番のURLに差し替える。#REPLACE_ のままの枠は表示しない） ----
 const LINKS={
   // svc=サービス名, label=ボタンの文言, why=選ぶ理由（一言）, url=広告リンク
-  BLOG:{svc:"ConoHa WING（レンタルサーバー）",label:"ConoHa WINGを見る",why:"初期費用無料で、ブログを自分のものとして育てられる",url:"https://af.moshimo.com/af/c/click?a_id=5877314&p_id=2312&pc_id=4967&pl_id=80070"},
+  BLOG:{svc:"ConoHa WING（レンタルサーバー）",label:"ConoHa WINGを見る",why:"初期費用は無料ですが、月額の利用料がかかります。ブログを自分のものとして育てられる",url:"https://af.moshimo.com/af/c/click?a_id=5877314&p_id=2312&pc_id=4967&pl_id=80070"},
   ASP:{svc:"A8.net",label:"A8.netに無料登録",why:"国内最大級のASP。紹介できる広告を無料で探せる",url:"https://px.a8.net/svt/ejp?a8mat=4BEPPX+FWR0QA+0K+105NKI"},
   VIDEO:{svc:"動画編集ソフト",label:"動画編集ソフトを見る",why:"最初の1本を作るための道具",url:"#REPLACE_VIDEO"},
   MARKET:{svc:"クラウディア（出品）",label:"クラウディアに無料で出品",why:"作ったものやスキルを無料で出品できる",url:"https://px.a8.net/svt/ejp?a8mat=4BEPPX+AVR8TU+4F8I+ZTFR6"},
@@ -868,6 +868,7 @@ function showPlan(id,main,sub){
   $("planTitle").textContent=`${j.name}：最初の30日プラン`;
   const prog=()=>$("planProg").textContent=`${done.size} / ${j.plan.length} 完了`+(done.size===j.plan.length?"　30日、おつかれさまでした！":"");
   prog();
+  $("planPr").hidden=!j.plan.some(x=>live(x[2]));
   $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${live(lk)?svcCard(lk,"plan_step",id):""}</li>`).join("");
   $("rplan").querySelectorAll("input").forEach(c=>c.onchange=()=>{
     const n=+c.dataset.n;c.checked?done.add(n):done.delete(n);
