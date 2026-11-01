@@ -27,7 +27,9 @@ const GA_ID="G-PX3Q72XL5G";
 const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
 if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
-  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());
+  // URL に ?debug=1 を付けて開くと、GA4 の DebugView にイベントが出る（確認用）
+  gtag("config",GA_ID,/[?&]debug=1/.test(location.search)?{debug_mode:true}:{});
 }
 function track(name,params){if(window.gtag)gtag("event",name,params||{})}
 </script>
@@ -447,7 +449,7 @@ const LINKS={
 };
 const live=k=>!!(k&&LINKS[k]&&!LINKS[k].url.startsWith("#REPLACE"));
 // サービス名＋選ぶ理由＋ボタンのカード。place は計測用（どこに置いたリンクか）
-function svcCard(k,place,extra){const L=LINKS[k];return `<a class="svc" href="${L.url}" target="_blank" rel="sponsored noopener" data-key="${k}" data-place="${place}"${extra||""}><span class="svc-t"><b>${L.svc}</b><span>${L.why}</span></span><span class="svc-b">${L.label}</span></a>`}
+function svcCard(k,place,job){const L=LINKS[k];return `<a class="svc" href="${L.url}" target="_blank" rel="sponsored noopener" data-key="${k}" data-place="${place}" data-job="${job}"><span class="svc-t"><b>${L.svc}</b><span>${L.why}</span></span><span class="svc-b">${L.label}</span></a>`}
 
 // ---- 副業カタログ ----
 // cost: 必要な初期費用（0=0円, 1=1万円まで, 2=5万円くらいまで）
@@ -636,7 +638,7 @@ function analyze(){
   $("loadMsg").textContent=msgs[0];
   anaTick=setInterval(()=>{nodes.forEach(x=>x.classList.remove("on"));nodes[n%nodes.length].classList.add("on");n++;$("loadMsg").textContent=msgs[Math.min(n/5|0,2)]},180);
   anaDone=setTimeout(()=>{
-    clearInterval(anaTick);track("quiz_complete",{result:code,cond:conds.join(""),vs:vs?vs.m+vs.s:""});
+    clearInterval(anaTick);track("quiz_complete",{result_type:code,result_title:titleOf(r.order[0],r.order[1])});
     mine={m:r.order[0],s:r.order[1],sc:r.sc,c:conds.slice(),vs};
     const got=loadTitles();
     const isNew=!got.includes(code);
@@ -677,8 +679,9 @@ function loadDone(id){try{return JSON.parse(localStorage.getItem(PLAN_KEY+id))||
 function saveDone(id,d){try{localStorage.setItem(PLAN_KEY+id,JSON.stringify(d))}catch(e){}}
 
 // 広告リンクのクリックを、結果タイプ・副業・置き場所・リンク先ごとに計測する
-function bindAff(root,main,sub,job){
-  root.querySelectorAll("a[data-key]").forEach(a=>a.onclick=()=>track("affiliate_click",{link_key:a.dataset.key,place:a.dataset.place,type:main,result:main+sub,job:a.dataset.job||job}));
+function bindAff(root,main,sub){
+  // 最初の一歩カード（result_top）は first_step_click、それ以外の広告は affiliate_click（二重には送らない）
+  root.querySelectorAll("a[data-key]").forEach(a=>a.onclick=()=>track(a.dataset.place==="result_top"?"first_step_click":"affiliate_click",{job_id:a.dataset.job,service_name:LINKS[a.dataset.key].svc,placement:a.dataset.place,result_type:main+sub}));
 }
 
 // 結果のすぐ下に置く「今日やる最初の一歩」。おすすめ順に、広告リンク付きのステップがある副業を探す
@@ -691,9 +694,9 @@ function showFirstStep(list,main,sub,mode){
   $("firstStep").innerHTML=`<p class="kicker">今日やる最初の一歩</p>
     <h2>${j.name}を始めるなら、まずこれだけ</h2>
     <p class="step1">${text}</p>
-    ${svcCard(k,"first_step",` data-job="${j.id}"`)}
+    ${svcCard(k,"result_top",j.id)}
     <p class="pr" style="margin:6px 0 0">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>`;
-  bindAff($("firstStep"),main,sub,j.id);
+  bindAff($("firstStep"),main,sub);
 }
 
 // 30日プランを端末のカレンダーに入れる（.ics）。登録なしでリマインドを受け取れる
@@ -727,27 +730,28 @@ function showPlan(id,main,sub){
   $("planTitle").textContent=`${j.name}：最初の30日プラン`;
   const prog=()=>$("planProg").textContent=`${done.size} / ${j.plan.length} 完了`+(done.size===j.plan.length?"　30日、おつかれさまでした！":"");
   prog();
-  $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${live(lk)?svcCard(lk,"plan"):""}</li>`).join("");
+  $("rplan").innerHTML=j.plan.map(([d,text,lk],n)=>`<li><label class="${done.has(n)?"done":""}"><input type="checkbox" data-n="${n}"${done.has(n)?" checked":""}><span class="day">${d}日目</span><span>${text}</span></label>${live(lk)?svcCard(lk,"plan_step",id):""}</li>`).join("");
   $("rplan").querySelectorAll("input").forEach(c=>c.onchange=()=>{
     const n=+c.dataset.n;c.checked?done.add(n):done.delete(n);
     c.parentNode.classList.toggle("done",c.checked);
     saveDone(id,[...done]);prog();
-    if(c.checked)track("plan_check",{job:id,step:n+1});
+    track("plan_check",{job_id:id,done_count:done.size});
   });
-  bindAff($("rplan"),main,sub,id);
+  bindAff($("rplan"),main,sub);
 }
 
 // 接頭辞 pre の3ボタン（preX・preLine・preCopy）に共有先を設定する
 function setShare(pre,text,url,kind){
+  const ev=ch=>track("share_click",{channel:ch,placement:kind});
   const tag="&hashtags="+encodeURIComponent("向いてる副業診断");
   $(pre+"X").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url)+tag;
   $(pre+"Line").href="https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text);
-  $(pre+"X").onclick=()=>track("share",{method:"x",kind});
-  $(pre+"Line").onclick=()=>track("share",{method:"line",kind});
+  $(pre+"X").onclick=()=>ev("x");
+  $(pre+"Line").onclick=()=>ev("line");
   const native=navigator.share&&matchMedia("(pointer:coarse)").matches,btn=$(pre+"Copy");
   btn.onclick=async()=>{
-    if(native){track("share",{method:"native",kind});try{await navigator.share({text,url});return}catch(e){if(e.name==="AbortError")return}}
-    track("share",{method:"copy",kind});
+    if(native){ev("native");try{await navigator.share({text,url});return}catch(e){if(e.name==="AbortError")return}}
+    ev("copy");
     try{await navigator.clipboard.writeText(text+"\n"+url);btn.textContent="コピーしました"}catch(e){prompt("コピーしてください",text+"\n"+url)}
   };
 }
@@ -809,7 +813,7 @@ function showResult(main,sub,sc,mode,ci){
   const img=`assets/og/${main+sub}.png`;
   $("shareImg").src=img;$("shareImg").alt=`診断結果の画像：${title}`;
   $("saveImg").onclick=async()=>{
-    track("share",{method:"image",result:main+sub});
+    track("share_click",{channel:"image",placement:"share_block",result_type:main+sub});
     const name=`shindan-${TYPES[main].slug}.png`;
     // スマホは共有シートに画像ごと渡す（そのまま写真に保存・ストーリーに投稿できる）
     try{
@@ -820,16 +824,16 @@ function showResult(main,sub,sc,mode,ci){
   };
   $("shareX").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url)+"&hashtags="+encodeURIComponent("向いてる副業診断");
   $("shareLine").href="https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text);
-  $("shareX").onclick=()=>track("share",{method:"x",result:main+sub});
-  $("shareLine").onclick=()=>track("share",{method:"line",result:main+sub});
+  $("shareX").onclick=()=>track("share_click",{channel:"x",placement:"share_block",result_type:main+sub});
+  $("shareLine").onclick=()=>track("share_click",{channel:"line",placement:"share_block",result_type:main+sub});
   // スマホでは OS の共有シート（Instagram・メッセージなど）を開く。PC はコピー
   $("copy").textContent=native?"ほかのアプリ":"リンクをコピー";
   $("copy").onclick=async()=>{
     if(native){
-      track("share",{method:"native",result:main+sub});
+      track("share_click",{channel:"native",placement:"share_block",result_type:main+sub});
       try{await navigator.share({title:document.title,text,url});return}catch(e){if(e.name==="AbortError")return}
     }
-    track("share",{method:"copy",result:main+sub});
+    track("share_click",{channel:"copy",placement:"share_block",result_type:main+sub});
     try{await navigator.clipboard.writeText(text+"\n"+url);$("copy").textContent="コピーしました"}
     catch(e){prompt("コピーしてください",text+"\n"+url)}
   };
@@ -874,7 +878,7 @@ $("go").onclick=begin;
 $("again").onclick=begin;
 $("tryMe").onclick=e=>{e.preventDefault();begin()};
 $("backMineBtn").onclick=()=>history.back();
-$("resumeBtn").onclick=()=>{history.pushState({r:1},"");showMine();track("resume_view")};
+$("resumeBtn").onclick=()=>{history.pushState({r:1},"");showMine();track("result_revisit",{result_type:mine.m+mine.s})};
 
 // 履歴の状態に合わせて画面を出し直す
 function route(state,first){

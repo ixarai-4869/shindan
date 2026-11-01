@@ -27,9 +27,9 @@ const GA_ID="G-PX3Q72XL5G";
 const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
 if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
-  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID,/[?&]debug=1/.test(location.search)?{debug_mode:true}:{});
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,a.dataset.placement?{job_id:a.dataset.jobId||"",service_name:a.dataset.service,placement:a.dataset.placement,page:location.pathname}:{page:location.pathname,link:a.textContent.trim(),place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -48,7 +48,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <section class="card first">
     <p class="kicker">今日やる最初の一歩</p>
     <p>詳しいジャンルを1つ決め、フリマで売れた価格を20件調べる</p>
-    <a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+DTQEIA+2990+6ARKY" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="FURIMA" data-place="first_step"><span class="svc-t"><b>オークファン</b><span>フリマ・オークションの落札相場をまとめて調べられる</span></span><span class="svc-b">オークファンに無料登録</span></a>
+    <a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+DTQEIA+2990+6ARKY" target="_blank" rel="sponsored noopener" data-track="first_step_click" data-service="オークファン" data-placement="job_top" data-job-id="used"><span class="svc-t"><b>オークファン</b><span>フリマ・オークションの落札相場をまとめて調べられる</span></span><span class="svc-b">オークファンに無料登録</span></a>
     <p class="pr">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>
   </section>
 
@@ -74,7 +74,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
 
   <section class="card">
     <h2>最初の30日プラン</h2>
-    <ol class="plan"><li><span class="day">1日目</span><span>詳しいジャンルを1つ決め、フリマで売れた価格を20件調べる<a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+DTQEIA+2990+6ARKY" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="FURIMA" data-place="plan"><span class="svc-t"><b>オークファン</b><span>フリマ・オークションの落札相場をまとめて調べられる</span></span><span class="svc-b">オークファンに無料登録</span></a></span></li><li><span class="day">3日目</span><span>近くのリサイクルショップを2店回り、値段の差を見る</span></li><li><span class="day">7日目</span><span>5,000円以内で3点仕入れて出品する</span></li><li><span class="day">14日目</span><span>売れた理由をメモし、仕入れ値の上限を決める</span></li><li><span class="day">21日目</span><span>古物商許可について調べ、続けるなら申請の準備をする</span></li><li><span class="day">30日目</span><span>1か月の利益と作業時間から、続けるか判断する</span></li></ol>
+    <ol class="plan"><li><span class="day">1日目</span><span>詳しいジャンルを1つ決め、フリマで売れた価格を20件調べる<a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEPPX+DTQEIA+2990+6ARKY" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-service="オークファン" data-placement="plan_step" data-job-id="used"><span class="svc-t"><b>オークファン</b><span>フリマ・オークションの落札相場をまとめて調べられる</span></span><span class="svc-b">オークファンに無料登録</span></a></span></li><li><span class="day">3日目</span><span>近くのリサイクルショップを2店回り、値段の差を見る</span></li><li><span class="day">7日目</span><span>5,000円以内で3点仕入れて出品する</span></li><li><span class="day">14日目</span><span>売れた理由をメモし、仕入れ値の上限を決める</span></li><li><span class="day">21日目</span><span>古物商許可について調べ、続けるなら申請の準備をする</span></li><li><span class="day">30日目</span><span>1か月の利益と作業時間から、続けるか判断する</span></li></ol>
     <p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
   </section>

@@ -27,9 +27,9 @@ const GA_ID="G-PX3Q72XL5G";
 const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
 if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
-  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID,/[?&]debug=1/.test(location.search)?{debug_mode:true}:{});
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,a.dataset.placement?{job_id:a.dataset.jobId||"",service_name:a.dataset.service,placement:a.dataset.placement,page:location.pathname}:{page:location.pathname,link:a.textContent.trim(),place:a.dataset.place||""})});
 </script>
 </head>
 <body>
