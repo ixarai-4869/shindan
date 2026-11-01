@@ -10,6 +10,8 @@ import {TYPE_EXTRA,JOB_EXTRA} from "./pages-data.mjs";
 import {COLUMNS} from "./column-data.mjs";
 import {CONDITIONS,HUB_LEAD,ZUKAN_LEAD} from "./conditions-data.mjs";
 import {COMPARE} from "./compare-data.mjs";
+import {SEASONS,FEATURES} from "./season-data.mjs";
+import {UNSEI} from "./quiz-data.mjs";
 
 const ROOT=join(dirname(fileURLToPath(import.meta.url)),"..");
 const SITE="https://mini-shindan.com/";
@@ -401,6 +403,51 @@ const FAQ=[
   ["副業で必ず稼げますか？","いいえ。収入は始め方や続けた期間で大きく変わり、最初の数か月はほとんど収入がないのがふつうです。サイトに書いている金額は一般的な目安で、収益を保証するものではありません。"],
   ["広告が含まれているのはなぜですか？","サイトの運営費のため、アフィリエイト広告を載せています。広告リンクには「PR」を表示しています。診断の結果は広告の有無で変えていません。"]
 ];
+// ---- 特集ページ（季節バナーの行き先。tools/season-data.mjs） ----
+const featPath=f=>`${BASE}feature/${f.slug}/`;
+const TOOL_TITLES={hourly:"副業時給計算機","target":"月1万円逆算ツール","tax-flow":"確定申告フローチェック"};
+const FEATS=FEATURES.filter(f=>f.cards.length);
+const featCard=(href,c)=>{
+  if(c.type==="column"){const x=COLUMNS.find(y=>y.slug===c.slug);return `<a class="job" href="${href(columnPath(x))}"><b>${esc(x.title)}</b><span class="more">読む →</span></a>`}
+  if(c.type==="job"){const j=JOB_BY_ID[c.slug];return `<a class="job" href="${href(jobPath(j))}"><b>${esc(j.name)}</b>${specLine(j)}<span class="more">始め方を見る →</span></a>`}
+  if(c.type==="tool")return `<a class="job" href="${href(TOOLS_DIR+c.slug+"/")}"><b>${esc(TOOL_TITLES[c.slug])}</b><span class="more">使ってみる →</span></a>`;
+  const k=KEYS.find(x=>TYPES[x].slug===c.slug);return `<a class="job" href="${href(typePath(k))}"><b>${esc(typeLabel(k))}</b><span class="more">くわしく見る →</span></a>`;
+};
+function featurePage(f){
+  const path=featPath(f),T=TYPES[f.chara];
+  return page({path,title:`${f.title}｜${NAME}`,desc:f.lead,ptype:"feature",crumbs:[[NAME,""],["特集",path],[f.title,path]],body:href=>`
+  <article>
+  <header class="card hero">
+    ${charSVG(f.chara,true)}
+    <p class="sub">${esc(T.animal)}の「${esc(T.chara)}」より</p>
+    <h1>${esc(f.title)}</h1>
+    <p class="catch">${esc(T.catch)}</p>
+    <p class="left">${esc(f.lead)}</p>
+  </header>
+  <section class="card"><h2>関連ページ</h2><div class="jobs">
+    ${f.cards.map(c=>featCard(href,c)).join("\n    ")}
+  </div></section>
+${cta(href,"あなたに向いてる副業を診断する")}
+  </article>
+`});
+}
+// 季節バナー：トップに差し込む（期間外は何も出ない）。リンク先が公開されている季節だけ載せる
+const SEASON_PUB=[...SEASONS.filter(s=>s.href===UNSEI.slug||FEATS.some(f=>s.href===featPath(f)))].map(s=>({...s,svg:charSVG(s.chara,true)}));
+const seasonScript=()=>`<script>
+(function(){
+  var S=${JSON.stringify(SEASON_PUB)},d=new Date(),p=function(n){return(n<10?"0":"")+n};
+  var t=d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate()),s=null;
+  for(var i=0;i<S.length;i++)if(t>=S[i].from&&t<=S[i].to){s=S[i];break}
+  var el=document.getElementById("seasonBanner");if(!s||!el)return;
+  document.documentElement.setAttribute("data-season",s.theme||"");
+  el.innerHTML=s.svg+'<span><b></b><br><span class="sub"></span></span>';
+  el.querySelector("b").textContent=s.title;el.querySelector(".sub").textContent=s.text;
+  el.href=s.href;el.hidden=false;
+  el.addEventListener("click",function(){if(window.track)track("season_click",{season:s.id})});
+  if(window.track)track("season_view",{season:s.id});
+})();
+</script>`;
+
 function landing(){
   const first=j=>j.plan.slice(0,3);
   const ex=JOB_BY_ID.writer; // 結果の実例：Webライター（書くタイプ）
@@ -427,6 +474,7 @@ function landing(){
     <p><a class="more" href="${COLUMN}">コラムをすべて見る</a>・<a class="more" href="${GUIDE}">タイプと副業の一覧</a>・<a class="more" href="${ZUKAN}">称号図鑑</a>・<a class="more" href="${TOOLS_DIR}">ミニ計算ツール</a>${PUB.length?`・<a class="more" href="${CONDS}">条件から探す</a>`:""}</p>
     <h2 style="margin-top:22px">よくある質問</h2>
     <dl>${FAQ.map(([q,a])=>`<dt>${esc(q)}</dt><dd>${esc(a)}</dd>`).join("")}</dl>
+    ${seasonScript()}
     <script type="application/ld+json">${JSON.stringify({"@context":"https://schema.org","@type":"FAQPage",mainEntity:FAQ.map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))})}</script>`;
 }
 {
@@ -751,6 +799,127 @@ ${cta(href,"まず自分のタイプを知る")}
 `});
 }
 
+// ---- 副業運勢（/unsei/2027/）。エンジンは assets/quiz2.js、データは tools/quiz-data.mjs ----
+const unseiPath=UNSEI.slug,UNSEI_TOP="unsei/";
+function unseiPage(){
+  const path=unseiPath,ID=UNSEI.id;
+  const title=`${UNSEI.year}年の副業運勢｜今年のラッキー副業を8問で占う｜${NAME}`;
+  const desc=`${UNSEI.year}年の副業運勢を8問で診断。今年のラッキー副業、気をつけたい月、相性の良いタイプがわかります。占いは娯楽・参考用です。`;
+  const data={
+    id:ID,year:UNSEI.year,to:UNSEI.to,qs:UNSEI.qs,keys:KEYS,yearMsg:UNSEI.yearMsg,caution:UNSEI.caution,
+    types:Object.fromEntries(KEYS.map(k=>[k,{animal:TYPES[k].animal,chara:TYPES[k].chara,short:TYPES[k].short,role:TYPES[k].role,adj:TYPES[k].adj,slug:TYPES[k].slug,good:TYPES[k].good[0],goodText:TYPES[k].good[1],jobs:JOBS.filter(j=>j.t===k).map(j=>({id:j.id,name:j.name}))}])),
+    svg:Object.fromEntries(KEYS.map(k=>[k,charSVG(k,true).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" ')])),
+  };
+  return page({path,title,desc,ptype:"unsei",crumbs:[[NAME,""],[`${UNSEI.year}年の副業運勢`,path]],body:href=>`
+  <article class="qz">
+  <section id="qzStart" class="card hero unsei-hero">
+    <div class="zk-line">${KEYS.map(k=>charSVG(k,true)).join("")}</div>
+    <p class="kicker">${UNSEI.year}年 新春限定</p>
+    <h1>${UNSEI.year}年の副業運勢</h1>
+    <p class="left">8問に答えると、今年のラッキー副業、気をつけたい月、相性の良いタイプがわかります。あなたの副業タイプ（称号）も出ます。</p>
+    <p class="sub left">約1分・登録不要。占いは娯楽・参考用で、収益を保証するものではありません。</p>
+    <div id="qzEnded" class="banner" hidden>この限定診断の公開期間は終了しました。結果は引き続き見られます。<a href="${href("")}">通常の診断はこちら</a></div>
+    <p><button class="primary" id="qzGo" type="button">占いをはじめる</button></p>
+    <p class="sub" id="qzPrev" hidden><button class="qz-link" id="qzPrevBtn" type="button">前回の結果を見る</button></p>
+  </section>
+  <section id="qzQuiz" class="card" hidden>
+    <div class="qz-head"><button class="qz-link" id="qzBack" type="button">← ひとつ戻る</button><span class="sub" id="qzNum"></span></div>
+    <div class="qz-bar" aria-hidden="true"><i id="qzProg"></i></div>
+    <h2 id="qzQ" class="qz-q"></h2>
+    <div id="qzOpts"></div>
+  </section>
+  <section id="qzResult" hidden>
+    <div class="card hero unsei-res">
+      <p class="kicker">${UNSEI.year}年の副業運勢</p>
+      <div id="rChar"></div>
+      <p class="sub" id="rName"></p>
+      <h1 id="rTitle"></h1>
+      <p class="catch" id="rYear"></p>
+    </div>
+    <div class="card"><h2>今年のラッキー副業</h2><p id="rLucky"></p></div>
+    <div class="card"><h2>気をつけたい月</h2><p id="rMonth"></p></div>
+    <div class="card"><h2>相性の良いタイプ</h2><p id="rGood"></p></div>
+    <div class="card">
+      <h2>結果を保存・シェアする</h2>
+      <p><button class="primary" id="rSave" type="button">結果の画像を保存する</button></p>
+      <p><button class="qz-link" id="rCopy" type="button">結果のテキストをコピーする</button></p>
+      <canvas id="rCanvas" width="1200" height="630" hidden></canvas>
+    </div>
+    <p class="sub">占いは娯楽・参考用です。副業タイプの診断結果とは別に保存され、通常の診断の結果や称号には影響しません。</p>
+    <p><a class="primary" href="${href("")}">通常の診断（11問）もやってみる</a></p>
+    <p><button class="qz-link" id="rAgain" type="button">もう一度占う</button></p>
+  </section>
+  </article>
+  <script src="${href("assets/quiz2.js")}"></script>
+  <script>
+  (function(){
+    var D=${JSON.stringify(data).replace(/</g,"\\u003c")},$=function(i){return document.getElementById(i)};
+    var KEY="unsei-"+D.year,today=(function(){var d=new Date(),p=function(n){return(n<10?"0":"")+n};return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())})();
+    function ev(n,p){if(window.gtag)gtag("event",n,p||{})}
+    if(today>D.to)$("qzEnded").hidden=false;
+    function hash(a){var h=0,s=a.join("");for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h}
+    function build(ans,r){
+      var m=r.order[0],s=r.order[1],T=D.types[m],h=hash(ans);
+      var jobs=T.jobs,job=jobs[h%jobs.length],month=(Math.floor(h/7)%12)+1;
+      return{m:m,s:s,job:job,month:month};
+    }
+    function titleOf(m,s){return D.types[s].adj+D.types[m].role}
+    var cur=null;
+    function show(res){
+      cur=res;var T=D.types[res.m],S=D.types[res.s],G=D.types[T.good];
+      $("qzStart").hidden=true;$("qzQuiz").hidden=true;$("qzResult").hidden=false;
+      $("rChar").innerHTML=D.svg[res.m];$("rChar").className="unsei-char";
+      $("rName").textContent=T.animal+"の「"+T.chara+"」 × "+S.short+"の素質";
+      $("rTitle").textContent=titleOf(res.m,res.s);$("rYear").textContent=D.yearMsg[res.m];
+      var j=D.types[res.m].jobs.filter(function(x){return x.id===res.job.id})[0];
+      $("rLucky").innerHTML='<b></b>。<a></a>';$("rLucky").querySelector("b").textContent=res.job.name;
+      var a=$("rLucky").querySelector("a");a.textContent="始め方を見る";a.href="../../fukugyo/job/"+res.job.id+"/";
+      $("rMonth").textContent=res.month+"月。"+D.caution[res.m];
+      $("rGood").innerHTML='<a></a>：<span></span>';var ga=$("rGood").querySelector("a");ga.textContent=G.animal+"の「"+G.chara+"」（"+G.short+"タイプ）";ga.href="../../fukugyo/type/"+G.slug+"/";$("rGood").querySelector("span").textContent=T.goodText;
+      window.scrollTo(0,0);
+    }
+    var run=Quiz.run({id:D.id,qs:D.qs,keys:D.keys,els:{start:$("qzStart"),quiz:$("qzQuiz"),num:$("qzNum"),prog:$("qzProg"),q:$("qzQ"),opts:$("qzOpts"),back:$("qzBack")},
+      onDone:function(ans,r){var res=build(ans,r);try{localStorage.setItem(KEY,JSON.stringify(res))}catch(e){}ev("quiz_complete",{quiz:D.id,result_type:res.m+res.s});show(res)}});
+    $("qzGo").onclick=function(){run.begin()};
+    $("rAgain").onclick=function(){$("qzResult").hidden=true;run.begin()};
+    var prev=null;try{prev=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+    if(prev&&D.types[prev.m]&&D.types[prev.s]&&prev.job&&prev.month){$("qzPrev").hidden=false;$("qzPrevBtn").onclick=function(){show(prev)}}
+    function text(){return D.year+"年の副業運勢は「"+titleOf(cur.m,cur.s)+"」。ラッキー副業は"+cur.job.name+"、気をつけたい月は"+cur.month+"月でした。（ミニ診断）https://mini-shindan.com/"+${JSON.stringify(unseiPath)}}
+    $("rCopy").onclick=function(){var t=text();ev("share_click",{placement:"unsei"});var b=$("rCopy");function ok(){b.textContent="コピーしました"}
+      if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){b.textContent="コピーできませんでした"});else b.textContent="コピーできませんでした"};
+    // 結果画像（正月限定デザイン）：ブラウザの中で描いて保存する。サイトの色（--accent など）を使う
+    $("rSave").onclick=function(){
+      var c=$("rCanvas"),x=c.getContext("2d"),T=D.types[cur.m],S=D.types[cur.s];
+      var cs=getComputedStyle(document.documentElement),acc="#b8460f";
+      x.fillStyle="#f7f5f0";x.fillRect(0,0,1200,630);
+      x.strokeStyle=acc;x.lineWidth=10;x.strokeRect(24,24,1152,582);x.lineWidth=2;x.strokeRect(44,44,1112,542);
+      x.fillStyle="#fff";x.fillRect(52,52,1096,526);
+      x.fillStyle=acc;x.font="700 34px system-ui,'Hiragino Sans','Yu Gothic',sans-serif";x.fillText(D.year+"年 新春 副業運勢",90,120);
+      x.fillStyle="#232220";x.font="700 40px system-ui,'Hiragino Sans','Yu Gothic',sans-serif";x.fillText(titleOf(cur.m,cur.s),90,200);
+      x.font="500 28px system-ui,'Hiragino Sans','Yu Gothic',sans-serif";x.fillStyle="#57534c";x.fillText(T.animal+"の「"+T.chara+"」 × "+S.short+"の素質",90,250);
+      x.fillStyle="#232220";x.font="700 32px system-ui,'Hiragino Sans','Yu Gothic',sans-serif";
+      x.fillText("ラッキー副業",90,340);x.font="500 32px system-ui,'Hiragino Sans','Yu Gothic',sans-serif";x.fillText(cur.job.name,90,390);
+      x.font="700 32px system-ui,'Hiragino Sans','Yu Gothic',sans-serif";x.fillText("気をつけたい月",90,460);x.font="500 32px system-ui,'Hiragino Sans','Yu Gothic',sans-serif";x.fillText(cur.month+"月",90,510);
+      x.fillStyle="#57534c";x.font="500 24px system-ui,'Hiragino Sans','Yu Gothic',sans-serif";x.fillText("mini-shindan.com/unsei/"+D.year+"/",90,555);
+      var img=new Image(),svg=new Blob([D.svg[cur.m]],{type:"image/svg+xml"}),url=URL.createObjectURL(svg);
+      img.onload=function(){x.drawImage(img,760,120,340,340);URL.revokeObjectURL(url);finish()};img.onerror=function(){finish()};img.src=url;
+      function finish(){ev("result_save",{quiz:D.id});c.toBlob(function(b){var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="unsei-"+D.year+".png";document.body.appendChild(a);a.click();document.body.removeChild(a)},"image/png")}
+    };
+  })();
+  </script>
+`});
+}
+function unseiTop(){
+  const path=UNSEI_TOP;
+  return page({path,title:`副業運勢｜年ごとの限定診断｜${NAME}`,desc:"新年に公開する、副業運勢の限定診断の入口です。",ptype:"unsei",crumbs:[[NAME,""],["副業運勢",path]],body:href=>`
+  <article>
+  <header class="card hero"><div class="zk-line">${KEYS.map(k=>charSVG(k,true)).join("")}</div><h1>副業運勢</h1><p class="left">新年に公開する限定の診断です。</p></header>
+  <section class="card"><div class="jobs"><a class="job" href="${href(unseiPath)}"><b>${UNSEI.year}年の副業運勢</b><span class="more">占ってみる →</span></a></div></section>
+  <p><a href="${href("")}">通常の診断（11問）はこちら</a></p>
+  </article>
+`});
+}
+
 // ---- 書き出し ----
 rmSync(join(ROOT,BASE),{recursive:true,force:true});
 const out=[];
@@ -764,6 +933,8 @@ write(ZUKAN,zukanPage());
 if(PUB.length){write(CONDS,conditionHub());PUB.forEach(c=>write(condPath(c),conditionPage(c)))}
 write(TOOLS_DIR,toolHub());write(TOOLS_DIR+"hourly/",hourlyPage());write(TOOLS_DIR+"target/",targetPage());write(TOOLS_DIR+"tax-flow/",taxPage());
 CMP.forEach(d=>write(cmpPath(d),comparePage(d)));
+write(unseiPath,unseiPage());write(UNSEI_TOP,unseiTop());
+FEATS.forEach(f=>write(featPath(f),featurePage(f)));
 write(PRIVACY,privacyPage());write(ABOUT,aboutPage());
 
 writeFileSync(join(ROOT,"sitemap.xml"),`<?xml version="1.0" encoding="UTF-8"?>
