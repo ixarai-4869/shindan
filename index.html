@@ -39,7 +39,7 @@ function track(name,params){if(window.gtag)gtag("event",name,params||{})}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{-webkit-tap-highlight-color:transparent;margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.7}
-main{max-width:640px;margin:0 auto;padding:16px 16px 64px;overflow-x:hidden}
+main{max-width:640px;margin:0 auto;padding:16px 16px 64px;overflow-x:clip}
 h1{font-size:1.5rem;margin:.4em 0;line-height:1.4}
 h2{font-size:1.05rem;margin:0 0 .5em}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
@@ -177,6 +177,32 @@ ul{padding-left:1.2em;margin:.3em 0}
   .keyhint{display:block}
 }
 
+/* 結果ページの並びは DOM 順＝スマホ向け（共感より先に「最初の一歩」「できる副業」「プラン」「シェア」）。PC の2カラムでは order で従来の並びに戻す */
+.quick{display:none}
+.rbar,.mini{display:none}
+@media (max-width:959px){
+  main.has-bar{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+  #result .hero{padding:14px 16px}
+  #result .hero>.sub{font-size:.8rem}
+  #result .hero svg{width:96px;height:96px}
+  #result .hero .char-name{font-size:.85rem}
+  #result .title{font-size:1.5rem}
+  #result .catch{margin:.3em 0}
+  #rdesc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:6px 0 2px;font-size:.9rem}
+  #result .rare{font-size:.82rem;padding:6px 12px}
+  #firstStep,#cJobs,#planCard,#shareCard{scroll-margin-top:56px}
+  .rbar{display:flex;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:30;padding:8px 14px calc(8px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(0,0,0,.06)}
+  .rbar[hidden]{display:none}
+  .rbar button{min-height:46px;border-radius:999px;font-weight:600;font-size:.95rem}
+  .rbar #barShare{flex:0 0 34%;background:none;border:1px solid var(--accent);color:var(--accent)}
+  .rbar #barStep{flex:1;padding:0 12px}
+  .mini{display:flex;align-items:center;gap:8px;position:fixed;top:0;left:0;right:0;z-index:30;padding:calc(6px + env(safe-area-inset-top)) 8px 6px 12px;background:var(--card);border-bottom:1px solid var(--line);font-size:.85rem;transform:translateY(0);transition:transform .2s}
+  .mini[hidden]{display:none}
+  .mini-ch svg{width:30px;height:30px;display:block}
+  .mini b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mini a{font-weight:600;white-space:nowrap;color:var(--accent)}
+  .mini button{background:none;border:0;color:var(--sub);font-size:1.3rem;min-width:40px;min-height:40px}
+}
 /* PC：結果ページは2カラムにして、キャラと称号を左に固定する */
 @media (min-width:960px){
   main{padding-top:24px}
@@ -187,9 +213,25 @@ ul{padding-left:1.2em;margin:.3em 0}
   #result>.card{margin:0 0 16px}
   #result>.hero{grid-column:1;grid-row:1 / span 30;margin:0}
   #result>.share{margin:0 0 12px}
-  .hero svg{width:200px;height:200px}
+  .hero svg{width:150px;height:150px}
+  #result .hero{padding:16px 18px}
+  #result .title{font-size:1.5rem}
+  #rdesc{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;font-size:.9rem;margin:6px 0}
+  .quick{display:flex;margin-top:10px;margin-bottom:0}
+  #result>*{order:1}
+  #sharedNote{order:0}
+  #cAru{order:2}#cSerif{order:3}#cTori{order:4}#cStr{order:5}#cJobs{order:6}#planCard{order:7}
+  #cAvoid{order:8}#barsCard{order:9}#cPair{order:10}#shareCard{order:11}#inviteCard{order:12}#collCard{order:13}#again{order:14}#cOthers{order:15}
 }
 @media (min-width:960px) and (min-height:700px){#result>.hero{position:sticky;top:16px}}
+/* 画面が低いPCでは、ページ最下部でも左のキャラと称号が欠けないよう、左カラムをさらに小さくする */
+@media (min-width:960px) and (min-height:700px) and (max-height:860px){
+  #result .hero>.sub{display:none}
+  #result .hero svg{width:104px;height:104px}
+  #result .hero{padding:12px 16px}
+  #rdesc{-webkit-line-clamp:2}
+  #result .rare{font-size:.78rem;padding:4px 10px;margin:.4em 0}
+}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -240,32 +282,15 @@ ul{padding-left:1.2em;margin:.3em 0}
       <p class="rare" id="rrare" hidden></p>
       <p id="rdesc" style="text-align:left"></p>
       <a class="more" id="rmore"></a>
+      <div class="share quick" id="quick"><a class="x" id="qX" target="_blank" rel="noopener">Xで共有</a><a class="line" id="qLine" target="_blank" rel="noopener">LINEで送る</a><button id="qCopy">リンクをコピー</button></div>
     </div>
 
     <div class="card vs" id="vsCard" hidden></div>
-    <div class="card first" id="firstStep" hidden></div>
-
     <div id="startHere" class="center" hidden><a class="primary" href="./" id="tryMe">あなたも診断する</a></div>
     <div id="backMine" class="center" hidden><button class="primary" id="backMineBtn">さっきの結果に戻る</button></div>
+    <div class="card first" id="firstStep" hidden></div>
 
-    <div class="card">
-      <h2>こんなところ、ありませんか？</h2>
-      <ul class="aru" id="raru"></ul>
-    </div>
-    <div class="card">
-      <h2 id="serifTitle"></h2>
-      <div class="serif" id="rserif"></div>
-    </div>
-    <div class="card">
-      <h2 id="toriTitle"></h2>
-      <dl class="tori" id="rtori"></dl>
-    </div>
-    <div class="card">
-      <h2>あなたの強み</h2>
-      <ul id="rstr"></ul>
-      <p class="sub" style="margin-bottom:0" id="rweak"></p>
-    </div>
-    <div class="card">
+    <div class="card" id="cJobs">
       <h2 id="rjobsTitle"></h2>
       <p class="sub" id="rcond"></p>
       <div class="jobs" id="rjobs"></div>
@@ -280,21 +305,7 @@ ul{padding-left:1.2em;margin:.3em 0}
       <p class="sub" style="margin:0 0 8px;text-align:center">今日から各ステップの日の20時に、スマホやPCのカレンダーで通知されます（登録不要）</p>
       <p class="pr" style="margin-bottom:0">チェックはこの端末に保存されます。PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
     </div>
-    <div class="card">
-      <h2>あなたが避けた方がいい副業</h2>
-      <p style="margin:0"><b id="ravoidName"></b></p>
-      <p class="sub" style="margin-bottom:0" id="ravoid"></p>
-    </div>
-    <div class="card" id="barsCard">
-      <h2>あなたのタイプ比率</h2>
-      <div id="rbars"></div>
-    </div>
-    <div class="card">
-      <h2>相性</h2>
-      <div id="rpair"></div>
-    </div>
-
-    <div class="card shareCard">
+    <div class="card shareCard" id="shareCard">
       <h2>結果をシェア</h2>
       <img id="shareImg" width="1200" height="630" alt="">
       <div class="share">
@@ -314,6 +325,37 @@ ul{padding-left:1.2em;margin:.3em 0}
         <button id="invCopy">リンクをコピー</button>
       </div>
     </div>
+    <div class="card" id="cAru">
+      <h2>こんなところ、ありませんか？</h2>
+      <ul class="aru" id="raru"></ul>
+    </div>
+    <div class="card" id="cSerif">
+      <h2 id="serifTitle"></h2>
+      <div class="serif" id="rserif"></div>
+    </div>
+    <div class="card" id="cTori">
+      <h2 id="toriTitle"></h2>
+      <dl class="tori" id="rtori"></dl>
+    </div>
+    <div class="card" id="cStr">
+      <h2>あなたの強み</h2>
+      <ul id="rstr"></ul>
+      <p class="sub" style="margin-bottom:0" id="rweak"></p>
+    </div>
+    <div class="card" id="cAvoid">
+      <h2>あなたが避けた方がいい副業</h2>
+      <p style="margin:0"><b id="ravoidName"></b></p>
+      <p class="sub" style="margin-bottom:0" id="ravoid"></p>
+    </div>
+    <div class="card" id="barsCard">
+      <h2>あなたのタイプ比率</h2>
+      <div id="rbars"></div>
+    </div>
+    <div class="card" id="cPair">
+      <h2>相性</h2>
+      <div id="rpair"></div>
+    </div>
+
     <div class="card" id="collCard">
       <h2>称号コレクション</h2>
       <p class="sub" id="collNote"></p>
@@ -321,7 +363,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     </div>
     <button class="opt" id="again" style="text-align:center">もう一度診断する</button>
 
-    <div class="card">
+    <div class="card" id="cOthers">
       <h2>ほかの子も見てみる</h2>
       <div class="others" id="others"></div>
     </div>
@@ -343,6 +385,8 @@ ul{padding-left:1.2em;margin:.3em 0}
     <p>掲載している費用・期間・収入は一般的な目安であり、正確性や収益を保証するものではありません。当サイトの情報を利用したことで生じた損害について、運営者は責任を負いかねます。</p>
   </details>
 </main>
+<div class="mini" id="miniBar" hidden><span class="mini-ch" id="miniCh"></span><b id="miniTitle"></b><a href="#firstStep" id="miniGo">最初の一歩</a><button id="miniX" aria-label="このバーを閉じる">×</button></div>
+<nav class="rbar" id="resultBar" aria-label="結果のクイック操作" hidden><button id="barShare">シェア</button><button class="primary" id="barStep">最初の一歩を見る</button></nav>
 <div class="confetti" id="confetti" aria-hidden="true"></div>
 
 <script>
@@ -571,7 +615,15 @@ const VS_KEY="shindan-vs";
 let vs=null;
 try{const v=sessionStorage.getItem(VS_KEY);if(v&&TYPES[v[0]]&&TYPES[v[1]])vs={m:v[0],s:v[1]}}catch(e){}
 
-function show(id){["start","quiz","loading","result"].forEach(s=>$(s).hidden=s!==id);$("footLinks").hidden=id==="quiz"||id==="loading";document.querySelector("main").classList.toggle("wide",id==="result");scrollTo(0,0)}
+let resultOn=false,heroPast=false,miniOff=false;
+function updateMini(){$("miniBar").hidden=!(resultOn&&heroPast&&!miniOff)}
+new IntersectionObserver(es=>{const e=es[0];heroPast=!e.isIntersecting&&e.boundingClientRect.bottom<0;updateMini()}).observe(document.querySelector("#result .hero"));
+$("miniX").onclick=()=>{miniOff=true;updateMini()};
+function goTo(el){el.scrollIntoView({behavior:reduced?"auto":"smooth",block:"start"})}
+function stepTarget(){return $("firstStep").hidden?$("cJobs"):$("firstStep")}
+$("barStep").onclick=()=>goTo(stepTarget());
+$("miniGo").onclick=e=>{e.preventDefault();goTo(stepTarget())};
+function show(id){["start","quiz","loading","result"].forEach(s=>$(s).hidden=s!==id);$("footLinks").hidden=id==="quiz"||id==="loading";$("resultBar").hidden=id!=="result";document.querySelector("main").classList.toggle("has-bar",id==="result");resultOn=id==="result";updateMini();document.querySelector("main").classList.toggle("wide",id==="result");scrollTo(0,0)}
 function shuffle(a){a=a.slice();for(let j=a.length-1;j>0;j--){const r=Math.random()*(j+1)|0;[a[j],a[r]]=[a[r],a[j]]}return a}
 
 // 質問ごとに履歴を積むので、スマホの「戻る」ジェスチャーやブラウザの戻るで前の質問に戻れる
@@ -811,6 +863,14 @@ function showResult(main,sub,sc,mode,ci){
   const text=`向いてる副業診断の結果、私は「${title}」でした！相棒は${T.animal}の${T.chara}。あなたはどの子？`;
   const native=navigator.share&&matchMedia("(pointer:coarse)").matches;
   const img=`assets/og/${main+sub}.png`;
+  // 画面下の固定バー・上のミニバー・PC のシェア行
+  $("barStep").textContent=mode==="own"?"最初の一歩を見る":"できる副業を見る";$("miniGo").textContent=mode==="own"?"最初の一歩":"できる副業";
+  $("miniCh").innerHTML=charSVG(main,true);$("miniTitle").textContent=title;miniOff=false;
+  $("barShare").onclick=async()=>{
+    if(native){track("share_click",{channel:"native",placement:"share_bar",result_type:main+sub});try{await navigator.share({title:document.title,text,url});return}catch(e){if(e.name==="AbortError")return}}
+    goTo($("shareCard"));
+  };
+  setShare("q",text,url,"top_row");
   $("shareImg").src=img;$("shareImg").alt=`診断結果の画像：${title}`;
   $("saveImg").onclick=async()=>{
     track("share_click",{channel:"image",placement:"share_block",result_type:main+sub});
