@@ -33,6 +33,7 @@ const typePath=k=>`${BASE}type/${TYPES[k].slug}/`;
 const jobPath=j=>`${BASE}job/${j.id}/`;
 const GUIDE=`${BASE}guide/`;
 const COLUMN=`${BASE}column/`;
+const TOOLS_DIR="tools/";
 const ZUKAN=`${BASE}zukan/`;
 const CONDS=`${BASE}conditions/`;
 const condPath=c=>`${CONDS}${c.slug}/`;
@@ -547,7 +548,6 @@ ${condCta(href,null)}
 }
 
 // ---- ミニ計算ツール（/tools/<slug>/）。入力はブラウザの中だけで計算し、サーバーにも GA にも送らない ----
-const TOOLS_DIR="tools/";
 const TOOL_UPDATED="2026年11月時点";
 const colLink=(href,slug,label)=>`<li><a href="${href(columnPath(COLUMNS.find(c=>c.slug===slug)))}">${esc(label||COLUMNS.find(c=>c.slug===slug).title)}</a></li>`;
 const yenMax=s=>{let m=0;for(const [,n,man] of String(s).matchAll(/([\d,]+)(万)?/g)){const v=Number(n.replace(/,/g,""))*(man?10000:1);if(v>m)m=v}return m};
