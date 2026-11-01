@@ -72,9 +72,9 @@ const GA_ID="${GA_ID}";
 const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
 if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
-  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID,/[?&]debug=1/.test(location.search)?{debug_mode:true}:{});
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,a.dataset.placement?{job_id:a.dataset.jobId||"",service_name:a.dataset.service,placement:a.dataset.placement,page:location.pathname}:{page:location.pathname,link:a.textContent.trim(),place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -101,7 +101,7 @@ const cta=(href,text)=>`  <div class="cta card">
 // URL が #REPLACE_… のままの枠は出さない（index.html の結果画面と同じ）
 const live=k=>!!(k&&LINKS[k]&&!LINKS[k].url.startsWith("#REPLACE"));
 // サービス名＋選ぶ理由＋ボタンのカード（index.html の svcCard と同じ見た目）。place は計測用の置き場所
-const svcCard=(k,place)=>{const L=LINKS[k];return `<a class="svc" href="${L.url}" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="${k}" data-place="${place}"><span class="svc-t"><b>${esc(L.svc)}</b><span>${esc(L.why)}</span></span><span class="svc-b">${esc(L.label)}</span></a>`};
+const svcCard=(k,place,job)=>{const L=LINKS[k];return `<a class="svc" href="${L.url}" target="_blank" rel="sponsored noopener" data-track="${place==="job_top"?"first_step_click":"affiliate_click"}" data-service="${esc(L.svc)}" data-placement="${place}"${job?` data-job-id="${job}"`:""}><span class="svc-t"><b>${esc(L.svc)}</b><span>${esc(L.why)}</span></span><span class="svc-b">${esc(L.label)}</span></a>`};
 const affLinks=(keys,place="column")=>keys.length?`<div class="aff">${keys.map(k=>svcCard(k,place)).join("")}</div>
     <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>`:"";
 
@@ -205,7 +205,7 @@ ${first?`
   <section class="card first">
     <p class="kicker">今日やる最初の一歩</p>
     <p>${esc(first[1])}</p>
-    ${svcCard(first[2],"first_step")}
+    ${svcCard(first[2],"job_top",j.id)}
     <p class="pr">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>
   </section>
 `:""}
@@ -229,7 +229,7 @@ ${first?`
 
   <section class="card">
     <h2>最初の30日プラン</h2>
-    <ol class="plan">${j.plan.map(([d,text,lk])=>`<li><span class="day">${d}日目</span><span>${esc(text)}${live(lk)?`${svcCard(lk,"plan")}`:""}</span></li>`).join("")}</ol>
+    <ol class="plan">${j.plan.map(([d,text,lk])=>`<li><span class="day">${d}日目</span><span>${esc(text)}${live(lk)?`${svcCard(lk,"plan_step",j.id)}`:""}</span></li>`).join("")}</ol>
     ${linkKeys.length?`<p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>`:""}
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
   </section>
