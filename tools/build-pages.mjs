@@ -91,7 +91,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <nav class="crumbs" aria-label="パンくずリスト">${crumbs.map(([n,p],i)=>i<crumbs.length-1?`<a href="${href(p)}">${esc(n)}</a>`:`<span aria-current="page">${esc(n)}</span>`).join(" › ")}</nav>
 ${body(href)}
   <footer>
-    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href(COLUMN)}">副業の悩みコラム</a>・<a href="${href(ZUKAN)}">称号図鑑</a>${PUB.length?`・<a href="${href(CONDS)}">条件から探す</a>`:""}</p>
+    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href(COLUMN)}">副業の悩みコラム</a>・<a href="${href(ZUKAN)}">称号図鑑</a>・<a href="${href(TOOLS_DIR)}">ミニ計算ツール</a>${PUB.length?`・<a href="${href(CONDS)}">条件から探す</a>`:""}</p>
     <p><a href="${href(PRIVACY)}">プライバシーポリシー・免責事項</a>・<a href="${href(ABOUT)}">運営者情報・広告について</a></p>
     <p class="pr">費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。この診断は娯楽・参考用です。</p>
   </footer>
@@ -422,7 +422,7 @@ function landing(){
     <div class="lp-all">${JOBS.map(j=>`<a href="${jobPath(j)}">${esc(j.name)}</a>`).join("")}</div>
     <h2 style="margin-top:22px">副業の悩みコラム</h2>
     <ul class="cols">${COLUMNS.map(c=>`<li><a href="${columnPath(c)}">${esc(c.title)}</a></li>`).join("")}</ul>
-    <p><a class="more" href="${COLUMN}">コラムをすべて見る</a>・<a class="more" href="${GUIDE}">タイプと副業の一覧</a>・<a class="more" href="${ZUKAN}">称号図鑑</a>${PUB.length?`・<a class="more" href="${CONDS}">条件から探す</a>`:""}</p>
+    <p><a class="more" href="${COLUMN}">コラムをすべて見る</a>・<a class="more" href="${GUIDE}">タイプと副業の一覧</a>・<a class="more" href="${ZUKAN}">称号図鑑</a>・<a class="more" href="${TOOLS_DIR}">ミニ計算ツール</a>${PUB.length?`・<a class="more" href="${CONDS}">条件から探す</a>`:""}</p>
     <h2 style="margin-top:22px">よくある質問</h2>
     <dl>${FAQ.map(([q,a])=>`<dt>${esc(q)}</dt><dd>${esc(a)}</dd>`).join("")}</dl>
     <script type="application/ld+json">${JSON.stringify({"@context":"https://schema.org","@type":"FAQPage",mainEntity:FAQ.map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))})}</script>`;
@@ -546,6 +546,159 @@ ${condCta(href,null)}
 `});
 }
 
+// ---- ミニ計算ツール（/tools/<slug>/）。入力はブラウザの中だけで計算し、サーバーにも GA にも送らない ----
+const TOOLS_DIR="tools/";
+const TOOL_UPDATED="2026年11月時点";
+const colLink=(href,slug,label)=>`<li><a href="${href(columnPath(COLUMNS.find(c=>c.slug===slug)))}">${esc(label||COLUMNS.find(c=>c.slug===slug).title)}</a></li>`;
+const yenMax=s=>{let m=0;for(const [,n,man] of String(s).matchAll(/([\d,]+)(万)?/g)){const v=Number(n.replace(/,/g,""))*(man?10000:1);if(v>m)m=v}return m};
+const TOOL_JOBS=JOBS.map(j=>({id:j.id,name:j.name,max:yenMax(j.month),month:j.month,h:j.h,ease:j.ease,cost:j.costLabel,url:jobPath(j)}));
+const TOOL_JS=`
+var $=function(i){return document.getElementById(i)};
+var used=false,done=false;
+function ev(n,p){if(window.gtag)gtag("event",n,p)}
+function num(id){var v=parseFloat(String($(id).value).replace(/,/g,""));return isFinite(v)?v:NaN}
+function yen(n){return Math.round(n).toLocaleString("ja-JP")}
+function touched(slug){if(!used){used=true;ev("tool_use",{tool:slug})}}
+function completed(slug){if(!done){done=true;ev("tool_complete",{tool:slug})}}
+function copyText(t,btn,slug){
+  function ok(){btn.textContent="コピーしました";setTimeout(function(){btn.textContent="結果をコピーする"},2000)}
+  ev("share_click",{placement:"tool_"+slug});
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){fallback()});else fallback();
+  function fallback(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){btn.textContent="コピーできませんでした"}document.body.removeChild(a)}
+}
+`;
+function toolShell({slug,chara,title,desc,lead,form,result,after,script,path}){
+  const T=TYPES[chara];
+  return page({path,title:`${title}｜${NAME}`,desc,ptype:"tool",crumbs:[[NAME,""],["ミニ計算ツール",TOOLS_DIR],[title,path]],body:href=>`
+  <article>
+  <header class="card hero tool-hero">
+    ${charSVG(chara,true)}
+    <p class="tool-say">「${esc(lead)}」</p>
+    <p class="sub">${esc(T.animal)}の「${esc(T.chara)}」がご案内します</p>
+    <h1>${esc(title)}</h1>
+  </header>
+  <section class="card tool-card">
+${form}
+  </section>
+  <section class="card tool-result" id="result" aria-live="polite">
+${result}
+  </section>
+${after(href)}
+  <p class="sub">入力した内容はこのページの中だけで計算し、サーバーや計測ツールには送りません。${TOOL_UPDATED}の内容です。</p>
+  <p class="sub"><a href="${href(TOOLS_DIR)}">ほかのミニ計算ツール</a></p>
+  </article>
+  <script>${TOOL_JS}
+${script}
+  </script>
+`});
+}
+const field=(id,label,unit,val,extra="")=>`    <label class="tool-f" for="${id}"><span>${label}</span><span class="tool-in"><input id="${id}" type="number" inputmode="decimal" min="0" step="any" value="${val}" ${extra}><b>${unit}</b></span></label>`;
+const toolHub=()=>page({path:TOOLS_DIR,title:`ミニ計算ツール（副業時給・月1万円の逆算・確定申告の目安）｜${NAME}`,desc:"副業の時給、月1万円までに必要な件数、確定申告が必要かの目安を、1画面で計算できる無料ツール。入力した内容は送信されません。",ptype:"tool",crumbs:[[NAME,""],["ミニ計算ツール",TOOLS_DIR]],body:href=>`
+  <article>
+  <header class="card hero"><div class="zk-line">${["W","S","C"].map(k=>charSVG(k,true)).join("")}</div><h1>ミニ計算ツール</h1><p class="left">副業のお金まわりを、1画面で計算できる3つのツールです。入力した内容はこのページの中だけで計算し、送信されません。</p></header>
+  <section class="card"><div class="jobs">
+    <a class="job cond" href="${href(TOOLS_DIR+"hourly/")}">${charSVG("W")}<span><b>副業時給計算機</b><span class="sub">収入と作業時間から、実際の時給を出します</span></span></a>
+    <a class="job cond" href="${href(TOOLS_DIR+"target/")}">${charSVG("S")}<span><b>月1万円逆算ツール</b><span class="sub">目標までに必要な件数と作業量の目安</span></span></a>
+    <a class="job cond" href="${href(TOOLS_DIR+"tax-flow/")}">${charSVG("C")}<span><b>確定申告フローチェック</b><span class="sub">申告が必要かどうかの目安を数問で確認</span></span></a>
+  </div></section>
+${cta(href,"まずは自分のタイプを知る")}
+  </article>
+`});
+
+function hourlyPage(){
+  const path=TOOLS_DIR+"hourly/",slug="hourly";
+  return toolShell({slug,path,chara:"W",lead:"時給にすると、意外な数字が出ることもあります",
+    title:"副業時給計算機",desc:"副業の月収と作業時間を入れるだけで、実際の時給と年間の収入の目安がわかる無料の計算機。入力内容は送信されません。",
+    form:[field("inc","1か月の副業収入","円",30000),field("days","作業した日数（1か月）","日",8,'max="31"'),field("hrs","1日あたりの作業時間","時間",2,'max="24" step="0.25"')].join("\n"),
+    result:`    <p class="kicker">結果</p>
+    <p class="tool-big"><span id="rHour">―</span></p>
+    <p class="sub" id="rSub">数字を入れると、時給が出ます。</p>
+    <button class="primary tool-copy" id="copy" type="button" hidden>結果をコピーする</button>`,
+    after:href=>`  <section class="card">
+    <h2>時給を上げたいときは</h2>
+    <p><b>単価を上げる</b>：同じ作業のまま、依頼者への単価交渉や、実績をそろえてからの値上げで時給は上がります。作業時間を記録しておくと、交渉の材料になります。</p>
+    <p><b>副業を変える</b>：作業時間が長いわりに収入が増えないなら、別の副業のほうが合うかもしれません。</p>
+    <ul class="links">${colLink(href,"10000-yen")}${colLink(href,"first-step")}<li><a href="${href(GUIDE)}">副業の一覧を見る</a></li>${PUB.length?`<li><a href="${href(CONDS)}">条件から副業を探す</a></li>`:""}</ul>
+  </section>`,
+    script:`
+function calc(){
+  var inc=num("inc"),d=num("days"),h=num("hrs");
+  if(!(inc>=0)||!(d>0)||!(h>0)||d>31||h>24){$("rHour").textContent="―";$("rSub").textContent="収入・日数・時間を入れてください（日数は31日以下、時間は24時間以下）。";$("copy").hidden=true;return}
+  var tot=d*h,hour=inc/tot;
+  $("rHour").textContent="時給 約"+yen(hour)+"円";
+  $("rSub").textContent="1か月の作業時間は"+(Math.round(tot*100)/100)+"時間。この収入が12か月続くと、年間で約"+yen(inc*12)+"円です。";
+  $("copy").hidden=false;$("copy").onclick=function(){copyText("私の副業を時給にすると、約"+yen(hour)+"円でした。（ミニ診断「副業時給計算機」）https://mini-shindan.com/tools/hourly/",$("copy"),"hourly")};
+  completed("hourly");
+}
+["inc","days","hrs"].forEach(function(i){$(i).addEventListener("input",function(){touched("hourly");calc()})});
+calc();`});
+}
+function targetPage(){
+  const path=TOOLS_DIR+"target/",slug="target";
+  return toolShell({slug,path,chara:"S",lead:"目標から逆算すると、やることが見えてきます",
+    title:"月1万円逆算ツール",desc:"月の目標金額と1件あたりの単価から、必要な件数と週あたりの作業量の目安がわかる無料ツール。目標に合う副業の候補も表示します。",
+    form:[field("goal","1か月の目標金額","円",10000),field("unit","1件（1記事・1点）あたりの収入","円",1500),field("min","1件にかかる時間","分",90,'step="5"')].join("\n"),
+    result:`    <p class="kicker">結果</p>
+    <p class="tool-big"><span id="rCnt">―</span></p>
+    <p class="sub" id="rSub">数字を入れると、必要な件数が出ます。</p>
+    <button class="primary tool-copy" id="copy" type="button" hidden>結果をコピーする</button>`,
+    after:href=>`  <section class="card">
+    <h2>目標に届く可能性のある副業</h2>
+    <p class="sub">半年後の収入の目安の上限が、目標以上の副業です（収入を保証するものではありません）。始めやすい順に並べています。</p>
+    <div class="jobs" id="jobList"></div>
+  </section>
+  <section class="card"><ul class="links">${colLink(href,"10000-yen")}</ul></section>`,
+    script:`
+var JOBS=${JSON.stringify(TOOL_JOBS)};var UP="${"../".repeat(2)}";
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function calc(){
+  var g=num("goal"),u=num("unit"),m=num("min");
+  if(!(g>0)||!(u>0)||!(m>=0)||g>1e8||u>1e8){$("rCnt").textContent="―";$("rSub").textContent="目標と単価を入れてください。";$("copy").hidden=true;$("jobList").innerHTML="";return}
+  var cnt=Math.ceil(g/u),wk=cnt/4,hrs=wk*m/60;
+  $("rCnt").textContent="1か月に"+cnt+"件が目安";
+  $("rSub").textContent="1か月を4週として、週に約"+(Math.round(wk*10)/10)+"件。作業時間は週に約"+(Math.round(hrs*10)/10)+"時間です（1件"+m+"分の場合）。";
+  $("jobList").innerHTML=JOBS.filter(function(j){return j.max>=g}).sort(function(a,b){return b.ease-a.ease}).map(function(j){return '<a class="job" href="'+UP+j.url+'"><b>'+esc(j.name)+'</b><div class="meta"><span>半年後の目安 '+esc(j.month)+'</span><span>初期費用 '+esc(j.cost)+'</span><span>週'+j.h+'時間〜</span></div></a>'}).join("")||'<p class="sub">この目標に届く目安の副業は、いまの一覧にはありません。目標を下げて試してみてください。</p>';
+  $("copy").hidden=false;$("copy").onclick=function(){copyText("月"+yen(g)+"円を稼ぐには、単価"+yen(u)+"円なら月"+cnt+"件が必要でした。（ミニ診断「月1万円逆算ツール」）https://mini-shindan.com/tools/target/",$("copy"),"target")};
+  completed("target");
+}
+["goal","unit","min"].forEach(function(i){$(i).addEventListener("input",function(){touched("target");calc()})});
+calc();`});
+}
+function taxPage(){
+  const path=TOOLS_DIR+"tax-flow/",slug="tax-flow";
+  const sel=(id,label,opts)=>`    <fieldset class="tool-q"><legend>${label}</legend>${opts.map(([v,t],n)=>`<label class="tool-r"><input type="radio" name="${id}" value="${v}"${n===0?"":""}> ${t}</label>`).join("")}</fieldset>`;
+  return toolShell({slug,path,chara:"C",lead:"申告のルールは、順番に確認すれば大丈夫です",
+    title:"確定申告フローチェック",desc:"会社員の副業で確定申告や住民税の申告が必要かどうかを、3つの質問で確認できる目安ツール。最終的な判断は税務署・市区町村で確認してください。",
+    form:[sel("q1","1. 本業は？",[["emp","会社員・公務員など（給与をもらっている）"],["none","上記以外（学生・主婦（夫）・個人事業など）"]]),
+      sel("q2","2. 副業のもらい方は？",[["biz","報酬（業務委託・販売・広告収入など）"],["wage","給与（アルバイト・パートなど）"]]),
+      sel("q3","3. 1年間の副業は？（報酬は収入から経費を引いた「所得」、給与は「収入」）",[["le","20万円以下"],["gt","20万円超"],["na","まだわからない"]])].join("\n"),
+    result:`    <p class="kicker">結果（目安）</p>
+    <p class="tool-big"><span id="rMain">3つの質問に答えてください</span></p>
+    <div id="rBody" class="sub"></div>
+    <button class="primary tool-copy" id="copy" type="button" hidden>結果をコピーする</button>
+    <p class="pr">これは一般的な目安で、個人の事情で判断が変わります。最終的な判断は、お近くの税務署や市区町村の窓口、税理士に確認してください。</p>`,
+    after:href=>`  <section class="card">
+    <h2>あわせて読む</h2>
+    <ul class="links">${colLink(href,"expenses")}${colLink(href,"company-secret")}</ul>
+  </section>`,
+    script:`
+function val(n){var e=document.querySelector('input[name="'+n+'"]:checked');return e?e.value:""}
+function calc(){
+  var a=val("q1"),b=val("q2"),c=val("q3");
+  if(!a||!b||!c){return}
+  var main,body;
+  if(c==="na"){main="まず、1年間の所得を計算しましょう";body="報酬は「収入−経費」、給与は「収入」で見ます。経費の考え方を読んで、ざっくり計算してからもう一度試してください。"}
+  else if(a==="emp"&&c==="le"){main="所得税の確定申告は、原則不要の目安です";body="ただし、住民税の申告は別に必要になる場合があります。お住まいの市区町村の案内を確認してください。医療費控除などを受けたい場合は、確定申告をします。"}
+  else if(a==="emp"&&c==="gt"){main="確定申告が必要になる目安です";body=(b==="wage"?"副業の給与が年末調整されていない場合は、申告が必要になることがあります。":"副業の所得が年20万円を超えると、申告が必要になるのが一般的です。")+"申告の時期は翌年の2月中旬から3月中旬です。住民税の申告は、確定申告をすれば別に出す必要はないのが一般的です。"}
+  else if(c==="le"){main="所得が少ないため、申告が不要な場合もあります";body="本業がないときは、所得の合計と控除の額で決まります。住民税の申告は別にあるので、市区町村と税務署に確認してください。"}
+  else{main="確定申告が必要になる可能性があります";body="本業がない場合は、所得の合計が基礎控除などを超えるかで決まります。税務署の案内か、税理士に確認してください。"}
+  $("rMain").textContent=main;$("rBody").textContent=body;
+  $("copy").hidden=false;$("copy").onclick=function(){copyText("確定申告フローチェックの結果：「"+main+"」（目安）。（ミニ診断）https://mini-shindan.com/tools/tax-flow/",$("copy"),"tax-flow")};
+  completed("tax-flow");
+}
+Array.prototype.forEach.call(document.querySelectorAll("input[type=radio]"),function(r){r.addEventListener("change",function(){touched("tax-flow");calc()})});`});
+}
+
 // ---- 書き出し ----
 rmSync(join(ROOT,BASE),{recursive:true,force:true});
 const out=[];
@@ -557,6 +710,7 @@ write(COLUMN,columnIndex());
 COLUMNS.forEach(c=>write(columnPath(c),columnPage(c)));
 write(ZUKAN,zukanPage());
 if(PUB.length){write(CONDS,conditionHub());PUB.forEach(c=>write(condPath(c),conditionPage(c)))}
+write(TOOLS_DIR,toolHub());write(TOOLS_DIR+"hourly/",hourlyPage());write(TOOLS_DIR+"target/",targetPage());write(TOOLS_DIR+"tax-flow/",taxPage());
 write(PRIVACY,privacyPage());write(ABOUT,aboutPage());
 
 writeFileSync(join(ROOT,"sitemap.xml"),`<?xml version="1.0" encoding="UTF-8"?>
