@@ -91,3 +91,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,s
 @keyframes zkin{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.zk,.zk.got{animation:none;transition:none}}
 @media (min-width:600px){.zk-grid{grid-template-columns:repeat(4,1fr)}}
+
+/* ミニ計算ツール */
+.tool-say{font-weight:600;margin:.2em 0}
+.tool-f{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0}
+.tool-in{display:flex;align-items:center;gap:6px;flex:none}
+.tool-in input{width:7.5em;font:inherit;font-size:1rem;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);text-align:right}
+.tool-in b{min-width:3em;font-weight:400;color:var(--sub);font-size:.85rem}
+.tool-q{border:0;padding:0;margin:0 0 14px}
+.tool-q legend{font-weight:600;margin-bottom:6px;padding:0}
+.tool-r{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin:6px 0;background:var(--bg)}
+.tool-r input{margin-right:6px}
+.tool-big{font-size:1.5rem;font-weight:700;margin:.2em 0;color:var(--accent)}
+.tool-result{border:2px solid var(--accent)}
+.tool-copy{border:0;font:inherit;font-weight:600;cursor:pointer;margin-top:10px}
+.tool-result:not(:has(.tool-copy:not([hidden]))){border-color:var(--line)}
+@media (max-width:420px){.tool-f{flex-direction:column;align-items:stretch}.tool-in{justify-content:flex-end}}
