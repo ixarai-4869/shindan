@@ -9,6 +9,7 @@ import vm from "node:vm";
 import {TYPE_EXTRA,JOB_EXTRA} from "./pages-data.mjs";
 import {COLUMNS} from "./column-data.mjs";
 import {CONDITIONS,HUB_LEAD,ZUKAN_LEAD} from "./conditions-data.mjs";
+import {COMPARE} from "./compare-data.mjs";
 
 const ROOT=join(dirname(fileURLToPath(import.meta.url)),"..");
 const SITE="https://mini-shindan.com/";
@@ -186,7 +187,7 @@ function typePage(k){
   </section>
   </article>
 
-${cta(href,`あなたは${T.short}タイプ？`)}
+${k==="W"&&serverCmp?cmpCard(href,serverCmp,"ブログを始めるときに迷いやすい、レンタルサーバーの選び方を比べました。"):""}${cta(href,`あなたは${T.short}タイプ？`)}
 
   <section class="card">
     <h2>ほかのタイプ</h2>
@@ -251,7 +252,7 @@ ${first?`
   </article>
 
 ${related(href,COLUMNS.filter(c=>c.jobs.includes(j.id)))}
-${cta(href,`${j.name}があなたに向いているか、診断で確かめる`)}
+${j.id==="blog"&&serverCmp?cmpCard(href,serverCmp,"ブログの土台になるレンタルサーバーを、月額・初期費用・サポートなどで比べました。"):""}${cta(href,`${j.name}があなたに向いているか、診断で確かめる`)}
 
   <section class="card">
     <h2>${esc(T.short)}タイプに向いてるほかの副業</h2>
@@ -699,6 +700,57 @@ function calc(){
 Array.prototype.forEach.call(document.querySelectorAll("input[type=radio]"),function(r){r.addEventListener("change",function(){touched("tax-flow");calc()})});`});
 }
 
+// ---- 比較コンテンツ（データが揃ったものだけ公開） ----
+const CMP_FIELDS=["name","monthly","initial","trial","speed","wp","support"];
+const cmpReady=d=>d.updated&&d.orderBasis&&d.summary.length&&d.criteria.length&&d.services.length>=2&&d.services.every(s=>CMP_FIELDS.every(f=>s[f])&&s.good.length&&s.caution.length&&s.fit.length);
+const CMP=Object.values(COMPARE).filter(cmpReady);
+const cmpPath=d=>`${BASE}compare/${d.slug}/`;
+const serverCmp=CMP.find(d=>d.slug==="server");
+const cmpCard=(href,d,lead)=>`  <section class="card">
+    <h2>${esc(d.title)}</h2>
+    <p>${esc(lead)}</p>
+    <p><a href="${href(cmpPath(d))}" data-track="compare_view">${esc(d.title)}を見る</a>（${esc(d.updated)}時点）</p>
+  </section>
+`;
+function comparePage(d){
+  const path=cmpPath(d),title=`${d.title}｜${NAME}`;
+  const desc=`${d.title}。月額・初期費用・無料期間・WordPress設置・サポートを表で比べ、向いている人と気になる点もまとめました（${d.updated}時点）。`;
+  return page({path,title,desc,ptype:"compare",crumbs:[[NAME,""],["比較",path],[d.title,path]],body:href=>`
+  <article>
+  <header class="card hero">
+    ${charSVG("W",true)}
+    <h1>${esc(d.title)}</h1>
+    <p class="sub">${esc(d.updated)}時点の情報です。価格やキャンペーンは変わるので、申し込み前に公式サイトで確認してください。</p>
+  </header>
+  <p class="pr">PR：このページには広告（アフィリエイト）リンクを含みます。</p>
+  <section class="card">
+    <h2>結論：タイプ別の向き不向き</h2>
+    <ul>${d.summary.map(([k,t])=>`<li><b>${esc(TYPES[k].short)}タイプ</b>：${esc(t)}</li>`).join("")}</ul>
+  </section>
+  <section class="card">
+    <h2>比較表（${esc(d.updated)}時点）</h2>
+    <p class="sub">並び順と推奨の根拠：${esc(d.orderBasis)}。表示速度は各社の公式公表値で、このサイトで実測したものではありません。</p>
+    <div class="tbl"><table><thead><tr><th>サービス</th><th>月額</th><th>初期費用</th><th>無料期間</th><th>表示速度（公式公表値）</th><th>WordPress簡単設置</th><th>サポート</th></tr></thead><tbody>
+${d.services.map(s=>`<tr><th>${esc(s.name)}</th><td>${esc(s.monthly)}</td><td>${esc(s.initial)}</td><td>${esc(s.trial)}</td><td>${esc(s.speed)}</td><td>${esc(s.wp)}</td><td>${esc(s.support)}</td></tr>`).join("\n")}
+    </tbody></table></div>
+  </section>
+${d.services.map(s=>`  <section class="card">
+    <h2>${esc(s.name)}</h2>
+    <p><b>良い点</b></p><ul>${s.good.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+    <p><b>気になる点</b></p><ul>${s.caution.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+    <p><b>向いている人</b></p><ul>${s.fit.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+    ${s.link&&live(s.link)?affLinks([s.link],"compare"):""}${s.official?`<p class="sub"><a href="${esc(s.official)}" rel="noopener" target="_blank">公式サイト</a></p>`:""}
+  </section>`).join("\n")}
+  <section class="card">
+    <h2>選び方の基準</h2>
+    ${d.criteria.map(([h,t])=>`<p><b>${esc(h)}</b><br>${esc(t)}</p>`).join("")}
+  </section>
+${cta(href,"まず自分のタイプを知る")}
+  </article>
+  <script>document.addEventListener("click",function(e){var a=e.target.closest(".tbl a,.aff a");if(a&&window.gtag){var n=a.dataset.service||a.textContent.trim();gtag("event","compare_click",{service_name:n})}})</script>
+`});
+}
+
 // ---- 書き出し ----
 rmSync(join(ROOT,BASE),{recursive:true,force:true});
 const out=[];
@@ -711,6 +763,7 @@ COLUMNS.forEach(c=>write(columnPath(c),columnPage(c)));
 write(ZUKAN,zukanPage());
 if(PUB.length){write(CONDS,conditionHub());PUB.forEach(c=>write(condPath(c),conditionPage(c)))}
 write(TOOLS_DIR,toolHub());write(TOOLS_DIR+"hourly/",hourlyPage());write(TOOLS_DIR+"target/",targetPage());write(TOOLS_DIR+"tax-flow/",taxPage());
+CMP.forEach(d=>write(cmpPath(d),comparePage(d)));
 write(PRIVACY,privacyPage());write(ABOUT,aboutPage());
 
 writeFileSync(join(ROOT,"sitemap.xml"),`<?xml version="1.0" encoding="UTF-8"?>

@@ -107,3 +107,4 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,s
 .tool-copy{border:0;font:inherit;font-weight:600;cursor:pointer;margin-top:10px}
 .tool-result:not(:has(.tool-copy:not([hidden]))){border-color:var(--line)}
 @media (max-width:420px){.tool-f{flex-direction:column;align-items:stretch}.tool-in{justify-content:flex-end}}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}.tbl table{min-width:640px;font-size:.85rem}
