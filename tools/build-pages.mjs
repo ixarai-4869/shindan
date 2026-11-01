@@ -11,7 +11,8 @@ import {COLUMNS} from "./column-data.mjs";
 import {CONDITIONS,HUB_LEAD,ZUKAN_LEAD} from "./conditions-data.mjs";
 import {COMPARE} from "./compare-data.mjs";
 import {SEASONS,FEATURES} from "./season-data.mjs";
-import {UNSEI} from "./quiz-data.mjs";
+import {UNSEI,TSUMAZUKI} from "./quiz-data.mjs";
+import {CONT} from "./continue-data.mjs";
 
 const ROOT=join(dirname(fileURLToPath(import.meta.url)),"..");
 const SITE="https://mini-shindan.com/";
@@ -95,7 +96,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <nav class="crumbs" aria-label="パンくずリスト">${crumbs.map(([n,p],i)=>i<crumbs.length-1?`<a href="${href(p)}">${esc(n)}</a>`:`<span aria-current="page">${esc(n)}</span>`).join(" › ")}</nav>
 ${body(href)}
   <footer>
-    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href(COLUMN)}">副業の悩みコラム</a>・<a href="${href(ZUKAN)}">称号図鑑</a>・<a href="${href(TOOLS_DIR)}">ミニ計算ツール</a>${PUB.length?`・<a href="${href(CONDS)}">条件から探す</a>`:""}</p>
+    <p><a href="${href("")}">${NAME}をやってみる</a>・<a href="${href(GUIDE)}">タイプと副業の一覧</a>・<a href="${href(COLUMN)}">副業の悩みコラム</a>・<a href="${href(ZUKAN)}">称号図鑑</a>・<a href="${href(TOOLS_DIR)}">ミニ計算ツール</a>・<a href="${href(TSUMAZUKI.slug)}">つまずきタイプ診断</a>${PUB.length?`・<a href="${href(CONDS)}">条件から探す</a>`:""}</p>
     <p><a href="${href(PRIVACY)}">プライバシーポリシー・免責事項</a>・<a href="${href(ABOUT)}">運営者情報・広告について</a></p>
     <p class="pr">費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。この診断は娯楽・参考用です。</p>
   </footer>
@@ -253,7 +254,7 @@ ${first?`
   </section>
   </article>
 
-${related(href,COLUMNS.filter(c=>c.jobs.includes(j.id)))}
+${contCard(href,j)}${related(href,COLUMNS.filter(c=>c.jobs.includes(j.id)))}
 ${j.id==="blog"&&serverCmp?cmpCard(href,serverCmp,"ブログの土台になるレンタルサーバーを、月額・初期費用・サポートなどで比べました。"):""}${cta(href,`${j.name}があなたに向いているか、診断で確かめる`)}
 
   <section class="card">
@@ -471,7 +472,7 @@ function landing(){
     <div class="lp-all">${JOBS.map(j=>`<a href="${jobPath(j)}">${esc(j.name)}</a>`).join("")}</div>
     <h2 style="margin-top:22px">副業の悩みコラム</h2>
     <ul class="cols">${COLUMNS.map(c=>`<li><a href="${columnPath(c)}">${esc(c.title)}</a></li>`).join("")}</ul>
-    <p><a class="more" href="${COLUMN}">コラムをすべて見る</a>・<a class="more" href="${GUIDE}">タイプと副業の一覧</a>・<a class="more" href="${ZUKAN}">称号図鑑</a>・<a class="more" href="${TOOLS_DIR}">ミニ計算ツール</a>${PUB.length?`・<a class="more" href="${CONDS}">条件から探す</a>`:""}</p>
+    <p><a class="more" href="${COLUMN}">コラムをすべて見る</a>・<a class="more" href="${GUIDE}">タイプと副業の一覧</a>・<a class="more" href="${ZUKAN}">称号図鑑</a>・<a class="more" href="${TOOLS_DIR}">ミニ計算ツール</a>・<a class="more" href="${TSUMAZUKI.slug}">つまずきタイプ診断</a>${PUB.length?`・<a class="more" href="${CONDS}">条件から探す</a>`:""}</p>
     <h2 style="margin-top:22px">よくある質問</h2>
     <dl>${FAQ.map(([q,a])=>`<dt>${esc(q)}</dt><dd>${esc(a)}</dd>`).join("")}</dl>
     ${seasonScript()}
@@ -920,6 +921,142 @@ function unseiTop(){
 `});
 }
 
+// ---- 副業つまずきタイプ診断（/tsumazuki/） ----
+function tsumazukiPage(){
+  const Q=TSUMAZUKI,path=Q.slug;
+  const title=`副業つまずきタイプ診断｜続かない・出せない・迷うの原因がわかる｜${NAME}`;
+  const desc="副業を始めたあとのつまずきを、8問で5タイプに分けて、関連コラムや見直しポイントを案内する無料診断。1本目の診断結果と並べても見られます。";
+  const hrefOf=l=>l.type==="column"?columnPath(COLUMNS.find(c=>c.slug===l.slug)):l.type==="condition"?condPath({slug:l.slug}):l.type==="tool"?`${TOOLS_DIR}${l.slug}/`:l.type==="plan"||l.type==="top"?"":GUIDE;
+  const types=Object.fromEntries(Q.keys.map(k=>{const t=Q.types[k];return [k,{name:t.name,lead:t.lead,chara:t.chara,advice:t.advice,links:t.links.map(l=>({label:l.label,href:"../"+hrefOf(l)+(l.type==="plan"?"?plan=1":"")}))}]}));
+  const main=Object.fromEntries(KEYS.map(k=>[k,{animal:TYPES[k].animal,chara:TYPES[k].chara,short:TYPES[k].short,role:TYPES[k].role,adj:TYPES[k].adj,weak:TYPES[k].weak,slug:TYPES[k].slug}]));
+  const svg=Object.fromEntries(KEYS.map(k=>[k,charSVG(k,true)]));
+  const data={id:Q.id,qs:Q.qs,keys:Q.keys,types,main,svg};
+  return page({path,title,desc,ptype:"tsumazuki",crumbs:[[NAME,""],["副業つまずきタイプ診断",path]],body:href=>`
+  <article class="qz">
+  <section id="qzStart" class="card hero">
+    <div class="zk-line">${KEYS.map(k=>charSVG(k,true)).join("")}</div>
+    <p class="kicker">第2の診断</p>
+    <h1>副業つまずきタイプ診断</h1>
+    <p class="left">副業を始めたあとの「出せない」「続かない」「折れそう」「時間がない」「迷う」。8問に答えると、あなたのつまずきパターンと、見直しのヒントがわかります。</p>
+    <p class="sub left">約1分・登録不要・無料。娯楽・参考用です。</p>
+    <p><button class="primary" id="qzGo" type="button">診断をはじめる</button></p>
+  </section>
+  <section id="qzQuiz" class="card" hidden>
+    <div class="qz-head"><button class="qz-link" id="qzBack" type="button">← ひとつ戻る</button><span class="sub" id="qzNum"></span></div>
+    <div class="qz-bar" aria-hidden="true"><i id="qzProg"></i></div>
+    <h2 id="qzQ" class="qz-q"></h2>
+    <div id="qzOpts"></div>
+  </section>
+  <section id="qzResult" hidden>
+    <div class="card hero">
+      <p class="kicker">あなたのつまずきタイプ</p>
+      <div id="rChar" class="unsei-char"></div>
+      <h1 id="rName"></h1>
+      <p class="catch" id="rLead"></p>
+    </div>
+    <div class="card"><h2>処方箋</h2><ul id="rAdvice"></ul></div>
+    <div class="card"><h2>あわせて読む・見直す</h2><ul class="links" id="rLinks"></ul></div>
+    <div class="card" id="rPrev" hidden><h2>前回の副業タイプと合わせて見る</h2><p id="rPrevT"></p><p class="sub" id="rPrevW"></p><p><a id="rPrevA" href="#">タイプをくわしく見る</a></p></div>
+    <p class="sub">診断は娯楽・参考用です。結果は、この端末のブラウザにだけ保存されます。</p>
+    <p><a class="primary" href="${href("")}">副業タイプの診断（11問）をやってみる</a></p>
+    <p><button class="qz-link" id="rAgain" type="button">もう一度診断する</button></p>
+  </section>
+  </article>
+  <script src="${href("assets/quiz2.js")}"></script>
+  <script>
+  (function(){
+    var D=${JSON.stringify(data).replace(/</g,"\\u003c")},$=function(i){return document.getElementById(i)};
+    var KEY="tsumazuki-last";
+    function ev(n,p){if(window.gtag)gtag("event",n,p||{})}
+    function show(k){
+      var T=D.types[k];$("qzStart").hidden=true;$("qzQuiz").hidden=true;$("qzResult").hidden=false;
+      $("rChar").innerHTML=D.svg[T.chara];$("rName").textContent=T.name;$("rLead").textContent=T.lead;
+      $("rAdvice").innerHTML="";T.advice.forEach(function(a){var li=document.createElement("li");li.textContent=a;$("rAdvice").appendChild(li)});
+      $("rLinks").innerHTML="";T.links.forEach(function(l){var li=document.createElement("li"),a=document.createElement("a");a.href=l.href;a.textContent=l.label;li.appendChild(a);$("rLinks").appendChild(li)});
+      var last=null;try{last=JSON.parse(localStorage.getItem("shindan-last"))}catch(e){}
+      if(last&&D.main[last.m]&&D.main[last.s]){var M=D.main[last.m];$("rPrev").hidden=false;
+        $("rPrevT").textContent="前回の副業タイプは「"+D.main[last.s].adj+M.role+"」（"+M.animal+"の「"+M.chara+"」）。つまずきタイプは「"+T.name+"」でした。";
+        $("rPrevW").textContent="副業タイプの診断が示す、"+M.short+"タイプの"+M.weak;$("rPrevA").href="../fukugyo/type/"+M.slug+"/"}
+      window.scrollTo(0,0);
+    }
+    var run=Quiz.run({id:D.id,qs:D.qs,keys:D.keys,els:{start:$("qzStart"),quiz:$("qzQuiz"),num:$("qzNum"),prog:$("qzProg"),q:$("qzQ"),opts:$("qzOpts"),back:$("qzBack")},
+      onDone:function(ans,r){var k=r.order[0];try{localStorage.setItem(KEY,k)}catch(e){}ev("quiz_complete",{quiz:D.id,result_type:k});show(k)}});
+    $("qzGo").onclick=function(){run.begin()};
+    $("rAgain").onclick=function(){$("qzResult").hidden=true;run.begin()};
+  })();
+  </script>
+`});
+}
+
+// ---- 31〜90日の継続プラン ----
+const CONT_PUB=Object.keys(CONT).filter(id=>JOB_BY_ID[id]);
+{
+  const m=html.match(/const CONT_IDS=\[([^\]]*)\]/);
+  const inHtml=m?m[1].split(",").map(x=>x.trim().replace(/"/g,"")).filter(Boolean).sort().join(","):"";
+  if(inHtml!==[...CONT_PUB].sort().join(","))throw new Error(`index.html の CONT_IDS（${inHtml}）が tools/continue-data.mjs（${[...CONT_PUB].sort()}）と一致しません`);
+}
+const contPath=id=>`${BASE}plan/${id}/`;
+function contPage(id){
+  const j=JOB_BY_ID[id],C=CONT[id],path=contPath(id);
+  const flat=C.phases.flatMap(p=>p.steps);
+  const title=`${j.name}の31〜90日の継続プラン｜${NAME}`;
+  const desc=`${j.name}の最初の30日プランのあと、31〜60日の習慣化と改善、61〜90日の伸ばす・守る（単価交渉・確定申告の準備・やめる判断の基準）をチェックしながら進められます。`;
+  const stepLink=(href,l)=>!l?"":l.tool?` <a href="${href(TOOLS_DIR+l.tool+"/")}">${esc(TOOL_TITLES[l.tool])}</a>`:l.column?` <a href="${href(columnPath(COLUMNS.find(c=>c.slug===l.column)))}">${esc(COLUMNS.find(c=>c.slug===l.column).short)}</a>`:"";
+  let n=0;
+  return page({path,title,desc,ptype:"plan",crumbs:[[NAME,""],[j.name,jobPath(j)],["31〜90日の継続プラン",path]],body:href=>`
+  <article>
+  <header class="card hero">
+    ${charSVG(j.t,true)}
+    <p class="sub">${esc(TYPES[j.t].animal)}の「${esc(TYPES[j.t].chara)}」と一緒に</p>
+    <h1>${esc(j.name)}：31〜90日の継続プラン</h1>
+    <p class="left">最初の30日のあとの、習慣化と改善、そして伸ばす・守るための60日です。チェックはこの端末に保存されます。</p>
+    <p class="catch" id="cProg"></p>
+    <p class="sub left" id="cSub"></p>
+  </header>
+${C.phases.map((ph,pi)=>`  <section class="card${ph.first&&live(ph.first)?" first":""}">
+    <h2>${esc(ph.name)}</h2>
+    ${ph.first&&live(ph.first)?`<div class="aff">${svcCard(ph.first,"plan_step",id)}</div>`:""}
+    <ol class="plan">${ph.steps.map(([d,t,l])=>`<li><label><input type="checkbox" data-n="${n++}"><span class="day">${d}日目</span><span>${esc(t)}${stepLink(href,l)}</span></label></li>`).join("\n    ")}</ol>
+  </section>`).join("\n")}
+  <section class="card">
+    <h2>30日プランに戻る</h2>
+    <p class="sub">最初の30日プランは、診断の結果ページで見られます。チェックの状態はそのまま引き継がれます。</p>
+    <p><a href="${href("")}?plan=1">診断の結果と30日プランを開く</a></p>
+    <p><a href="${href(jobPath(j))}">${esc(j.name)}の始め方を読む</a></p>
+  </section>
+${cta(href,"あなたに向いてる副業を診断する")}
+  <p class="pr">費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。</p>
+  </article>
+  <script>
+  (function(){
+    var ID=${JSON.stringify(id)},N1=${j.plan.length},N2=${flat.length},K1="shindan-plan-"+ID,K2="shindan-plan2-"+ID;
+    function load(k){try{var a=JSON.parse(localStorage.getItem(k));return Array.isArray(a)?a:[]}catch(e){return[]}}
+    var d1=load(K1).filter(function(x){return x<N1}),d2=new Set(load(K2));
+    function ev(n,p){if(window.gtag)gtag("event",n,p||{})}
+    function prog(){
+      var a=d1.length,b=d2.size;
+      document.getElementById("cProg").textContent="30日プラン "+a+" / "+N1+"　継続プラン "+b+" / "+N2;
+      document.getElementById("cSub").textContent=a<N1?"30日プランはまだ途中です。こちらを先に進めても大丈夫です。":(b===N2?"90日、おつかれさまでした！":"30日プランは完了しています。続きを進めましょう。");
+    }
+    var boxes=document.querySelectorAll("input[type=checkbox]");
+    boxes.forEach(function(c){var n=+c.dataset.n;if(d2.has(n)){c.checked=true;c.parentNode.classList.add("done")}
+      c.onchange=function(){
+        if(c.checked){if(d2.size===0)ev("plan_extend_start",{job_id:ID});d2.add(n)}else d2.delete(n);
+        c.parentNode.classList.toggle("done",c.checked);
+        try{localStorage.setItem(K2,JSON.stringify(Array.from(d2)))}catch(e){}prog();ev("plan_check",{job_id:ID,done_count:d2.size,phase:"extend"});
+      }});
+    prog();
+  })();
+  </script>
+`});
+}
+const contCard=(href,j)=>CONT[j.id]?`  <section class="card first">
+    <h2>31日目からの継続プラン</h2>
+    <p>最初の30日のあと、60日かけて習慣化と改善、単価交渉や確定申告の準備まで進められます。</p>
+    <p><a href="${href(contPath(j.id))}" data-track="plan_extend_view">31〜90日の継続プランを見る</a></p>
+  </section>
+`:"";
+
 // ---- 書き出し ----
 rmSync(join(ROOT,BASE),{recursive:true,force:true});
 const out=[];
@@ -935,6 +1072,8 @@ write(TOOLS_DIR,toolHub());write(TOOLS_DIR+"hourly/",hourlyPage());write(TOOLS_D
 CMP.forEach(d=>write(cmpPath(d),comparePage(d)));
 write(unseiPath,unseiPage());write(UNSEI_TOP,unseiTop());
 FEATS.forEach(f=>write(featPath(f),featurePage(f)));
+write(TSUMAZUKI.slug,tsumazukiPage());
+CONT_PUB.forEach(id=>write(contPath(id),contPage(id)));
 write(PRIVACY,privacyPage());write(ABOUT,aboutPage());
 
 writeFileSync(join(ROOT,"sitemap.xml"),`<?xml version="1.0" encoding="UTF-8"?>
