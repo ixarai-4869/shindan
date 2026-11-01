@@ -74,7 +74,7 @@ if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim()})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -99,8 +99,10 @@ const cta=(href,text)=>`  <div class="cta card">
   </div>`;
 
 // URL が #REPLACE_… のままの枠は出さない（index.html の結果画面と同じ）
-const live=k=>k&&!LINKS[k][1].startsWith("#REPLACE");
-const affLinks=keys=>keys.length?`<ul class="aff">${keys.map(k=>`<li><a href="${LINKS[k][1]}" target="_blank" rel="sponsored noopener" data-track="affiliate_click">${esc(LINKS[k][0])} →</a></li>`).join("")}</ul>
+const live=k=>!!(k&&LINKS[k]&&!LINKS[k].url.startsWith("#REPLACE"));
+// サービス名＋選ぶ理由＋ボタンのカード（index.html の svcCard と同じ見た目）。place は計測用の置き場所
+const svcCard=(k,place)=>{const L=LINKS[k];return `<a class="svc" href="${L.url}" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="${k}" data-place="${place}"><span class="svc-t"><b>${esc(L.svc)}</b><span>${esc(L.why)}</span></span><span class="svc-b">${esc(L.label)}</span></a>`};
+const affLinks=(keys,place="column")=>keys.length?`<div class="aff">${keys.map(k=>svcCard(k,place)).join("")}</div>
     <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>`:"";
 
 const jobMeta=j=>`<div class="meta"><span>初期費用 ${esc(j.costLabel)}</span><span>週${j.h}時間〜</span><span>最初の収入まで ${esc(j.first)}</span><span>半年後の目安 ${esc(j.month)}</span><span>始めやすさ <span class="stars">${stars(j.ease)}</span></span></div>`;
@@ -187,6 +189,7 @@ ${cta(href,`あなたは${T.short}タイプ？`)}
 function jobPage(j){
   const T=TYPES[j.t],X=JOB_EXTRA[j.id],path=jobPath(j);
   const linkKeys=[...new Set(j.plan.map(p=>p[2]).filter(live))];
+  const first=j.plan.find(p=>live(p[2]));
   const same=JOBS.filter(x=>x.t===j.t&&x.id!==j.id);
   const title=`${j.name}の始め方と最初の30日プラン｜${NAME}`;
   const desc=`${j.name}の初期費用（${j.costLabel}）、必要な時間（週${j.h}時間〜）、最初の収入までの期間（${j.first}）、半年後の目安（${j.month}）と、最初の30日でやることを解説します。`;
@@ -198,7 +201,14 @@ function jobPage(j){
     ${jobMeta(j)}
     <p>${esc(j.real)}</p>
   </header>
-
+${first?`
+  <section class="card first">
+    <p class="kicker">今日やる最初の一歩</p>
+    <p>${esc(first[1])}</p>
+    ${svcCard(first[2],"first_step")}
+    <p class="pr">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>
+  </section>
+`:""}
   <section class="card">
     <h2>${esc(j.name)}の目安</h2>
     <table>
@@ -219,16 +229,11 @@ function jobPage(j){
 
   <section class="card">
     <h2>最初の30日プラン</h2>
-    <ol class="plan">${j.plan.map(([d,text,lk])=>`<li><span class="day">${d}日目</span><span>${esc(text)}${live(lk)?`<br><a href="${LINKS[lk][1]}" target="_blank" rel="sponsored noopener" data-track="affiliate_click">${esc(LINKS[lk][0])} →</a>`:""}</span></li>`).join("")}</ol>
+    <ol class="plan">${j.plan.map(([d,text,lk])=>`<li><span class="day">${d}日目</span><span>${esc(text)}${live(lk)?`${svcCard(lk,"plan")}`:""}</span></li>`).join("")}</ol>
     ${linkKeys.length?`<p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>`:""}
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
   </section>
-${linkKeys.length?`
-  <section class="card">
-    <h2>${esc(j.name)}を始めるのに使うサービス</h2>
-    ${affLinks(linkKeys)}
-  </section>
-`:""}
+
   <section class="card">
     <h2>よくある質問</h2>
     <dl class="faq">${X.faq.map(([q,a])=>`<dt>${esc(q)}</dt><dd>${esc(a)}</dd>`).join("")}</dl>
@@ -285,6 +290,7 @@ function block(href,b){
   if(b.ol)return `<ol>${b.ol.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>`;
   if(b.jobs)return jobCards(href,b.jobs);
   if(b.aff)return affLinks(b.aff.filter(live));
+  if(b.cta)return `<div class="cta mid"><p><b>${esc(b.cta)}</b></p><p class="sub">11問・約2分・登録不要。今の時間とお金で始められる副業と、最初の30日プランがわかります。</p><a class="primary" href="${href("")}" data-track="page_to_quiz" data-place="column_mid">無料で診断する</a></div>`;
   if(b.note)return `<p class="sub">${esc(b.note)}</p>`;
   throw new Error("column-data.mjs に知らない形の中身があります: "+JSON.stringify(b));
 }
@@ -294,6 +300,7 @@ function columnPage(c){
   <article>
   <header class="card">
     <h1>${esc(c.title)}</h1>
+    <p class="sub"><time datetime="${c.updated}">${c.updated.replace(/^(\d+)-0?(\d+)-0?(\d+)$/,"$1年$2月$3日")}更新</time></p>
     <p>${esc(c.lead)}</p>
   </header>
 ${c.sections.map(([h,bs])=>`

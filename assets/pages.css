@@ -45,6 +45,7 @@ th{width:8em;font-weight:500;color:var(--sub)}
 .plan li{display:flex;gap:10px;border-top:1px solid var(--line);padding:8px 0}
 .plan .day{flex:none;width:3.6em;font-size:.8rem;font-weight:600;color:var(--accent);padding-top:2px}
 .plan a,.aff a,.links a{font-weight:600}
+.plan a.svc,.aff a.svc{font-weight:400}
 .aff{list-style:none;padding:0}
 .aff li{margin:6px 0}
 .faq dt{font-weight:600;margin-top:10px}
@@ -52,3 +53,14 @@ th{width:8em;font-weight:500;color:var(--sub)}
 .cta{text-align:center;background:var(--accent-soft);border-color:var(--accent)}
 footer{margin-top:32px;text-align:center;font-size:.9rem}
 .job .sub{display:block;margin-top:2px}
+
+/* 広告カード（サービス名＋選ぶ理由＋ボタン） */
+.svc{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border:1px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:10px 12px;margin:8px 0 2px;color:var(--text);text-decoration:none;font-weight:400}
+.svc-t{display:flex;flex-direction:column;min-width:12em;flex:1}
+.svc-t span{font-size:.82rem;color:var(--sub)}
+.svc-b{background:var(--accent);color:#fff;border-radius:999px;padding:7px 16px;font-weight:600;font-size:.88rem;white-space:nowrap}
+.aff .svc{margin:8px 0}
+.first{border:2px solid var(--accent)}
+.first .day{font-weight:700;color:var(--accent);margin-right:8px}
+.kicker{margin:0;font-size:.8rem;font-weight:700;color:var(--accent);letter-spacing:.05em}
+.cta.mid{border:1px solid var(--accent);border-radius:12px;padding:14px;margin:14px 0}

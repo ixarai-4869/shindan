@@ -29,7 +29,7 @@ if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim()})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -40,12 +40,18 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <article>
   <header class="card">
     <h1>副業の経費はどこまで？認められやすいもの・認められないもの</h1>
+    <p class="sub"><time datetime="2026-11-01">2026年11月1日更新</time></p>
     <p>副業の経費になるのは「その副業でお金を得るために使ったお金」です。迷ったら「副業をしていなくても買ったか？」と自分に聞いてみると判断しやすくなります。</p>
   </header>
 
   <section class="card">
     <h2>経費にしやすいもの</h2>
     <ul><li>フリマやせどりの仕入れ代、送料、梱包資材</li><li>販売サイトやクラウドソーシングの手数料</li><li>副業専用のソフト・アプリ・サーバー代</li><li>仕事に使う本や講座の代金</li><li>ハンドメイドの材料費</li><li>打ち合わせや仕入れに行く交通費</li></ul>
+  </section>
+  <section class="card">
+    <h2>迷ったら、診断で副業を決めてから</h2>
+    <p>経費になるものは、副業の種類で大きく変わります。仕入れがある「売る」副業と、パソコン1台でできる「書く」副業では、記録の手間もまったく違います。</p>
+    <div class="cta mid"><p><b>あなたに向いてる副業と、かかるお金の目安を確かめる</b></p><p class="sub">11問・約2分・登録不要。今の時間とお金で始められる副業と、最初の30日プランがわかります。</p><a class="primary" href="../../../" data-track="page_to_quiz" data-place="column_mid">無料で診断する</a></div>
   </section>
   <section class="card">
     <h2>家と共用のものは「按分」する</h2>
@@ -66,6 +72,9 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <h2>領収書と記録の残し方</h2>
     <p>レシートや領収書、ネットで買ったものは注文履歴の画面を保存しておきます。月に一度、スプレッドシートや家計簿アプリに「日付・金額・何に使ったか」をまとめておくと、確定申告のときに困りません。</p>
     <p>書類は原則として5〜7年の保存が必要です。</p>
+    <p>副業の入金と支払いを1つの口座にまとめると、通帳（入出金の明細）がそのまま記録の土台になります。記録や申告書づくりは、確定申告ソフトを使うと手作業がぐっと減ります。</p>
+    <div class="aff"><a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEQHQ+OESKY+47L8+61C2Q" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="BIZ" data-place="column"><span class="svc-t"><b>FREENANCE（フリーナンス）</b><span>副業の報酬を受け取る口座を生活費と分けられる</span></span><span class="svc-b">FREENANCEの口座を無料で開設</span></a></div>
+    <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>
   </section>
   <section class="card">
     <h2>経費がかかりやすい副業</h2>

@@ -29,7 +29,7 @@ if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim()})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -40,6 +40,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <article>
   <header class="card">
     <h1>副業は何から始める？未経験でも迷わない3ステップ</h1>
+    <p class="sub"><time datetime="2026-10-29">2026年10月29日更新</time></p>
     <p>副業選びで迷う人の多くは、「稼げる副業」から探し始めています。順番を逆にして、自分の条件と向き不向きから決めると、続く副業が見つかりやすくなります。</p>
   </header>
 
@@ -54,6 +55,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <p>副業は大きく「書く」「話す・見せる」「作る」「売る」「こなす」の5種類に分けられます。得意なことに近い種類を選ぶと、最初の壁を越えやすくなります。</p>
     <ul><li>調べてまとめるのが好き → 書く（Webライター、ブログ）</li><li>人と話すのが好き → 話す・見せる（SNS発信、配信）</li><li>手を動かすのが好き → 作る（ハンドメイド、デザイン）</li><li>値段や相場が気になる → 売る（フリマ、せどり）</li><li>決まった作業をきっちりやりたい → こなす（データ入力、オンライン秘書）</li></ul>
     <p>どれに当てはまるか迷ったら、診断で確かめるのが早道です。11問・約2分で、タイプと今の条件で始められる副業がわかります。</p>
+    <div class="cta mid"><p><b>5つのタイプ、あなたはどれ？</b></p><p class="sub">11問・約2分・登録不要。今の時間とお金で始められる副業と、最初の30日プランがわかります。</p><a class="primary" href="../../../" data-track="page_to_quiz" data-place="column_mid">無料で診断する</a></div>
   </section>
   <section class="card">
     <h2>ステップ3：最初の30日は「1件目」だけを目標にする</h2>

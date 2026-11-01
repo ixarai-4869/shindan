@@ -29,7 +29,7 @@ if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim()})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -40,6 +40,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <article>
   <header class="card">
     <h1>副業は会社にバレる？住民税のしくみと始める前の確認ポイント</h1>
+    <p class="sub"><time datetime="2026-11-01">2026年11月1日更新</time></p>
     <p>会社に副業が伝わる一番多いきっかけは、住民税の金額です。ただし、隠す方法を考える前に、まず就業規則で副業が認められているかを確認しましょう。</p>
   </header>
 
@@ -59,11 +60,15 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
     <h2>「20万円以下なら申告不要」の落とし穴</h2>
     <p>会社員の副業で、所得（収入から経費を引いた額）が年20万円以下なら、所得税の確定申告は不要とされています。ただし、住民税の申告は別に必要です。</p>
     <p>住民税の申告をしないと、あとから市区町村から問い合わせが来ることがあります。20万円以下でも、市区町村への住民税の申告は忘れずに行いましょう。</p>
+    <p>申告のときに困らないよう、副業の入金は最初から生活費の口座と分けておくのがおすすめです。年間の収入がひと目でわかり、20万円を超えたかどうかもすぐ確認できます。</p>
+    <div class="aff"><a class="svc" href="https://px.a8.net/svt/ejp?a8mat=4BEQHQ+OESKY+47L8+61C2Q" target="_blank" rel="sponsored noopener" data-track="affiliate_click" data-key="BIZ" data-place="column"><span class="svc-t"><b>FREENANCE（フリーナンス）</b><span>副業の報酬を受け取る口座を生活費と分けられる</span></span><span class="svc-b">FREENANCEの口座を無料で開設</span></a></div>
+    <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>
   </section>
   <section class="card">
     <h2>住民税以外で知られるケース</h2>
     <ul><li>SNSやブログで本名・顔写真・勤務先がわかる情報を出している</li><li>同僚に話したことが広まる</li><li>会社の近くで配達やアルバイトをしている</li></ul>
     <p>顔も声も出さずに在宅でできる副業なら、こうしたきっかけはぐっと減ります。</p>
+    <div class="cta mid"><p><b>顔も声も出さずにできる副業、あなたに向いているのは？</b></p><p class="sub">11問・約2分・登録不要。今の時間とお金で始められる副業と、最初の30日プランがわかります。</p><a class="primary" href="../../../" data-track="page_to_quiz" data-place="column_mid">無料で診断する</a></div>
   </section>
   <section class="card">
     <h2>顔も声も出さずにできる副業</h2>

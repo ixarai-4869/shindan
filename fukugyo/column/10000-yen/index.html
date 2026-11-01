@@ -29,7 +29,7 @@ if(GA_ID&&!NOTRACK){
   const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
   window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID);
 }
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim()})});
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,{page:location.pathname,link:a.textContent.trim(),link_key:a.dataset.key||"",place:a.dataset.place||""})});
 </script>
 </head>
 <body>
@@ -40,6 +40,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
   <article>
   <header class="card">
     <h1>副業で月1万円は現実的？種類別の期間と時間の目安</h1>
+    <p class="sub"><time datetime="2026-11-01">2026年11月1日更新</time></p>
     <p>月1万円は、種類を選べば多くの人に届く金額です。ただし「早く届く副業」と「時間はかかるが積み上がる副業」があり、どちらを選ぶかで最初の半年の見え方がまったく変わります。</p>
   </header>
 
@@ -60,6 +61,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");
       <a class="job" href="../../../fukugyo/job/secretary/"><b>オンライン秘書</b><div class="meta"><span>初期費用 0円</span><span>週7時間〜</span><span>最初の収入まで 1か月前後</span><span>半年後の目安 月3〜8万円</span><span>始めやすさ <span class="stars">★★★☆☆</span></span></div><span class="more">始め方を見る →</span></a>
       <a class="job" href="../../../fukugyo/job/sns-agent/"><b>SNS運用代行</b><div class="meta"><span>初期費用 0円</span><span>週5時間〜</span><span>最初の収入まで 1〜2か月</span><span>半年後の目安 月2〜5万円</span><span>始めやすさ <span class="stars">★★★☆☆</span></span></div><span class="more">始め方を見る →</span></a>
     </div>
+    <div class="cta mid"><p><b>作業型・代行型・発信型、あなたに向いているのはどれ？</b></p><p class="sub">11問・約2分・登録不要。今の時間とお金で始められる副業と、最初の30日プランがわかります。</p><a class="primary" href="../../../" data-track="page_to_quiz" data-place="column_mid">無料で診断する</a></div>
   </section>
   <section class="card">
     <h2>時間はかかるが積み上がる「発信型」</h2>
