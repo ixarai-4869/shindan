@@ -19,6 +19,11 @@
 <link rel="canonical" href="https://mini-shindan.com/">
 <meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1917" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ミニ診断">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E">
 <script>
 // GA4 の測定ID（G-XXXXXXX）を入れると計測が有効になる。空のままなら何も読み込まない。
@@ -346,6 +351,10 @@ ul{padding-left:1.2em;margin:.3em 0}
       <ul class="plan" id="rplan"></ul>
       <button class="opt" id="planCal" style="text-align:center">予定をカレンダーに入れて、毎日リマインドを受け取る</button>
       <p class="sub" style="margin:0 0 8px;text-align:center">今日から各ステップの日の20時に、スマホやPCのカレンダーで通知されます（登録不要）</p>
+      <div id="installRow" class="center" hidden>
+        <button class="opt" id="installBtn" style="text-align:center" hidden>ホーム画面に追加して、いつでもプランを開く</button>
+        <p class="sub" id="installIos" style="margin:0 0 8px" hidden>ホーム画面に追加すると、アプリのようにプランを開けます。Safariの共有ボタンから「ホーム画面に追加」を選んでください。</p>
+      </div>
       <p class="pr" style="margin-bottom:0">チェックはこの端末に保存されます。PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>
     </div>
     <div class="card shareCard" id="shareCard">
@@ -1012,6 +1021,24 @@ function showResult(main,sub,sc,mode,ci){
 }
 // リビール中のタップ・キー・スクロールで、残りの演出を飛ばして全部表示する
 ["pointerdown","keydown","wheel","touchmove"].forEach(ev=>addEventListener(ev,()=>{if(!$("result").hidden)$("result").classList.add("skip")},{passive:true}));
+
+// ホーム画面に追加（PWA）。Chrome 系は専用ボタン、iPhone/iPad は手順の案内。インストール済みの画面では出さない
+let installEv=null;
+const standalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const isIos=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+function updateInstall(){
+  const on=!standalone()&&(installEv||isIos);
+  $("installRow").hidden=!on;$("installBtn").hidden=!installEv;$("installIos").hidden=!!installEv||!isIos;
+}
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEv=e;updateInstall()});
+addEventListener("appinstalled",()=>{installEv=null;updateInstall();track("pwa_installed")});
+$("installBtn").onclick=async()=>{
+  if(!installEv)return;
+  installEv.prompt();const r=await installEv.userChoice;track("pwa_install_prompt",{outcome:r.outcome});
+  installEv=null;updateInstall();
+};
+updateInstall();
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 
 $("lineup").innerHTML=KEYS.map(k=>charSVG(k)).join("");
 $("go").onclick=begin;
