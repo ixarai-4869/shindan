@@ -7,6 +7,7 @@ import {dirname,join} from "node:path";
 import {fileURLToPath} from "node:url";
 import vm from "node:vm";
 import {TYPE_EXTRA,JOB_EXTRA} from "./pages-data.mjs";
+import {TYPE_DEEP} from "./type-deep-data.mjs";
 import {COLUMNS} from "./column-data.mjs";
 import {CONDITIONS,HUB_LEAD,ZUKAN_LEAD} from "./conditions-data.mjs";
 import {COMPARE} from "./compare-data.mjs";
@@ -55,7 +56,7 @@ const stars=n=>"★".repeat(n)+"☆".repeat(5-n);
 
 // ---- 共通の枠 ----
 // path はサイトルートからのパス（末尾 /）。リンクは相対パスにして github.io/shindan/ でも動くようにする
-function page({path,title,desc,crumbs,body,ptype=""}){
+function page({path,title,desc,crumbs,body,ptype="",extraLd=""}){
   const up="../".repeat(path.split("/").filter(Boolean).length);
   const href=p=>up+p;
   const ld={"@context":"https://schema.org","@type":"BreadcrumbList",itemListElement:crumbs.map(([n,p],i)=>({"@type":"ListItem",position:i+1,name:n,item:SITE+p}))};
@@ -83,7 +84,7 @@ function page({path,title,desc,crumbs,body,ptype=""}){
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="${href("assets/pages.css")}">
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
-<script>
+${extraLd}<script>
 const GA_ID="${GA_ID}";
 const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
 if(GA_ID&&!NOTRACK){
@@ -127,39 +128,43 @@ const FACE=["顔も声も出さずにできる","声出しが必要","顔出し�
 
 // ---- タイプ別ページ ----
 function typePage(k){
-  const T=TYPES[k],X=TYPE_EXTRA[k],jobs=JOBS.filter(j=>j.t===k),path=typePath(k);
+  const T=TYPES[k],X=TYPE_EXTRA[k],D=TYPE_DEEP[k],jobs=JOBS.filter(j=>j.t===k),path=typePath(k);
   const g=T.good,o=T.opp;
-  const title=`${T.animal}の${T.chara}（${T.short}タイプ）の特徴と向いてる副業｜${NAME}`;
-  const desc=`${NAME}の「${T.short}」タイプ（${T.animal}の${T.chara}）の特徴、強み、つまずきやすい点、向いている副業${jobs.length}つと避けた方がいい副業を解説します。${T.catch}`;
-  return page({path,title,desc,crumbs:[[NAME,""],["タイプと副業の一覧",GUIDE],[`${T.short}タイプ`,path]],body:href=>`
+  const title=`${T.animal}の${T.chara}（${T.short}タイプ）を深掘り：場面別の行動・つまずき・伸ばし方｜${NAME}`;
+  const desc=`${NAME}の「${T.short}」タイプ（${T.animal}の${T.chara}）を深掘り。仕事場面でのふるまい、副業を始めてからの時系列、収入が伸びる型、称号4つの使い方、よくある疑問、Lv1〜4のロードマップを解説します。`;
+  const ldFaq=`<script type="application/ld+json">${JSON.stringify({"@context":"https://schema.org","@type":"FAQPage",mainEntity:D.faq.map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))})}</script>\n`;
+  return page({path,title,desc,extraLd:ldFaq,crumbs:[[NAME,""],["タイプと副業の一覧",GUIDE],[`${T.short}タイプ`,path]],body:href=>`
   <article>
   <header class="card hero">
     ${charSVG(k,true)}
     <p class="sub">${esc(T.animal)}の「${esc(T.chara)}」</p>
-    <h1>${esc(T.short)}タイプ（${esc(T.role)}）の特徴と向いてる副業</h1>
+    <h1>${esc(T.short)}タイプ（${esc(T.role)}）を深掘り</h1>
     <p class="catch">${esc(T.catch)}</p>
     <p class="left">${esc(X.lead)}${esc(T.desc)}</p>
+    <p class="left sub">診断結果の画面にある「あるある」「取扱説明書」などは省き、このページでは場面別のふるまい、始めてからの時系列、称号ごとの使い方、ロードマップを詳しく解説します。</p>
   </header>
 
   <section class="card">
-    <h2>こんなところ、ありませんか？</h2>
-    <ul>${T.aru.map(s=>`<li>${esc(s)}</li>`).join("")}</ul>
-  </section>
-
-  <section class="card">
-    <h2>${esc(T.short)}タイプがよく言うセリフ</h2>
-    <ul>${T.serif.map(s=>`<li>「${esc(s)}」</li>`).join("")}</ul>
-  </section>
-
-  <section class="card">
-    <h2>${esc(T.short)}タイプの取扱説明書</h2>
-    <dl class="faq">${T.tori.map(([h,t])=>`<dt>${esc(h)}</dt><dd>${esc(t)}</dd>`).join("")}</dl>
-  </section>
-
-  <section class="card">
-    <h2>${esc(T.short)}タイプの強み</h2>
+    <h2>${esc(T.short)}タイプの強みと弱み</h2>
     <ul>${T.str.map(s=>`<li>${esc(s)}</li>`).join("")}</ul>
     <p class="sub">${esc(T.weak)}</p>
+  </section>
+
+  <section class="card">
+    <h2>場面別：${esc(T.short)}タイプのふるまい</h2>
+    <dl class="faq">${D.scenes.map(([h,t])=>`<dt>${esc(h)}</dt><dd>${esc(t)}</dd>`).join("")}</dl>
+  </section>
+
+  <section class="card">
+    <h2>副業を始めてからの時系列：起きること・抜け方</h2>
+    <dl class="faq">${D.stages.map(([h,t,r])=>`<dt>${esc(h)}</dt><dd><b>起きること：</b>${esc(t)}<br><b>抜け方：</b>${esc(r)}</dd>`).join("")}</dl>
+  </section>
+
+  <section class="card">
+    <h2>収入が伸びる型：週5時間の配分例</h2>
+    <ul class="titles">${D.alloc.map(([h,t])=>`<li><b>${esc(h)}</b><span class="sub">${esc(t)}</span></li>`).join("")}</ul>
+    <p>${esc(D.gear)}</p>
+    <p class="sub">${esc(D.metric)}配分は一般的な目安で、収益を保証するものではありません。</p>
   </section>
 
   <section class="card">
@@ -167,12 +172,13 @@ function typePage(k){
     <div class="jobs">${jobs.map(j=>`
       <a class="job" href="${href(jobPath(j))}"><b>${esc(j.name)}</b>${jobMeta(j)}<span class="more">くわしく見る →</span></a>`).join("")}
     </div>
+    <p class="sub">避けた方がいい副業：${esc(T.avoid[0])}（${esc(T.avoid[1])}）</p>
   </section>
 
   <section class="card">
-    <h2>${esc(T.short)}タイプが避けた方がいい副業</h2>
-    <p><b>${esc(T.avoid[0])}</b></p>
-    <p class="sub">${esc(T.avoid[1])}</p>
+    <h2>称号4つの使い方</h2>
+    <p class="sub">診断では、2番目に強い素質によって称号が変わります。</p>
+    <dl class="faq">${KEYS.filter(s=>s!==k).map(s=>`<dt>${esc(titleOf(k,s))}（${esc(TYPES[s].short)}の素質）</dt><dd>${esc(D.titles[s])}</dd>`).join("")}</dl>
   </section>
 
   <section class="card">
@@ -181,15 +187,21 @@ function typePage(k){
   </section>
 
   <section class="card">
-    <h2>${esc(T.short)}タイプの称号（全4通り）</h2>
-    <p class="sub">診断では、2番目に強い素質によって称号が変わります。</p>
-    <ul class="titles">${KEYS.filter(s=>s!==k).map(s=>`<li><b>${esc(titleOf(k,s))}</b><span class="sub">${esc(TYPES[s].short)}の素質：${esc(TYPES[s].str[0])}</span></li>`).join("")}</ul>
+    <h2>Lv1〜Lv4ロードマップ</h2>
+    <ol class="road">${D.roadmap.map(([lv,todo,change,stuck])=>`<li><b>${esc(lv)}</b><span>やること：${esc(todo)}</span><span>変わること：${esc(change)}</span><span class="sub">つまずき所：${esc(stuck)}</span></li>`).join("")}</ol>
+    <p class="sub">金額は目標の目安で、達成や収益を保証するものではありません。</p>
   </section>
 
   <section class="card">
-    <h2>相性</h2>
+    <h2>相棒と組むなら</h2>
+    <p>${esc(D.partner)}</p>
     <a class="pair" href="${href(typePath(g[0]))}">${charSVG(g[0],true)}<span><b>最高の相棒：${esc(typeLabel(g[0]))}</b><br><span class="sub">${esc(g[1])}</span></span></a>
     <a class="pair" href="${href(typePath(o[0]))}">${charSVG(o[0])}<span><b>真逆のタイプ：${esc(typeLabel(o[0]))}</b><br><span class="sub">${esc(o[1])}</span></span></a>
+  </section>
+
+  <section class="card">
+    <h2>よくある疑問</h2>
+    <dl class="faq">${D.faq.map(([q,a])=>`<dt>${esc(q)}</dt><dd>${esc(a)}</dd>`).join("")}</dl>
   </section>
   </article>
 

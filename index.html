@@ -1056,7 +1056,7 @@ function showResult(main,sub,sc,mode,ci){
   $("rtitle").innerHTML=[...title].map((c,n)=>`<span style="animation-delay:${.25+n*.04}s">${c}</span>`).join("");
   $("rcatch").textContent=T.catch;
   $("rdesc").textContent=T.desc+` さらに「${TYPES[sub].short}」の素質もあり、${TYPES[sub].str[0]}を組み合わせられるのがあなたらしさです。`;
-  $("rmore").href=`fukugyo/type/${T.slug}/`;$("rmore").textContent=`${T.short}タイプをくわしく見る →`;
+  $("rmore").href=`fukugyo/type/${T.slug}/`;$("rmore").textContent=`${T.short}タイプを深掘り：場面別・つまずき・ロードマップ →`;
   $("raru").innerHTML=T.aru.map(s=>`<li>${s}</li>`).join("");
   $("serifTitle").textContent=`${T.short}タイプがよく言うセリフ`;
   $("rserif").innerHTML=T.serif.map(s=>`<p>「${s}」</p>`).join("");

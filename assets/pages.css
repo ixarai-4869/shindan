@@ -135,3 +135,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,s
 #guideSlot .guide{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
 #guideSlot[hidden]{display:none}
 [data-season="newyear"] .season-hero{border:2px solid var(--accent)}
+
+.road{list-style:none;padding:0;margin:8px 0}
+.road li{border-top:1px solid var(--line);padding:10px 0;display:flex;flex-direction:column;gap:2px}
+.road li:first-child{border-top:0}
+.road b{color:var(--accent)}
