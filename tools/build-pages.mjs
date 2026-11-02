@@ -415,6 +415,8 @@ const FEATS=FEATURES.filter(f=>f.cards.length);
 const featCard=(href,c)=>{
   if(c.type==="column"){const x=COLUMNS.find(y=>y.slug===c.slug);return `<a class="job" href="${href(columnPath(x))}"><b>${esc(x.title)}</b><span class="more">読む →</span></a>`}
   if(c.type==="job"){const j=JOB_BY_ID[c.slug];return `<a class="job" href="${href(jobPath(j))}"><b>${esc(j.name)}</b>${specLine(j)}<span class="more">始め方を見る →</span></a>`}
+  if(c.type==="cond"){const x=CONDITIONS.find(y=>y.slug===c.slug);return `<a class="job" href="${href(condPath(x))}"><b>${esc(x.title)}</b><span class="more">条件から探す →</span></a>`}
+  if(c.type==="unsei")return `<a class="job" href="${href(UNSEI_TOP+UNSEI.slug.replace(/^unsei\//,""))}"><b>${esc(c.label)}</b><span class="more">見てみる →</span></a>`;
   if(c.type==="tool")return `<a class="job" href="${href(TOOLS_DIR+c.slug+"/")}"><b>${esc(TOOL_TITLES[c.slug])}</b><span class="more">使ってみる →</span></a>`;
   const k=KEYS.find(x=>TYPES[x].slug===c.slug);return `<a class="job" href="${href(typePath(k))}"><b>${esc(typeLabel(k))}</b><span class="more">くわしく見る →</span></a>`;
 };
