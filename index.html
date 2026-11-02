@@ -229,6 +229,24 @@ ul{padding-left:1.2em;margin:.3em 0}
 
 /* 結果ページの並びは DOM 順＝スマホ向け（共感より先に「最初の一歩」「できる副業」「プラン」「シェア」）。PC の2カラムでは order で従来の並びに戻す */
 .quick{display:none}
+.chap{margin:24px 2px 8px;font-weight:700;font-size:1.05rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px}
+.chap b{display:inline-grid;place-items:center;width:1.5em;height:1.5em;border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:.8rem}
+.chap span{flex-basis:100%;font-weight:400;font-size:.85rem;color:var(--sub)}
+.fold{padding:0}
+.fold>summary{display:block;list-style:none;cursor:pointer;padding:16px 44px 16px 20px;position:relative;min-height:44px}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary::after{content:"＋";position:absolute;right:18px;top:16px;color:var(--accent);font-weight:700}
+.fold[open]>summary::after{content:"－"}
+.fold>summary h2{margin:0}
+.fold .teaser{display:block;margin-top:2px;font-size:.85rem;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fold[open] .teaser{display:none}
+.fold>:not(summary){margin-left:20px;margin-right:20px}
+.fold>:last-child{margin-bottom:18px}
+.echo{list-style:none;padding:0;margin:8px 0 0}
+.echo li{border-top:1px solid var(--line);padding:8px 0;font-size:.9rem}
+.echo li:first-child{border-top:0}
+.echo span{display:block;color:var(--sub);font-size:.8rem}
+.echo b{font-weight:600}
 .rbar,.mini{display:none}
 @media (max-width:959px){
   main.has-bar{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
@@ -270,8 +288,9 @@ ul{padding-left:1.2em;margin:.3em 0}
   .quick{display:flex;margin-top:10px;margin-bottom:0}
   #result>*{order:1}
   #sharedNote{order:0}
-  #cAru{order:2}#cSerif{order:3}#cTori{order:4}#cStr{order:5}#cJobs{order:6}#planCard{order:7}
-  #cAvoid{order:8}#barsCard{order:9}#cPair{order:10}#shareCard{order:11}#inviteCard{order:12}#collCard{order:13}#again{order:14}#cOthers{order:15}
+  .chap{display:none}
+  #echoCard{order:2}#barsCard{order:3}#cAru{order:4}#cSerif{order:5}#cTori{order:6}#cStr{order:7}#cJobs{order:8}#planCard{order:9}
+  #cAvoid{order:10}#cPair{order:11}#shareCard{order:12}#inviteCard{order:13}#collCard{order:14}#again{order:15}#cOthers{order:16}
 }
 @media (min-width:960px) and (min-height:700px){#result>.hero{position:sticky;top:16px}}
 /* 画面が低いPCでは、ページ最下部でも左のキャラと称号が欠けないよう、左カラムをさらに小さくする */
@@ -339,6 +358,7 @@ ul{padding-left:1.2em;margin:.3em 0}
     <div class="card vs" id="vsCard" hidden></div>
     <div id="startHere" class="center" hidden><a class="primary" href="./" id="tryMe">あなたも診断する</a></div>
     <div id="backMine" class="center" hidden><button class="primary" id="backMineBtn">さっきの結果に戻る</button></div>
+    <p class="chap" id="chap1"><b>1</b>あなたに向いてる副業</p>
     <div class="card first" id="firstStep" hidden></div>
 
     <div class="card" id="cJobs">
@@ -362,6 +382,43 @@ ul{padding-left:1.2em;margin:.3em 0}
       <p class="pr" style="margin-bottom:0">チェックはこの端末に保存されます。<span id="planPr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</span></p>
     </div>
     <div id="guideSlot" hidden></div>
+    <p class="chap" id="chap2"><b>2</b>あなたの取扱説明書<span>副業は決まりました。次は、あなたが動きやすくなるコツを開きます。</span></p>
+    <div class="card" id="echoCard" hidden>
+      <h2 id="echoTitle"></h2>
+      <p class="sub" style="margin-top:0">この回答が、あなたの結果を決めました。</p>
+      <ul class="echo" id="echoList"></ul>
+    </div>
+    <div class="card" id="barsCard">
+      <h2>あなたの5つの素質スコア</h2>
+      <div id="rbars"></div>
+    </div>
+    <details class="card fold" id="cAru" open>
+      <summary><h2>こんなところ、ありませんか？</h2><span class="teaser" id="tAru"></span></summary>
+      <ul class="aru" id="raru"></ul>
+    </details>
+    <details class="card fold" id="cSerif">
+      <summary><h2 id="serifTitle"></h2><span class="teaser" id="tSerif"></span></summary>
+      <div class="serif" id="rserif"></div>
+    </details>
+    <details class="card fold" id="cTori">
+      <summary><h2 id="toriTitle"></h2><span class="teaser" id="tTori"></span></summary>
+      <dl class="tori" id="rtori"></dl>
+    </details>
+    <details class="card fold" id="cStr">
+      <summary><h2>あなたの強み</h2><span class="teaser" id="tStr"></span></summary>
+      <ul id="rstr"></ul>
+      <p class="sub" style="margin-bottom:0" id="rweak"></p>
+    </details>
+    <details class="card fold" id="cAvoid">
+      <summary><h2>あなたが避けた方がいい副業</h2><span class="teaser" id="tAvoid"></span></summary>
+      <p style="margin:0"><b id="ravoidName"></b></p>
+      <p class="sub" style="margin-bottom:0" id="ravoid"></p>
+    </details>
+    <details class="card fold" id="cPair">
+      <summary><h2>相性</h2><span class="teaser" id="tPair"></span></summary>
+      <div id="rpair"></div>
+    </details>
+    <p class="chap" id="chap3"><b>3</b>結果を広げる<span>最後に、友達と見比べてみましょう。</span></p>
     <div class="card shareCard" id="shareCard">
       <h2>結果をシェア</h2>
       <img id="shareImg" width="1200" height="630" alt="" loading="lazy" decoding="async">
@@ -382,37 +439,6 @@ ul{padding-left:1.2em;margin:.3em 0}
         <button id="invCopy">リンクをコピー</button>
       </div>
     </div>
-    <div class="card" id="cAru">
-      <h2>こんなところ、ありませんか？</h2>
-      <ul class="aru" id="raru"></ul>
-    </div>
-    <div class="card" id="cSerif">
-      <h2 id="serifTitle"></h2>
-      <div class="serif" id="rserif"></div>
-    </div>
-    <div class="card" id="cTori">
-      <h2 id="toriTitle"></h2>
-      <dl class="tori" id="rtori"></dl>
-    </div>
-    <div class="card" id="cStr">
-      <h2>あなたの強み</h2>
-      <ul id="rstr"></ul>
-      <p class="sub" style="margin-bottom:0" id="rweak"></p>
-    </div>
-    <div class="card" id="cAvoid">
-      <h2>あなたが避けた方がいい副業</h2>
-      <p style="margin:0"><b id="ravoidName"></b></p>
-      <p class="sub" style="margin-bottom:0" id="ravoid"></p>
-    </div>
-    <div class="card" id="barsCard">
-      <h2>あなたのタイプ比率</h2>
-      <div id="rbars"></div>
-    </div>
-    <div class="card" id="cPair">
-      <h2>相性</h2>
-      <div id="rpair"></div>
-    </div>
-
     <div class="card" id="collCard">
       <h2>称号コレクション</h2>
       <p class="sub" id="collNote"></p>
@@ -802,7 +828,7 @@ function analyze(){
   anaTick=setInterval(()=>{nodes.forEach(x=>x.classList.remove("on"));nodes[n%nodes.length].classList.add("on");n++;$("loadMsg").textContent=msgs[Math.min(n/5|0,2)]},180);
   anaDone=setTimeout(()=>{
     clearInterval(anaTick);track("quiz_complete",{result_type:code,result_title:titleOf(r.order[0],r.order[1])});
-    mine={m:r.order[0],s:r.order[1],sc:r.sc,c:conds.slice(),vs};
+    mine={m:r.order[0],s:r.order[1],sc:r.sc,c:conds.slice(),a:answers.slice(),vs};
     const got=loadTitles();
     const isNew=!got.includes(code);
     if(isNew)got.push(code);
@@ -971,6 +997,22 @@ function showResult(main,sub,sc,mode,ci){
     $("rbars").innerHTML=order.map(k=>{const p=Math.round(sc[k]/MAX*100);return `<div class="row"><b>${TYPES[k].short}</b><div class="track"><i style="width:${p}%"></i></div><em>${p}%</em></div>`}).join("");
   }
   $("barsCard").hidden=!sc;
+  // 折りたたみの見出しに、閉じていても読める1行のつかみを出す
+  $("tAru").textContent=T.aru[0]+" ほか";
+  $("tSerif").textContent="「"+T.serif[0]+"」ほか";
+  $("tTori").textContent=T.tori[0][0]+"："+T.tori[0][1];
+  $("tStr").textContent=T.str[0]+" ほか";
+  $("tAvoid").textContent=T.avoid[0]+"："+T.avoid[1];
+  $("tPair").textContent="最高の相棒は"+TYPES[T.good[0]].animal+"の"+TYPES[T.good[0]].chara;
+  // 回答エコー：自分の結果のときだけ、実際の回答を引用する（回答はこの端末にだけ保存）
+  const ea=mode==="own"&&mine&&Array.isArray(mine.a)&&mine.a.length===Q.length?mine.a:null;
+  $("echoCard").hidden=!ea;
+  if(ea){
+    const top=(k,n)=>ea.map((v,q)=>[v,q]).filter(x=>x[0]===k).sort((x,y)=>Q[y[1]].w-Q[x[1]].w||x[1]-y[1]).slice(0,n);
+    const items=[...top(main,2).map(x=>[main,x[1]]),...top(sub,1).map(x=>[sub,x[1]])];
+    $("echoTitle").textContent=`なぜ「${T.short}」タイプ？ あなたの回答から`;
+    $("echoList").innerHTML=items.map(([k,q])=>`<li><span>${Q[q].q}</span><b>${Q[q].a[k].startsWith("「")?Q[q].a[k]:"「"+Q[q].a[k]+"」"}</b>${k===main?"":`<small class="sub">（${TYPES[sub].short}の素質）</small>`}</li>`).join("");
+  }
   const g=T.good,o=T.opp;
   $("rpair").innerHTML=`<div class="pair">${charSVG(g[0],true)}<div><b>最高の相棒：${TYPES[g[0]].animal}の${TYPES[g[0]].chara}（${TYPES[g[0]].short}）</b><br><span class="sub">${g[1]}</span></div></div>
     <div class="pair">${charSVG(o[0])}<div><b>真逆のタイプ：${TYPES[o[0]].animal}の${TYPES[o[0]].chara}（${TYPES[o[0]].short}）</b><br><span class="sub">${o[1]}</span></div></div>`;
@@ -1073,6 +1115,7 @@ updateInstall();
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 
 $("lineup").innerHTML=KEYS.map(k=>charSVG(k)).join("");
+document.querySelectorAll(".fold").forEach(d=>d.addEventListener("toggle",()=>{if(d.open)track("fold_open",{section:d.id})}));
 $("go").onclick=begin;
 $("again").onclick=begin;
 $("tryMe").onclick=e=>{e.preventDefault();begin()};
