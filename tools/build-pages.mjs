@@ -118,8 +118,9 @@ const cta=(href,text)=>`  <div class="cta card">
 
 // URL が #REPLACE_… のままの枠は出さない（index.html の結果画面と同じ）
 const live=k=>!!(k&&LINKS[k]&&!LINKS[k].url.startsWith("#REPLACE"));
+const isAd=k=>live(k)&&!LINKS[k].plain;
 // サービス名＋選ぶ理由＋ボタンのカード（index.html の svcCard と同じ見た目）。place は計測用の置き場所
-const svcCard=(k,place,job)=>{const L=LINKS[k];return `<a class="svc" href="${L.url}" target="_blank" rel="sponsored noopener" data-track="${place==="job_top"?"first_step_click":"affiliate_click"}" data-service="${esc(L.svc)}" data-placement="${place}"${job?` data-job-id="${job}"`:""}><span class="svc-t"><b>${esc(L.svc)}</b><span>${esc(L.why)}</span></span><span class="svc-b">${esc(L.label)}</span></a>`};
+const svcCard=(k,place,job)=>{const L=LINKS[k];return `<a class="svc" href="${L.url}" target="_blank" rel="${L.plain?"noopener":"sponsored noopener"}" data-track="${place==="job_top"?"first_step_click":"affiliate_click"}" data-service="${esc(L.svc)}" data-placement="${place}"${job?` data-job-id="${job}"`:""}><span class="svc-t"><b>${esc(L.svc)}</b><span>${esc(L.why)}</span></span><span class="svc-b">${esc(L.label)}</span></a>`};
 const affLinks=(keys,place="column")=>keys.length?`<div class="aff">${keys.map(k=>svcCard(k,place)).join("")}</div>
     <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>`:"";
 
@@ -219,7 +220,7 @@ ${guideHtml(guidesFor(k))}${k==="W"&&serverCmp?cmpCard(href,serverCmp,"ブログ
 function jobPage(j){
   const T=TYPES[j.t],X=JOB_EXTRA[j.id],path=jobPath(j);
   const linkKeys=[...new Set(j.plan.map(p=>p[2]).filter(live))];
-  const first=j.plan.find(p=>live(p[2]));
+  const first=j.plan.find(p=>isAd(p[2]));
   const same=JOBS.filter(x=>x.t===j.t&&x.id!==j.id);
   const title=`${j.name}の始め方と最初の30日プラン｜${NAME}`;
   const desc=`${j.name}の初期費用（${j.costLabel}）、必要な時間（週${j.h}時間〜）、最初の収入までの期間（${j.first}）、半年後の目安（${j.month}）と、最初の30日でやることを解説します。`;
@@ -260,7 +261,7 @@ ${first?`
   <section class="card">
     <h2>最初の30日プラン</h2>
     <ol class="plan">${j.plan.map(([d,text,lk])=>`<li><span class="day">${d}日目</span><span>${esc(text)}${live(lk)?`${svcCard(lk,"plan_step",j.id)}`:""}</span></li>`).join("")}</ol>
-    ${linkKeys.length?`<p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>`:""}
+    ${linkKeys.some(isAd)?`<p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>`:""}
     <p class="sub">診断を受けると、このプランにチェックをつけて進み具合を記録できます。</p>
   </section>
 
@@ -428,7 +429,7 @@ const featCard=(href,c)=>{
   if(c.type==="column"){const x=COLUMNS.find(y=>y.slug===c.slug);return `<a class="job" href="${href(columnPath(x))}"><b>${esc(x.title)}</b><span class="more">読む →</span></a>`}
   if(c.type==="job"){const j=JOB_BY_ID[c.slug];return `<a class="job" href="${href(jobPath(j))}"><b>${esc(j.name)}</b>${specLine(j)}<span class="more">始め方を見る →</span></a>`}
   if(c.type==="cond"){const x=CONDITIONS.find(y=>y.slug===c.slug);return `<a class="job" href="${href(condPath(x))}"><b>${esc(x.title)}</b><span class="more">条件から探す →</span></a>`}
-  if(c.type==="unsei")return `<a class="job" href="${href(UNSEI_TOP+UNSEI.slug.replace(/^unsei\//,""))}"><b>${esc(c.label)}</b><span class="more">見てみる →</span></a>`;
+  if(c.type==="unsei")return `<a class="job" href="${href(UNSEI_TOP+UNSEI.slug.replace(/^unsei\//,""))}"><b>${esc(c.label)}</b>${c.note?`<span class="sub">${esc(c.note)}</span>`:""}<span class="more">見てみる →</span></a>`;
   if(c.type==="tool")return `<a class="job" href="${href(TOOLS_DIR+c.slug+"/")}"><b>${esc(TOOL_TITLES[c.slug])}</b><span class="more">使ってみる →</span></a>`;
   const k=KEYS.find(x=>TYPES[x].slug===c.slug);return `<a class="job" href="${href(typePath(k))}"><b>${esc(typeLabel(k))}</b><span class="more">くわしく見る →</span></a>`;
 };
