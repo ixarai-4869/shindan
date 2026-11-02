@@ -447,6 +447,7 @@ ul{padding-left:1.2em;margin:.3em 0}
         <button id="copy">リンクをコピー</button>
       </div>
       <button class="opt" id="saveImg" style="text-align:center;margin-bottom:0">結果画像を保存する</button>
+      <button class="opt" id="saveStory" style="text-align:center;margin:8px 0 0" hidden>ストーリー用の縦画像を保存する</button>
       <p class="sub" style="margin:6px 0 0;text-align:center">インスタのストーリーや画像投稿に使えます</p>
     </div>
     <div class="card" id="inviteCard">
@@ -983,6 +984,66 @@ const PUNCH={
  SW:"買う前に比較表を作り、作り終えて満足して買わない",SV:"売るより先に、売り場の雰囲気で仲良くなる",SM:"値札と梱包の見た目にだけ、異様に時間をかける",SC:"仕入れは勢い、帳簿だけは毎日つける",
  CW:"手順書を作るために、手順を調べ始める",CV:"頼まれると断れないのに、感謝されると全部許す",CM:"ToDoリストの見た目に凝って、タスクが増えない",CS:"面倒な作業ほど『もっと楽な方法ない？』と探し出す"
 };
+// ---- 自分の結果のシェア画像（スコア・レア度・図星の一言入り）をブラウザで描く ----
+function wrapText(ctx,text,maxW){
+  const lines=[];let cur="";
+  for(const ch of text){if(ctx.measureText(cur+ch).width>maxW&&cur){lines.push(cur);cur=ch}else cur+=ch}
+  if(cur)lines.push(cur);return lines;
+}
+async function makeShareImage(main,sub,sc,story){
+  const W=story?1080:1200,H=story?1920:630,ctx0=document.createElement("canvas");
+  ctx0.width=W;ctx0.height=H;const c=ctx0.getContext("2d");
+  const F='"Hiragino Sans","Noto Sans JP","Yu Gothic","Meiryo",sans-serif';
+  const T=TYPES[main],title=titleOf(main,sub),punch=PUNCH[main+sub]||"";
+  const svg=charSVG(main,true).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="480" height="480" ');
+  const img=new Image();
+  await new Promise((ok,ng)=>{img.onload=ok;img.onerror=ng;img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg)});
+  c.fillStyle="#fbf1e6";c.fillRect(0,0,W,H);
+  c.fillStyle="#fff";c.beginPath();c.roundRect(story?48:40,story?48:40,W-(story?96:80),H-(story?96:80),32);c.fill();
+  c.strokeStyle="#e6e1d8";c.lineWidth=2;c.stroke();
+  c.textBaseline="alphabetic";
+  const p=sc?tailProb(sc[main])*100:100;
+  const rare=p<=20?`レア度 ${"★".repeat(p<=2?5:p<=5?4:p<=10?3:2)}`:"バランス型";
+  const bars=KEYS.slice().sort((a,b)=>sc[b]-sc[a]);
+  const drawBars=(x,y,w)=>{
+    bars.forEach((k,n)=>{
+      const yy=y+n*(story?58:31),pc=sc[k]/MAX;
+      c.fillStyle="#57534c";c.font=`${story?30:20}px ${F}`;c.textAlign="left";c.fillText(TYPES[k].short,x,yy);
+      c.fillStyle="#e6e1d8";c.beginPath();c.roundRect(x+(story?200:150),yy-(story?24:15),w-(story?320:240),story?24:16,8);c.fill();
+      c.fillStyle="#b8460f";c.beginPath();c.roundRect(x+(story?200:150),yy-(story?24:15),Math.max(18,(w-(story?320:240))*pc),story?24:16,8);c.fill();
+      c.fillStyle="#57534c";c.textAlign="right";c.fillText(Math.round(pc*100)+"%",x+w,yy);
+    });
+  };
+  if(story){
+    c.textAlign="center";c.fillStyle="#b8460f";c.font=`bold 38px ${F}`;c.fillText("向いてる副業診断",W/2,150);
+    c.drawImage(img,W/2-240,200,480,480);
+    c.fillStyle="#57534c";c.font=`32px ${F}`;c.fillText(`${T.animal}の「${T.chara}」 × ${TYPES[sub].short}の素質`,W/2,745);
+    c.fillStyle="#232220";c.font=`bold 70px ${F}`;
+    let ls=wrapText(c,title,W-140);ls.forEach((l,n)=>c.fillText(l,W/2,850+n*90));
+    let y=850+ls.length*90+10;
+    c.fillStyle="#b8460f";c.font=`bold 38px ${F}`;c.fillText(rare,W/2,y);y+=70;
+    c.fillStyle="#232220";c.font=`bold 40px ${F}`;
+    wrapText(c,`「${punch}」`,W-160).forEach((l,n)=>c.fillText(l,W/2,y+n*60));
+    y+=wrapText(c,`「${punch}」`,W-160).length*60+50;
+    drawBars(140,y,W-280);
+    c.textAlign="center";c.fillStyle="#57534c";c.font=`30px ${F}`;c.fillText("あなたはどの子？　mini-shindan.com",W/2,H-110);
+  }else{
+    c.drawImage(img,90,120,360,360);
+    c.textAlign="left";c.fillStyle="#b8460f";c.font=`bold 28px ${F}`;c.fillText("向いてる副業診断",500,110);
+    c.fillStyle="#57534c";c.font=`26px ${F}`;c.fillText(`私の副業タイプは　${T.animal}の「${T.chara}」`,500,160);
+    c.fillStyle="#232220";c.font=`bold 52px ${F}`;
+    const tl=wrapText(c,title,650);tl.forEach((l,n)=>c.fillText(l,500,230+n*62));
+    let y=230+tl.length*62-30;
+    c.fillStyle="#b8460f";c.font=`bold 26px ${F}`;c.fillText(rare,500,y+30);y+=76;
+    c.fillStyle="#232220";c.font=`bold 27px ${F}`;
+    const pl=wrapText(c,`「${punch}」`,650);pl.forEach((l,n)=>c.fillText(l,500,y+n*38));
+    y+=pl.length*38+14;
+    drawBars(500,y,640);
+    c.textAlign="left";c.fillStyle="#57534c";c.font=`22px ${F}`;c.fillText("あなたはどの子？　mini-shindan.com",90,560);
+  }
+  return new Promise(res=>ctx0.toBlob(b=>res(b),"image/png"));
+}
+
 function titleOf(main,sub){return TYPES[sub].adj+TYPES[main].role}
 function stars(n){return "★".repeat(n)+"☆".repeat(5-n)}
 
@@ -1070,15 +1131,25 @@ function showResult(main,sub,sc,mode,ci){
     goTo($("shareCard"));
   };
   $("shareImg").src=img.replace(/\.png$/,".webp");$("shareImg").alt=`診断結果の画像：${title}`;
+  let shareBlob=null,storyBlob=null;
+  $("saveStory").hidden=!(mode==="own"&&sc);
+  if(mode==="own"&&sc&&(document.fonts?document.fonts.ready:Promise.resolve()))(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>makeShareImage(main,sub,sc,false)).then(b=>{shareBlob=b;if($("shareImg").dataset.cur===main+sub)URL.revokeObjectURL($("shareImg").src);$("shareImg").src=URL.createObjectURL(b);$("shareImg").dataset.cur=main+sub}).catch(()=>{});
+  $("saveStory").onclick=async()=>{
+    track("share_click",{channel:"story_image",placement:"share_block",result_type:main+sub});
+    try{storyBlob=storyBlob||await makeShareImage(main,sub,sc,true)}catch(e){return}
+    const name=`shindan-${TYPES[main].slug}-story.png`,file=new File([storyBlob],name,{type:"image/png"});
+    try{if(native&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:text+"\n"+url});return}}catch(e){if(e.name==="AbortError")return}
+    const a=document.createElement("a");a.href=URL.createObjectURL(storyBlob);a.download=name;document.body.appendChild(a);a.click();a.remove();
+  };
   $("saveImg").onclick=async()=>{
     track("share_click",{channel:"image",placement:"share_block",result_type:main+sub});
     const name=`shindan-${TYPES[main].slug}.png`;
     // スマホは共有シートに画像ごと渡す（そのまま写真に保存・ストーリーに投稿できる）
     try{
-      const blob=await (await fetch(img)).blob(),file=new File([blob],name,{type:"image/png"});
+      const blob=shareBlob||await (await fetch(img)).blob(),file=new File([blob],name,{type:"image/png"});
       if(native&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:text+"\n"+url});return}
     }catch(e){if(e.name==="AbortError")return}
-    const a=document.createElement("a");a.href=img;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    const a=document.createElement("a");a.href=shareBlob?URL.createObjectURL(shareBlob):img;a.download=name;document.body.appendChild(a);a.click();a.remove();
   };
   $("shareX").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url)+"&hashtags="+encodeURIComponent("向いてる副業診断");
   $("shareLine").href="https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text);
