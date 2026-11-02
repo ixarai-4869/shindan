@@ -9,7 +9,7 @@ export const SEASONS=[
 ];
 export const FEATURES=[
   {slug:"year-end",title:"年末年始のスキマ時間で始める副業 特集",chara:"C",lead:"休みや帰省の合間の数時間でも、始めやすい副業を条件から探せます。年が明けたあとも続けやすいように、時給の確かめ方と最初の一歩もあわせて載せました。",
-   cards:[{type:"cond",slug:"short-time"},{type:"cond",slug:"weekend"},{type:"cond",slug:"smartphone"},{type:"job",slug:"furima"},{type:"tool",slug:"hourly"},{type:"column",slug:"first-step"},{type:"unsei",label:"2027年の副業運勢（12月20日から特集バナーで案内）"}]},
+   cards:[{type:"cond",slug:"short-time"},{type:"cond",slug:"weekend"},{type:"cond",slug:"smartphone"},{type:"job",slug:"furima"},{type:"tool",slug:"hourly"},{type:"column",slug:"first-step"},{type:"unsei",label:"2027年の副業運勢"}]},
   {slug:"kakutei-shinkoku",title:"副業の確定申告 特集",chara:"C",lead:"申告が必要かどうかの目安を調べて、経費と会社への知られ方もあわせて確認できます。",
    cards:[{type:"tool",slug:"tax-flow"},{type:"column",slug:"expenses"},{type:"column",slug:"company-secret"},{type:"column",slug:"10000-yen"}]},
 ];
