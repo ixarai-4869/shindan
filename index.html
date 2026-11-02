@@ -234,6 +234,11 @@ ul{padding-left:1.2em;margin:.3em 0}
 
 /* 結果ページの並びは DOM 順＝スマホ向け（共感より先に「最初の一歩」「できる副業」「プラン」「シェア」）。PC の2カラムでは order で従来の並びに戻す */
 .quick{display:none}
+.punch{text-align:center;border:2px solid var(--accent)}
+.punchline{font-size:1.2rem;font-weight:800;line-height:1.5;margin:6px 0 10px}
+.vars{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.vars button{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--text);font-size:.85rem;min-height:36px}
+.vars button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
 .chap{margin:24px 2px 8px;font-weight:700;font-size:1.05rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px}
 .chap b{display:inline-grid;place-items:center;width:1.5em;height:1.5em;border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:.8rem}
 .chap span{flex-basis:100%;font-weight:400;font-size:.85rem;color:var(--sub)}
@@ -294,7 +299,7 @@ ul{padding-left:1.2em;margin:.3em 0}
   #result>*{order:1}
   #sharedNote{order:0}
   .chap{display:none}
-  #echoCard{order:2}#barsCard{order:3}#cAru{order:4}#cSerif{order:5}#cTori{order:6}#cStr{order:7}#cJobs{order:8}#firstStep{order:9}#planCard{order:10}
+  #punchCard{order:1}#echoCard{order:2}#barsCard{order:3}#cAru{order:4}#cSerif{order:5}#cTori{order:6}#cStr{order:7}#cJobs{order:8}#firstStep{order:9}#planCard{order:10}
   #cAvoid{order:11}#cPair{order:12}#shareCard{order:13}#inviteCard{order:14}#collCard{order:15}#again{order:16}#cOthers{order:17}
 }
 @media (min-width:960px) and (min-height:700px){#result>.hero{position:sticky;top:16px}}
@@ -360,6 +365,15 @@ ul{padding-left:1.2em;margin:.3em 0}
       <div class="share quick" id="quick"><a class="x" id="qX" target="_blank" rel="noopener">Xで共有</a><a class="line" id="qLine" target="_blank" rel="noopener">LINEで送る</a><button id="qCopy">リンクをコピー</button></div>
     </div>
 
+    <div class="card punch" id="punchCard" hidden>
+      <p class="kicker">あなたの図星の一言</p>
+      <p class="punchline" id="punchLine"></p>
+      <div class="vars" id="vars" role="group" aria-label="シェア文を選ぶ">
+        <button type="button" data-v="pride">自慢げに</button><button type="button" data-v="self">自虐で</button><button type="button" data-v="ask">当ててもらう</button>
+      </div>
+      <p class="sub" id="varPreview" style="margin:8px 0 0;font-size:.82rem"></p>
+      <div class="share"><a class="x" id="pX" target="_blank" rel="noopener">Xで共有</a><a class="line" id="pLine" target="_blank" rel="noopener">LINEで送る</a><button id="pCopy">リンクをコピー</button></div>
+    </div>
     <div class="card vs" id="vsCard" hidden></div>
     <div id="startHere" class="center" hidden><a class="primary" href="./" id="tryMe">あなたも診断する</a></div>
     <div id="backMine" class="center" hidden><button class="primary" id="backMineBtn">さっきの結果に戻る</button></div>
@@ -961,6 +975,14 @@ function setShare(pre,text,url,kind){
   };
 }
 
+// ---- 図星の一言（称号20種）。シェア画像・シェア文に使う ----
+const PUNCH={
+ WV:"書いてるときは饒舌なのに、人前だと『えっと…』",WM:"記事より先に、ブログのデザインが完成している",WS:"買う前に口コミを30件読んで、そのレビュー記事まで書ける",WC:"下書きは完璧。公開ボタンだけが遠い",
+ VW:"投稿前に調べすぎて、タイミングを逃す",VM:"話す前にスライドを作り込み、スライドが本編になる",VS:"おすすめしたものが、だいたい友達の家にある",VC:"盛り上げ役なのに、投稿の予定表だけは分刻み",
+ MW:"作る前に調べ終えて、調べ終えると作る気力が半分",MV:"作品より先に『作ってます』の報告が出る",MS:"他人の作品の適正価格だけは、なぜか当てられる",MC:"作品は量産体制。でも納得いくのは1個目だけ",
+ SW:"買う前に比較表を作り、作り終えて満足して買わない",SV:"売るより先に、売り場の雰囲気で仲良くなる",SM:"値札と梱包の見た目にだけ、異様に時間をかける",SC:"仕入れは勢い、帳簿だけは毎日つける",
+ CW:"手順書を作るために、手順を調べ始める",CV:"頼まれると断れないのに、感謝されると全部許す",CM:"ToDoリストの見た目に凝って、タスクが増えない",CS:"面倒な作業ほど『もっと楽な方法ない？』と探し出す"
+};
 function titleOf(main,sub){return TYPES[sub].adj+TYPES[main].role}
 function stars(n){return "★".repeat(n)+"☆".repeat(5-n)}
 
@@ -1030,7 +1052,14 @@ function showResult(main,sub,sc,mode,ci){
   // r/XY/ は結果ごとのシェア画像を OGP に持つページ（tools/build-share.mjs で生成）。開くと ?r=XY に移る
   const url=new URL("r/"+main+sub+"/"+(ci?"?c="+ci.join(""):""),location.origin+location.pathname).href;
   const inviteUrl=new URL("r/"+main+sub+"/?vs=1",location.origin+location.pathname).href;
-  const text=`向いてる副業診断の結果、私は「${title}」でした！相棒は${T.animal}の${T.chara}。あなたはどの子？`;
+  const punch=PUNCH[main+sub]||"";
+  const rareStar=sc&&tailProb(sc[main])*100<=20?`レア度${"★".repeat(tailProb(sc[main])*100<=2?5:tailProb(sc[main])*100<=5?4:tailProb(sc[main])*100<=10?3:2)}。`:"";
+  const VARS={
+    pride:`向いてる副業診断の結果、私は「${title}」でした！${rareStar}相棒は${T.animal}の${T.chara}。あなたはどの子？`,
+    self:`「${punch}」…図星すぎた。向いてる副業診断で、私は「${title}」でした。`,
+    ask:`私の称号、当てられる？ヒント：「${punch}」。向いてる副業診断でわかるよ。`
+  };
+  let vkey="pride",text=VARS.pride;
   const native=navigator.share&&matchMedia("(pointer:coarse)").matches;
   const img=`assets/og/${main+sub}.png`;
   // 画面下の固定バー・上のミニバー・PC のシェア行
@@ -1040,7 +1069,6 @@ function showResult(main,sub,sc,mode,ci){
     if(native){track("share_click",{channel:"native",placement:"share_bar",result_type:main+sub});try{await navigator.share({title:document.title,text,url});return}catch(e){if(e.name==="AbortError")return}}
     goTo($("shareCard"));
   };
-  setShare("q",text,url,"top_row");
   $("shareImg").src=img.replace(/\.png$/,".webp");$("shareImg").alt=`診断結果の画像：${title}`;
   $("saveImg").onclick=async()=>{
     track("share_click",{channel:"image",placement:"share_block",result_type:main+sub});
@@ -1067,6 +1095,19 @@ function showResult(main,sub,sc,mode,ci){
     try{await navigator.clipboard.writeText(text+"\n"+url);$("copy").textContent="コピーしました"}
     catch(e){prompt("コピーしてください",text+"\n"+url)}
   };
+  // 図星の一言カード（自分の結果のときだけ）。シェア文を3種から選べる
+  $("punchCard").hidden=!(mode==="own"&&punch);
+  $("punchLine").textContent=punch?`「${punch}」`:"";
+  const applyVar=k=>{
+    vkey=k;text=VARS[k];
+    [...$("vars").children].forEach(b=>b.classList.toggle("on",b.dataset.v===k));
+    $("varPreview").textContent=text;
+    setShare("q",text,url,"top_row");setShare("p",text,url,"hero_punch");
+    $("shareX").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url)+"&hashtags="+encodeURIComponent("向いてる副業診断");
+    $("shareLine").href="https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text);
+  };
+  [...$("vars").children].forEach(b=>b.onclick=()=>{applyVar(b.dataset.v);track("share_variant",{variant:b.dataset.v,result_type:main+sub})});
+  applyVar("pride");
   // 相性診断：招待リンクから来て診断した人に、2人の相性を見せる
   const v=mode==="own"&&mine&&mine.vs;
   $("vsCard").hidden=!v;
