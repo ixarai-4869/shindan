@@ -169,6 +169,11 @@ ul{padding-left:1.2em;margin:.3em 0}
 .first{border:2px solid var(--accent)}
 .first h2{margin-top:2px}
 .kicker{margin:0;font-size:.8rem;font-weight:700;color:var(--accent);letter-spacing:.05em}
+.first .why{margin:4px 0;font-size:.92rem}
+.first .spec{margin:4px 0;font-size:.82rem;color:var(--sub)}
+.flow{display:flex;flex-wrap:wrap;gap:4px 14px;list-style:none;counter-reset:f;padding:0;margin:8px 0 0;font-size:.8rem;color:var(--sub)}
+.flow li{counter-increment:f}
+.flow li::before{content:counter(f);display:inline-grid;place-items:center;width:1.4em;height:1.4em;margin-right:4px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:.75rem}
 .step1 .day{font-weight:700;color:var(--accent);margin-right:8px}
 .plan a{display:inline-block;margin:4px 0 0 calc(30px + 3.6em);color:var(--accent);font-weight:600;font-size:.9rem}
 .row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.9rem}
@@ -289,8 +294,8 @@ ul{padding-left:1.2em;margin:.3em 0}
   #result>*{order:1}
   #sharedNote{order:0}
   .chap{display:none}
-  #echoCard{order:2}#barsCard{order:3}#cAru{order:4}#cSerif{order:5}#cTori{order:6}#cStr{order:7}#cJobs{order:8}#planCard{order:9}
-  #cAvoid{order:10}#cPair{order:11}#shareCard{order:12}#inviteCard{order:13}#collCard{order:14}#again{order:15}#cOthers{order:16}
+  #echoCard{order:2}#barsCard{order:3}#cAru{order:4}#cSerif{order:5}#cTori{order:6}#cStr{order:7}#cJobs{order:8}#firstStep{order:9}#planCard{order:10}
+  #cAvoid{order:11}#cPair{order:12}#shareCard{order:13}#inviteCard{order:14}#collCard{order:15}#again{order:16}#cOthers{order:17}
 }
 @media (min-width:960px) and (min-height:700px){#result>.hero{position:sticky;top:16px}}
 /* 画面が低いPCでは、ページ最下部でも左のキャラと称号が欠けないよう、左カラムをさらに小さくする */
@@ -359,7 +364,6 @@ ul{padding-left:1.2em;margin:.3em 0}
     <div id="startHere" class="center" hidden><a class="primary" href="./" id="tryMe">あなたも診断する</a></div>
     <div id="backMine" class="center" hidden><button class="primary" id="backMineBtn">さっきの結果に戻る</button></div>
     <p class="chap" id="chap1"><b>1</b>あなたに向いてる副業</p>
-    <div class="card first" id="firstStep" hidden></div>
 
     <div class="card" id="cJobs">
       <h2 id="rjobsTitle"></h2>
@@ -368,6 +372,7 @@ ul{padding-left:1.2em;margin:.3em 0}
       <div id="rout"></div>
       <p class="pr" style="margin-bottom:0">※ 費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。</p>
     </div>
+    <div class="card first" id="firstStep" hidden></div>
     <div class="card" id="planCard">
       <h2 id="planTitle"></h2>
       <p class="sub" id="planProg"></p>
@@ -871,8 +876,8 @@ function saveDone(id,d){try{localStorage.setItem(PLAN_KEY+id,JSON.stringify(d))}
 
 // 広告リンクのクリックを、結果タイプ・副業・置き場所・リンク先ごとに計測する
 function bindAff(root,main,sub){
-  // 最初の一歩カード（result_top）は first_step_click、それ以外の広告は affiliate_click（二重には送らない）
-  root.querySelectorAll("a[data-key]").forEach(a=>a.onclick=()=>track(a.dataset.place==="result_top"?"first_step_click":"affiliate_click",{job_id:a.dataset.job,service_name:LINKS[a.dataset.key].svc,placement:a.dataset.place,result_type:main+sub}));
+  // 最初の一歩カード（result_after_jobs。以前は result_top）は first_step_click、それ以外の広告は affiliate_click（二重には送らない）
+  root.querySelectorAll("a[data-key]").forEach(a=>a.onclick=()=>track(a.dataset.place==="result_after_jobs"?"first_step_click":"affiliate_click",{job_id:a.dataset.job,service_name:LINKS[a.dataset.key].svc,placement:a.dataset.place,result_type:main+sub}));
 }
 
 // 結果のすぐ下に置く「今日やる最初の一歩」。おすすめ順に、広告リンク付きのステップがある副業を探す
@@ -881,12 +886,17 @@ function showFirstStep(list,main,sub,mode){
   if(mode==="own")for(const j of list){const st=j.plan.find(x=>live(x[2]));if(st){hit=[j,st];break}}
   $("firstStep").hidden=!hit;
   if(!hit)return;
-  const [j,[d,text,k]]=hit;
-  $("firstStep").innerHTML=`<p class="kicker">今日やる最初の一歩</p>
+  const [j,[d,text,k]]=hit,T=TYPES[main];
+  const WHY={W:"調べて書くのが得意なので、まず形にして出す場所を用意するのが近道です",V:"発信が得意なので、人の目に触れる場所に早く出るのが近道です",M:"作るのが得意なので、作ったものを置く場所を先に作るのが近道です",S:"売る目があるので、売り買いが実際に動く場所に早く入るのが近道です",C:"手順が得意なので、決まった型どおりに始められる場所を選ぶのが近道です"};
+  const flow=k==="BLOG"?["公式サイトでプランを比べる","納得できたら申し込む","ブログを開設する"]:["リンク先の公式サイトを開く","画面の案内どおりに登録する","今日の一歩を済ませる"];
+  $("firstStep").innerHTML=`<p class="kicker">${titleOf(main,sub)}さんの、今日の一歩</p>
     <h2>${j.name}を始めるなら、まずこれだけ</h2>
+    <p class="why">${T.short}タイプは、${WHY[main]}。</p>
+    <p class="spec">初期費用 ${j.costLabel}　週${j.h}時間〜　最初の収入まで ${j.first}</p>
     <p class="step1">${text}</p>
-    ${svcCard(k,"result_top",j.id)}
-    <p class="pr" style="margin:6px 0 0">PR：広告（アフィリエイト）リンクです。登録は無料です。</p>`;
+    ${svcCard(k,"result_after_jobs",j.id)}
+    <ol class="flow">${flow.map(x=>`<li>${x}</li>`).join("")}</ol>
+    <p class="pr" style="margin:6px 0 0">PR：広告（アフィリエイト）リンクです。${k==="BLOG"?"月額の利用料がかかります。":"登録は無料です。"}</p>`;
   bindAff($("firstStep"),main,sub);
 }
 
