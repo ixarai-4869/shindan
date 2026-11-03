@@ -328,6 +328,7 @@ function block(href,b){
   if(b.aff)return affLinks(b.aff.filter(live));
   if(b.cta)return `<div class="cta mid"><p><b>${esc(b.cta)}</b></p><p class="sub">11問・約2分・登録不要。今の時間とお金で始められる副業と、最初の30日プランがわかります。</p><a class="primary" href="${href("")}" data-track="page_to_quiz" data-place="column_mid">無料で診断する</a></div>`;
   if(b.note)return `<p class="sub">${esc(b.note)}</p>`;
+  if(b.link)return `<p><a href="${href(b.link[0])}">${esc(b.link[1])}</a></p>`;
   throw new Error("column-data.mjs に知らない形の中身があります: "+JSON.stringify(b));
 }
 function columnPage(c){
