@@ -2,6 +2,8 @@
 // {slug:"半角の短い名前", date:"2026-11-01", kind:"update"（機能・コンテンツの追加）または "diary"（開発日誌）, title, body:[段落の文字列…], href:"関連ページ（任意）"}
 // 新しいコンテンツを公開するときは、ここに1件追加する運用。事実だけを書き、実績の数字や利用者の声は書かない。
 export const NEWS=[
+  {slug:"column-suspicious",date:"2026-11-04",kind:"update",title:"悩みコラム「怪しい副業の見分け方｜始める前に確認したい5つのサイン」を公開しました",
+   body:["初期費用や収入保証のうたい文句など、始める前に確認したい5つのサインと、不安なときの確認のしかたをまとめました。特定のサービスを断定するものではありません。"],href:"fukugyo/column/suspicious/"},
   {slug:"column-quit-or-switch",date:"2026-11-03",kind:"update",title:"悩みコラム「副業が続かないとき｜やめる・続ける・乗り換えるの見分け方」を公開しました",
    body:["副業が続かないと感じたときに、期間・時間・収入の3つの目安で見直す方法をまとめました。乗り換えるときの選び方も載せています。"],href:"fukugyo/column/quit-or-switch/"},
   {slug:"year-end-feature",date:"2026-11-02",kind:"update",title:"「年末年始のスキマ時間で始める副業」特集ページを公開しました",
