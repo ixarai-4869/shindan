@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api repos/ixarai-4869/shindan/pulls/*/merge:*)",
+      "Bash(gh api repos/ixarai-4869/shindan/pulls/*/merge -X PUT:*)"
+    ]
+  }
+}
