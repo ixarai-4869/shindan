@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>週の副業時間割シミュレータ｜向いてる副業診断</title>
+<meta name="description" content="平日と週末の空き時間を入れるだけで、1週間・1か月に使える副業時間と、時間に合う進め方の目安がわかる無料ツール。入力内容は送信されません。">
+<link rel="canonical" href="https://mini-shindan.com/tools/schedule/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ミニ診断">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="週の副業時間割シミュレータ｜向いてる副業診断">
+<meta property="og:description" content="平日と週末の空き時間を入れるだけで、1週間・1か月に使える副業時間と、時間に合う進め方の目安がわかる無料ツール。入力内容は送信されません。">
+<meta property="og:url" content="https://mini-shindan.com/tools/schedule/">
+<meta property="og:image" content="https://mini-shindan.com/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="向いてる副業診断。フクロウ、インコ、ビーバー、キツネ、ミツバチの5キャラ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1917" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../../assets/pages.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"向いてる副業診断","item":"https://mini-shindan.com/"},{"@type":"ListItem","position":2,"name":"ミニ計算ツール","item":"https://mini-shindan.com/tools/"},{"@type":"ListItem","position":3,"name":"週の副業時間割シミュレータ","item":"https://mini-shindan.com/tools/schedule/"}]}</script>
+<script>
+const GA_ID="G-PX3Q72XL5G";
+const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
+if(GA_ID&&!NOTRACK){
+  const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID,Object.assign(/[?&]debug=1/.test(location.search)?{debug_mode:true}:{},{"page_type":"tool"}));
+}
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,a.dataset.placement?{job_id:a.dataset.jobId||"",service_name:a.dataset.service,placement:a.dataset.placement,page:location.pathname}:{page:location.pathname,link:a.textContent.trim(),place:a.dataset.place||""})});
+</script>
+</head>
+<body>
+<main>
+  <p class="pr">※ 本サイトには広告（PR・アフィリエイトリンク）が含まれます。</p>
+  <nav class="crumbs" aria-label="パンくずリスト"><a href="../../">向いてる副業診断</a> › <a href="../../tools/">ミニ計算ツール</a> › <span aria-current="page">週の副業時間割シミュレータ</span></nav>
+
+  <article>
+  <header class="card hero tool-hero">
+    <svg viewBox="0 0 120 120" role="img" aria-label="フクロウのフミ"><path d="M30 34 38 14 48 30M90 34 82 14 72 30" fill="#8a6142"/><ellipse cx="60" cy="68" rx="38" ry="40" fill="#a47551"/><ellipse cx="60" cy="80" rx="24" ry="24" fill="#e9d3b5"/>
+    <circle cx="45" cy="58" r="14" fill="#fff"/><circle cx="75" cy="58" r="14" fill="#fff"/><path d="M39 58q6 -8 12 0M69 58q6 -8 12 0" stroke="#2b2420" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="45" cy="58" r="15" fill="none" stroke="#3c3c3c" stroke-width="2.5"/><circle cx="75" cy="58" r="15" fill="none" stroke="#3c3c3c" stroke-width="2.5"/><path d="M60 58h0" stroke="#3c3c3c" stroke-width="2.5"/>
+    <path d="M55 70 60 78 65 70z" fill="#f2a93b"/><rect x="88" y="70" width="6" height="30" rx="2" transform="rotate(25 91 85)" fill="#2f6fed"/></svg>
+    <p class="tool-say">「空き時間を入れると、1週間の使い方の目安が出ます」</p>
+    <p class="sub">フクロウの「フミ」がご案内します</p>
+    <h1>週の副業時間割シミュレータ</h1>
+  </header>
+  <section class="card tool-card">
+    <label class="tool-f" for="wd"><span>平日（月〜金）1日あたり</span><span class="tool-in"><input id="wd" type="number" inputmode="decimal" min="0" step="any" value="30" max="600" step="5"><b>分</b></span></label>
+    <label class="tool-f" for="we"><span>週末（土日）1日あたり</span><span class="tool-in"><input id="we" type="number" inputmode="decimal" min="0" step="any" value="120" max="900" step="5"><b>分</b></span></label>
+  </section>
+  <section class="card tool-result" id="result" aria-live="polite">
+    <p class="kicker">結果</p>
+    <p class="tool-big"><span id="rWeek">―</span></p>
+    <p class="sub" id="rSub">数字を入れると、1週間に使える時間が出ます。</p>
+    <p id="rPlan"></p>
+    <button class="primary tool-copy" id="copy" type="button" hidden>結果をコピーする</button>
+  </section>
+  <section class="card">
+    <h2>この時間割の使い方</h2>
+    <p>表示されるのは、入れた時間から計算した目安です。副業や人によって、実際に必要な時間は変わります。無理のない範囲で、少なめに入れておくと続けやすくなります。</p>
+    <ul class="links"><li><a href="../../fukugyo/column/first-step/">副業は何から始める？未経験でも迷わない3ステップ</a></li><li><a href="../../tools/hourly/">副業時給計算機</a></li><li><a href="../../fukugyo/guide/">副業の一覧を見る</a></li><li><a href="../../fukugyo/conditions/">条件から副業を探す</a></li></ul>
+  </section>
+  <p class="sub">入力した内容はこのページの中だけで計算し、サーバーや計測ツールには送りません。2026年11月時点の内容です。</p>
+  <p class="sub"><a href="../../tools/">ほかのミニ計算ツール</a></p>
+  </article>
+  <script>
+var $=function(i){return document.getElementById(i)};
+var used=false,done=false;
+function ev(n,p){if(window.gtag)gtag("event",n,p)}
+function num(id){var v=parseFloat(String($(id).value).replace(/,/g,""));return isFinite(v)?v:NaN}
+function yen(n){return Math.round(n).toLocaleString("ja-JP")}
+function touched(slug){if(!used){used=true;ev("tool_use",{tool:slug})}}
+function completed(slug){if(!done){done=true;ev("tool_complete",{tool:slug})}}
+function copyText(t,btn,slug){
+  function ok(){btn.textContent="コピーしました";setTimeout(function(){btn.textContent="結果をコピーする"},2000)}
+  ev("share_click",{placement:"tool_"+slug});
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){fallback()});else fallback();
+  function fallback(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){btn.textContent="コピーできませんでした"}document.body.removeChild(a)}
+}
+
+
+function calc(){
+  var wd=num("wd"),we=num("we");
+  if(!(wd>=0)||!(we>=0)||wd>600||we>900){$("rWeek").textContent="―";$("rSub").textContent="分数を入れてください（平日は600分以下、週末は900分以下）。";$("rPlan").textContent="";$("copy").hidden=true;return}
+  var wk=(wd*5+we*2)/60,mo=wk*52/12,r=function(x){return Math.round(x*10)/10};
+  if(wk<=0){$("rWeek").textContent="週 0時間";$("rSub").textContent="時間が0分だと副業は進めにくいので、まず15分だけでも入れてみてください。";$("rPlan").textContent="";$("copy").hidden=true;return}
+  $("rWeek").textContent="週 約"+r(wk)+"時間";
+  $("rSub").textContent="1か月では約"+r(mo)+"時間。平日は1日"+wd+"分×5日、週末は1日"+we+"分×2日の計算です。";
+  var t=wk<2?"週2時間未満の目安：1回15〜30分で終わる出品やデータ入力など、細切れで進められるものが合いやすい時間です。まず「毎週決まった曜日に1回」を目標にしましょう。":
+    wk<5?"週2〜5時間の目安：平日は下調べや記録などの短い作業、週末にまとまった作業を入れる使い分けが合いやすい時間です。":
+    wk<10?"週5〜10時間の目安：ライティングやブログなど、まとまった時間が必要な副業にも取り組める時間です。週1日は休む日を作ると続きやすくなります。":
+    "週10時間以上の目安：かなり本格的に取り組める時間です。本業や休息に響かないよう、最初は予定の7〜8割で始めるのがおすすめです。";
+  $("rPlan").textContent=t;
+  $("copy").hidden=false;$("copy").onclick=function(){copyText("私が副業に使える時間は、週に約"+r(wk)+"時間でした。（ミニ診断「週の副業時間割シミュレータ」）https://mini-shindan.com/tools/schedule/",$("copy"),"schedule")};
+  completed("schedule");
+}
+["wd","we"].forEach(function(i){$(i).addEventListener("input",function(){touched("schedule");calc()})});
+calc();
+  </script>
+
+  <footer>
+    <p><a href="../../">向いてる副業診断をやってみる</a>・<a href="../../fukugyo/guide/">タイプと副業の一覧</a>・<a href="../../fukugyo/column/">副業の悩みコラム</a>・<a href="../../fukugyo/zukan/">称号図鑑</a>・<a href="../../tools/">ミニ計算ツール</a>・<a href="../../tsumazuki/">つまずきタイプ診断</a>・<a href="../../characters/">キャラクター</a>・<a href="../../news/">更新履歴</a>・<a href="../../fukugyo/conditions/">条件から探す</a></p>
+    <p><a href="../../privacy/">プライバシーポリシー・免責事項</a>・<a href="../../about/">運営者情報・広告について</a></p>
+    <p class="pr">費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。この診断は娯楽・参考用です。</p>
+  </footer>
+</main>
+</body>
+</html>

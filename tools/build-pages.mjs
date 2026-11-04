@@ -424,7 +424,7 @@ const FAQ=[
 ];
 // ---- 特集ページ（季節バナーの行き先。tools/season-data.mjs） ----
 const featPath=f=>`${BASE}feature/${f.slug}/`;
-const TOOL_TITLES={hourly:"副業時給計算機","target":"月1万円逆算ツール","tax-flow":"確定申告フローチェック"};
+const TOOL_TITLES={hourly:"副業時給計算機","target":"月1万円逆算ツール","tax-flow":"確定申告フローチェック",schedule:"週の副業時間割シミュレータ"};
 const FEATS=FEATURES.filter(f=>f.cards.length);
 const featCard=(href,c)=>{
   if(c.type==="column"){const x=COLUMNS.find(y=>y.slug===c.slug);return `<a class="job" href="${href(columnPath(x))}"><b>${esc(x.title)}</b><span class="more">読む →</span></a>`}
@@ -758,11 +758,12 @@ ${script}
 const field=(id,label,unit,val,extra="")=>`    <label class="tool-f" for="${id}"><span>${label}</span><span class="tool-in"><input id="${id}" type="number" inputmode="decimal" min="0" step="any" value="${val}" ${extra}><b>${unit}</b></span></label>`;
 const toolHub=()=>page({path:TOOLS_DIR,title:`ミニ計算ツール（副業時給・月1万円の逆算・確定申告の目安）｜${NAME}`,desc:"副業の時給、月1万円までに必要な件数、確定申告が必要かの目安を、1画面で計算できる無料ツール。入力した内容は送信されません。",ptype:"tool",crumbs:[[NAME,""],["ミニ計算ツール",TOOLS_DIR]],body:href=>`
   <article>
-  <header class="card hero"><div class="zk-line">${["W","S","C"].map(k=>charSVG(k,true)).join("")}</div><h1>ミニ計算ツール</h1><p class="left">副業のお金まわりを、1画面で計算できる3つのツールです。入力した内容はこのページの中だけで計算し、送信されません。</p></header>
+  <header class="card hero"><div class="zk-line">${["W","S","C"].map(k=>charSVG(k,true)).join("")}</div><h1>ミニ計算ツール</h1><p class="left">副業のお金と時間の目安を、1画面で確認できる4つのツールです。入力した内容はこのページの中だけで計算し、送信されません。</p></header>
   <section class="card"><div class="jobs">
     <a class="job cond" href="${href(TOOLS_DIR+"hourly/")}">${charSVG("W")}<span><b>副業時給計算機</b><span class="sub">収入と作業時間から、実際の時給を出します</span></span></a>
     <a class="job cond" href="${href(TOOLS_DIR+"target/")}">${charSVG("S")}<span><b>月1万円逆算ツール</b><span class="sub">目標までに必要な件数と作業量の目安</span></span></a>
     <a class="job cond" href="${href(TOOLS_DIR+"tax-flow/")}">${charSVG("C")}<span><b>確定申告フローチェック</b><span class="sub">申告が必要かどうかの目安を数問で確認</span></span></a>
+    <a class="job cond" href="${href(TOOLS_DIR+"schedule/")}">${charSVG("W")}<span><b>週の副業時間割シミュレータ</b><span class="sub">平日と週末の空き時間から、1週間の時間の使い方の目安を出します</span></span></a>
   </div></section>
 ${cta(href,"まずは自分のタイプを知る")}
   </article>
@@ -794,6 +795,40 @@ function calc(){
   completed("hourly");
 }
 ["inc","days","hrs"].forEach(function(i){$(i).addEventListener("input",function(){touched("hourly");calc()})});
+calc();`});
+}
+function schedulePage(){
+  const path=TOOLS_DIR+"schedule/",slug="schedule";
+  return toolShell({slug,path,chara:"W",lead:"空き時間を入れると、1週間の使い方の目安が出ます",
+    title:"週の副業時間割シミュレータ",desc:"平日と週末の空き時間を入れるだけで、1週間・1か月に使える副業時間と、時間に合う進め方の目安がわかる無料ツール。入力内容は送信されません。",
+    form:[field("wd","平日（月〜金）1日あたり","分",30,'max="600" step="5"'),field("we","週末（土日）1日あたり","分",120,'max="900" step="5"')].join("\n"),
+    result:`    <p class="kicker">結果</p>
+    <p class="tool-big"><span id="rWeek">―</span></p>
+    <p class="sub" id="rSub">数字を入れると、1週間に使える時間が出ます。</p>
+    <p id="rPlan"></p>
+    <button class="primary tool-copy" id="copy" type="button" hidden>結果をコピーする</button>`,
+    after:href=>`  <section class="card">
+    <h2>この時間割の使い方</h2>
+    <p>表示されるのは、入れた時間から計算した目安です。副業や人によって、実際に必要な時間は変わります。無理のない範囲で、少なめに入れておくと続けやすくなります。</p>
+    <ul class="links">${colLink(href,"first-step")}<li><a href="${href(TOOLS_DIR+"hourly/")}">副業時給計算機</a></li><li><a href="${href(GUIDE)}">副業の一覧を見る</a></li>${PUB.length?`<li><a href="${href(CONDS)}">条件から副業を探す</a></li>`:""}</ul>
+  </section>`,
+    script:`
+function calc(){
+  var wd=num("wd"),we=num("we");
+  if(!(wd>=0)||!(we>=0)||wd>600||we>900){$("rWeek").textContent="―";$("rSub").textContent="分数を入れてください（平日は600分以下、週末は900分以下）。";$("rPlan").textContent="";$("copy").hidden=true;return}
+  var wk=(wd*5+we*2)/60,mo=wk*52/12,r=function(x){return Math.round(x*10)/10};
+  if(wk<=0){$("rWeek").textContent="週 0時間";$("rSub").textContent="時間が0分だと副業は進めにくいので、まず15分だけでも入れてみてください。";$("rPlan").textContent="";$("copy").hidden=true;return}
+  $("rWeek").textContent="週 約"+r(wk)+"時間";
+  $("rSub").textContent="1か月では約"+r(mo)+"時間。平日は1日"+wd+"分×5日、週末は1日"+we+"分×2日の計算です。";
+  var t=wk<2?"週2時間未満の目安：1回15〜30分で終わる出品やデータ入力など、細切れで進められるものが合いやすい時間です。まず「毎週決まった曜日に1回」を目標にしましょう。":
+    wk<5?"週2〜5時間の目安：平日は下調べや記録などの短い作業、週末にまとまった作業を入れる使い分けが合いやすい時間です。":
+    wk<10?"週5〜10時間の目安：ライティングやブログなど、まとまった時間が必要な副業にも取り組める時間です。週1日は休む日を作ると続きやすくなります。":
+    "週10時間以上の目安：かなり本格的に取り組める時間です。本業や休息に響かないよう、最初は予定の7〜8割で始めるのがおすすめです。";
+  $("rPlan").textContent=t;
+  $("copy").hidden=false;$("copy").onclick=function(){copyText("私が副業に使える時間は、週に約"+r(wk)+"時間でした。（ミニ診断「週の副業時間割シミュレータ」）https://mini-shindan.com/tools/schedule/",$("copy"),"schedule")};
+  completed("schedule");
+}
+["wd","we"].forEach(function(i){$(i).addEventListener("input",function(){touched("schedule");calc()})});
 calc();`});
 }
 function targetPage(){
@@ -1181,7 +1216,7 @@ write(COLUMN,columnIndex());
 COLUMNS.forEach(c=>write(columnPath(c),columnPage(c)));
 write(ZUKAN,zukanPage());
 if(PUB.length){write(CONDS,conditionHub());PUB.forEach(c=>write(condPath(c),conditionPage(c)))}
-write(TOOLS_DIR,toolHub());write(TOOLS_DIR+"hourly/",hourlyPage());write(TOOLS_DIR+"target/",targetPage());write(TOOLS_DIR+"tax-flow/",taxPage());
+write(TOOLS_DIR,toolHub());write(TOOLS_DIR+"hourly/",hourlyPage());write(TOOLS_DIR+"target/",targetPage());write(TOOLS_DIR+"tax-flow/",taxPage());write(TOOLS_DIR+"schedule/",schedulePage());
 CMP.forEach(d=>write(cmpPath(d),comparePage(d)));
 write(unseiPath,unseiPage());write(UNSEI_TOP,unseiTop());
 FEATS.forEach(f=>write(featPath(f),featurePage(f)));
