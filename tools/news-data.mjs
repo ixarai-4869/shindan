@@ -2,6 +2,8 @@
 // {slug:"半角の短い名前", date:"2026-11-01", kind:"update"（機能・コンテンツの追加）または "diary"（開発日誌）, title, body:[段落の文字列…], href:"関連ページ（任意）"}
 // 新しいコンテンツを公開するときは、ここに1件追加する運用。事実だけを書き、実績の数字や利用者の声は書かない。
 export const NEWS=[
+  {slug:"column-quit-or-switch",date:"2026-11-03",kind:"update",title:"悩みコラム「副業が続かないとき｜やめる・続ける・乗り換えるの見分け方」を公開しました",
+   body:["副業が続かないと感じたときに、期間・時間・収入の3つの目安で見直す方法をまとめました。乗り換えるときの選び方も載せています。"],href:"fukugyo/column/quit-or-switch/"},
   {slug:"year-end-feature",date:"2026-11-02",kind:"update",title:"「年末年始のスキマ時間で始める副業」特集ページを公開しました",
    body:["週3時間以内・週末だけ・スマホだけの条件ページと、時給計算機、最初の一歩のコラムをまとめた特集です。トップの季節バナーは12月1日から19日の間だけ表示されます。"],href:"fukugyo/feature/year-end/"},
   {slug:"tsumazuki-and-extend-plan",date:"2026-11-01",kind:"update",title:"副業つまずきタイプ診断と、31〜90日の継続プランを公開しました",
