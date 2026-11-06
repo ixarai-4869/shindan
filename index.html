@@ -62,7 +62,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,s
 .opt.preset{border-color:var(--accent)}.presetTag{display:block;color:var(--accent);font-size:.75rem;margin-top:2px}
 .opt.picked{background:var(--accent-soft);border-color:var(--accent);transform:scale(.98)}
 .opt.picked::after{content:"✓";margin-left:auto;padding-left:10px;color:var(--accent);font-weight:700}
-.opts.chosen .opt:not(.picked){opacity:.45;transition:opacity .15s}
+.opts.chosen .opt:not(.picked){opacity:.75;transition:opacity .15s}
 .primary{display:inline-block;background:var(--accent);color:var(--on-accent);border:0;border-radius:999px;padding:13px 32px;font-weight:600;text-decoration:none}
 .ghost{background:none;border:0;color:var(--sub);padding:10px 12px 10px 0;min-height:44px;font-size:.9rem}
 .ghost:disabled{visibility:hidden}
@@ -112,8 +112,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible,s
 @keyframes hop{40%{transform:translateY(-9px)}}
 .wlabel{position:absolute;top:56px;left:50%;transform:translateX(-50%);font-size:.75rem;font-weight:600;color:var(--sub);white-space:nowrap}
 .cheer{min-height:1.6em;color:var(--accent);font-weight:600;font-size:.9rem;text-align:center}
-.slide-in{animation:slidein .3s ease both}
-@keyframes slidein{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.slide-in{animation:slidein .2s ease both}
+@keyframes slidein{from{opacity:.7;transform:translateX(16px)}to{opacity:1;transform:none}}
 
 /* 分析中 */
 #loading{text-align:center;padding:48px 0}
