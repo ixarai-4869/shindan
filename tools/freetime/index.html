@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>スキマ時間ツール｜向いてる副業診断</title>
+<meta name="description" content="1日の決まった予定（仕事・学校・睡眠・家事など）の時間を入れると、平日と週末の空き時間の目安がわかる無料ツール。入力内容は送信されません。">
+<link rel="canonical" href="https://mini-shindan.com/tools/freetime/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ミニ診断">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="スキマ時間ツール｜向いてる副業診断">
+<meta property="og:description" content="1日の決まった予定（仕事・学校・睡眠・家事など）の時間を入れると、平日と週末の空き時間の目安がわかる無料ツール。入力内容は送信されません。">
+<meta property="og:url" content="https://mini-shindan.com/tools/freetime/">
+<meta property="og:image" content="https://mini-shindan.com/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="向いてる副業診断。フクロウ、インコ、ビーバー、キツネ、ミツバチの5キャラ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1917" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="../../assets/pages.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"向いてる副業診断","item":"https://mini-shindan.com/"},{"@type":"ListItem","position":2,"name":"ミニ計算ツール","item":"https://mini-shindan.com/tools/"},{"@type":"ListItem","position":3,"name":"スキマ時間ツール","item":"https://mini-shindan.com/tools/freetime/"}]}</script>
+<script>
+const GA_ID="G-PX3Q72XL5G";
+const NOTRACK=(()=>{try{const q=new URLSearchParams(location.search).get("notrack");if(q==="1")localStorage.setItem("shindan-notrack","1");if(q==="0")localStorage.removeItem("shindan-notrack");return localStorage.getItem("shindan-notrack")==="1"}catch(e){return false}})();
+if(GA_ID&&!NOTRACK){
+  const s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;document.head.appendChild(s);
+  window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());gtag("config",GA_ID,Object.assign(/[?&]debug=1/.test(location.search)?{debug_mode:true}:{},{"page_type":"tool"}));
+}
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-track]");if(a&&window.gtag)gtag("event",a.dataset.track,a.dataset.placement?{job_id:a.dataset.jobId||"",service_name:a.dataset.service,placement:a.dataset.placement,page:location.pathname}:{page:location.pathname,link:a.textContent.trim(),place:a.dataset.place||""})});
+</script>
+</head>
+<body>
+<main>
+  <p class="pr">※ 本サイトには広告（PR・アフィリエイトリンク）が含まれます。</p>
+  <nav class="crumbs" aria-label="パンくずリスト"><a href="../../">向いてる副業診断</a> › <a href="../../tools/">ミニ計算ツール</a> › <span aria-current="page">スキマ時間ツール</span></nav>
+
+  <article>
+  <header class="card hero tool-hero">
+    <svg viewBox="0 0 120 120" role="img" aria-label="フクロウのフミ"><path d="M30 34 38 14 48 30M90 34 82 14 72 30" fill="#8a6142"/><ellipse cx="60" cy="68" rx="38" ry="40" fill="#a47551"/><ellipse cx="60" cy="80" rx="24" ry="24" fill="#e9d3b5"/>
+    <circle cx="45" cy="58" r="14" fill="#fff"/><circle cx="75" cy="58" r="14" fill="#fff"/><path d="M39 58q6 -8 12 0M69 58q6 -8 12 0" stroke="#2b2420" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="45" cy="58" r="15" fill="none" stroke="#3c3c3c" stroke-width="2.5"/><circle cx="75" cy="58" r="15" fill="none" stroke="#3c3c3c" stroke-width="2.5"/><path d="M60 58h0" stroke="#3c3c3c" stroke-width="2.5"/>
+    <path d="M55 70 60 78 65 70z" fill="#f2a93b"/><rect x="88" y="70" width="6" height="30" rx="2" transform="rotate(25 91 85)" fill="#2f6fed"/></svg>
+    <p class="tool-say">「決まっている予定を引くと、空き時間が見えてきます」</p>
+    <p class="sub">フクロウの「フミ」がご案内します</p>
+    <h1>スキマ時間ツール</h1>
+  </header>
+  <section class="card tool-card">
+    <label class="tool-f" for="bwd"><span>平日1日の予定の合計</span><span class="tool-in"><input id="bwd" type="number" inputmode="decimal" min="0" step="any" value="15" max="24" step="0.5"><b>時間</b></span></label>
+    <label class="tool-f" for="bwe"><span>週末1日の予定の合計</span><span class="tool-in"><input id="bwe" type="number" inputmode="decimal" min="0" step="any" value="12" max="24" step="0.5"><b>時間</b></span></label>
+  </section>
+  <section class="card tool-result" id="result" aria-live="polite">
+    <p class="kicker">結果</p>
+    <p class="tool-big"><span id="rFree">―</span></p>
+    <p class="sub" id="rSub">予定の時間を入れると、空き時間の目安が出ます。</p>
+    <p id="rNote"></p>
+    <button class="primary tool-copy" id="copy" type="button" hidden>結果をコピーする</button>
+  </section>
+  <section class="card">
+    <h2>空き時間を時間割に入れる</h2>
+    <p>ここで出た空き時間は、「予定が決まっていない時間」の目安です。疲れている日や予定の変更もあるので、実際に使えるのは空き時間より少ないことが多いです。</p>
+    <p>平日と週末の空き時間の分数を、<a href="../../tools/schedule/">週の副業時間割シミュレータ</a>の欄に入れると、1週間の目安が出ます。</p>
+    <ul class="links"><li><a href="../../fukugyo/column/first-step/">副業は何から始める？未経験でも迷わない3ステップ</a></li><li><a href="../../tools/schedule/">週の副業時間割シミュレータ</a></li><li><a href="../../tools/">ほかのミニ計算ツール</a></li></ul>
+  </section>
+  <p class="sub">入力した内容はこのページの中だけで計算し、サーバーや計測ツールには送りません。2026年11月時点の内容です。</p>
+  <p class="sub"><a href="../../tools/">ほかのミニ計算ツール</a></p>
+  </article>
+  <script>
+var $=function(i){return document.getElementById(i)};
+var used=false,done=false;
+function ev(n,p){if(window.gtag)gtag("event",n,p)}
+function num(id){var v=parseFloat(String($(id).value).replace(/,/g,""));return isFinite(v)?v:NaN}
+function yen(n){return Math.round(n).toLocaleString("ja-JP")}
+function touched(slug){if(!used){used=true;ev("tool_use",{tool:slug})}}
+function completed(slug){if(!done){done=true;ev("tool_complete",{tool:slug})}}
+function copyText(t,btn,slug){
+  function ok(){btn.textContent="コピーしました";setTimeout(function(){btn.textContent="結果をコピーする"},2000)}
+  ev("share_click",{placement:"tool_"+slug});
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){fallback()});else fallback();
+  function fallback(){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){btn.textContent="コピーできませんでした"}document.body.removeChild(a)}
+}
+
+
+function calc(){
+  var bwd=num("bwd"),bwe=num("bwe");
+  if(!(bwd>=0)||!(bwe>=0)||bwd>24||bwe>24){$("rFree").textContent="―";$("rSub").textContent="予定の時間は0〜24時間で入れてください。";$("rNote").textContent="";$("copy").hidden=true;return}
+  var fwd=Math.round((24-bwd)*60),fwe=Math.round((24-bwe)*60);
+  var h=function(m){return Math.floor(m/60)+"時間"+(m%60?(m%60)+"分":"")};
+  $("rFree").textContent="平日 約"+h(fwd)+"／週末 約"+h(fwe);
+  $("rSub").textContent="1日24時間から、入れた予定の時間を引いた空き時間です（平日"+fwd+"分／週末"+fwe+"分）。";
+  $("rNote").textContent=fwd<=0||fwe<=0?"予定の時間が24時間に近いので、空き時間はほとんどありません。予定を少し見直すと、副業の時間を作りやすくなります。":"この分数を時間割シミュレータに入れると、1週間の目安がわかります。";
+  $("copy").hidden=false;$("copy").onclick=function(){copyText("私の空き時間は、平日1日約"+h(fwd)+"、週末1日約"+h(fwe)+"でした。（ミニ診断「スキマ時間ツール」）https://mini-shindan.com/tools/freetime/",$("copy"),"freetime")};
+  completed("freetime");
+}
+["bwd","bwe"].forEach(function(i){$(i).addEventListener("input",function(){touched("freetime");calc()})});
+calc();
+  </script>
+
+  <footer>
+    <p><a href="../../">向いてる副業診断をやってみる</a>・<a href="../../fukugyo/guide/">タイプと副業の一覧</a>・<a href="../../fukugyo/column/">副業の悩みコラム</a>・<a href="../../fukugyo/zukan/">称号図鑑</a>・<a href="../../tools/">ミニ計算ツール</a>・<a href="../../tsumazuki/">つまずきタイプ診断</a>・<a href="../../characters/">キャラクター</a>・<a href="../../news/">更新履歴</a>・<a href="../../fukugyo/conditions/">条件から探す</a></p>
+    <p><a href="../../privacy/">プライバシーポリシー・免責事項</a>・<a href="../../about/">運営者情報・広告について</a></p>
+    <p class="pr">費用・期間・収入は始め方による一般的な目安で、収益を保証するものではありません。この診断は娯楽・参考用です。</p>
+  </footer>
+</main>
+</body>
+</html>

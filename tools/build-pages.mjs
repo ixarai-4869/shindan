@@ -424,7 +424,7 @@ const FAQ=[
 ];
 // ---- 特集ページ（季節バナーの行き先。tools/season-data.mjs） ----
 const featPath=f=>`${BASE}feature/${f.slug}/`;
-const TOOL_TITLES={hourly:"副業時給計算機","target":"月1万円逆算ツール","tax-flow":"確定申告フローチェック",schedule:"週の副業時間割シミュレータ"};
+const TOOL_TITLES={hourly:"副業時給計算機","target":"月1万円逆算ツール","tax-flow":"確定申告フローチェック",schedule:"週の副業時間割シミュレータ",freetime:"スキマ時間ツール"};
 const FEATS=FEATURES.filter(f=>f.cards.length);
 const featCard=(href,c)=>{
   if(c.type==="column"){const x=COLUMNS.find(y=>y.slug===c.slug);return `<a class="job" href="${href(columnPath(x))}"><b>${esc(x.title)}</b><span class="more">読む →</span></a>`}
@@ -764,6 +764,7 @@ const toolHub=()=>page({path:TOOLS_DIR,title:`ミニ計算ツール（副業時�
     <a class="job cond" href="${href(TOOLS_DIR+"target/")}">${charSVG("S")}<span><b>月1万円逆算ツール</b><span class="sub">目標までに必要な件数と作業量の目安</span></span></a>
     <a class="job cond" href="${href(TOOLS_DIR+"tax-flow/")}">${charSVG("C")}<span><b>確定申告フローチェック</b><span class="sub">申告が必要かどうかの目安を数問で確認</span></span></a>
     <a class="job cond" href="${href(TOOLS_DIR+"schedule/")}">${charSVG("W")}<span><b>週の副業時間割シミュレータ</b><span class="sub">平日と週末の空き時間から、1週間の時間の使い方の目安を出します</span></span></a>
+    <a class="job cond" href="${href(TOOLS_DIR+"freetime/")}">${charSVG("W")}<span><b>スキマ時間ツール</b><span class="sub">1日の決まった予定を入れると、空き時間の目安がわかります</span></span></a>
   </div></section>
 ${cta(href,"まずは自分のタイプを知る")}
   </article>
@@ -829,6 +830,37 @@ function calc(){
   completed("schedule");
 }
 ["wd","we"].forEach(function(i){$(i).addEventListener("input",function(){touched("schedule");calc()})});
+calc();`});
+}
+function freetimePage(){
+  const path=TOOLS_DIR+"freetime/",slug="freetime";
+  return toolShell({slug,path,chara:"W",lead:"決まっている予定を引くと、空き時間が見えてきます",
+    title:"スキマ時間ツール",desc:"1日の決まった予定（仕事・学校・睡眠・家事など）の時間を入れると、平日と週末の空き時間の目安がわかる無料ツール。入力内容は送信されません。",
+    form:[field("bwd","平日1日の予定の合計","時間",15,'max="24" step="0.5"'),field("bwe","週末1日の予定の合計","時間",12,'max="24" step="0.5"')].join("\n"),
+    result:`    <p class="kicker">結果</p>
+    <p class="tool-big"><span id="rFree">―</span></p>
+    <p class="sub" id="rSub">予定の時間を入れると、空き時間の目安が出ます。</p>
+    <p id="rNote"></p>
+    <button class="primary tool-copy" id="copy" type="button" hidden>結果をコピーする</button>`,
+    after:href=>`  <section class="card">
+    <h2>空き時間を時間割に入れる</h2>
+    <p>ここで出た空き時間は、「予定が決まっていない時間」の目安です。疲れている日や予定の変更もあるので、実際に使えるのは空き時間より少ないことが多いです。</p>
+    <p>平日と週末の空き時間の分数を、<a href="${href(TOOLS_DIR+"schedule/")}">週の副業時間割シミュレータ</a>の欄に入れると、1週間の目安が出ます。</p>
+    <ul class="links">${colLink(href,"first-step")}<li><a href="${href(TOOLS_DIR+"schedule/")}">週の副業時間割シミュレータ</a></li><li><a href="${href(TOOLS_DIR)}">ほかのミニ計算ツール</a></li></ul>
+  </section>`,
+    script:`
+function calc(){
+  var bwd=num("bwd"),bwe=num("bwe");
+  if(!(bwd>=0)||!(bwe>=0)||bwd>24||bwe>24){$("rFree").textContent="―";$("rSub").textContent="予定の時間は0〜24時間で入れてください。";$("rNote").textContent="";$("copy").hidden=true;return}
+  var fwd=Math.round((24-bwd)*60),fwe=Math.round((24-bwe)*60);
+  var h=function(m){return Math.floor(m/60)+"時間"+(m%60?(m%60)+"分":"")};
+  $("rFree").textContent="平日 約"+h(fwd)+"／週末 約"+h(fwe);
+  $("rSub").textContent="1日24時間から、入れた予定の時間を引いた空き時間です（平日"+fwd+"分／週末"+fwe+"分）。";
+  $("rNote").textContent=fwd<=0||fwe<=0?"予定の時間が24時間に近いので、空き時間はほとんどありません。予定を少し見直すと、副業の時間を作りやすくなります。":"この分数を時間割シミュレータに入れると、1週間の目安がわかります。";
+  $("copy").hidden=false;$("copy").onclick=function(){copyText("私の空き時間は、平日1日約"+h(fwd)+"、週末1日約"+h(fwe)+"でした。（ミニ診断「スキマ時間ツール」）https://mini-shindan.com/tools/freetime/",$("copy"),"freetime")};
+  completed("freetime");
+}
+["bwd","bwe"].forEach(function(i){$(i).addEventListener("input",function(){touched("freetime");calc()})});
 calc();`});
 }
 function targetPage(){
@@ -1216,7 +1248,7 @@ write(COLUMN,columnIndex());
 COLUMNS.forEach(c=>write(columnPath(c),columnPage(c)));
 write(ZUKAN,zukanPage());
 if(PUB.length){write(CONDS,conditionHub());PUB.forEach(c=>write(condPath(c),conditionPage(c)))}
-write(TOOLS_DIR,toolHub());write(TOOLS_DIR+"hourly/",hourlyPage());write(TOOLS_DIR+"target/",targetPage());write(TOOLS_DIR+"tax-flow/",taxPage());write(TOOLS_DIR+"schedule/",schedulePage());
+write(TOOLS_DIR,toolHub());write(TOOLS_DIR+"hourly/",hourlyPage());write(TOOLS_DIR+"target/",targetPage());write(TOOLS_DIR+"tax-flow/",taxPage());write(TOOLS_DIR+"schedule/",schedulePage());write(TOOLS_DIR+"freetime/",freetimePage());
 CMP.forEach(d=>write(cmpPath(d),comparePage(d)));
 write(unseiPath,unseiPage());write(UNSEI_TOP,unseiTop());
 FEATS.forEach(f=>write(featPath(f),featurePage(f)));
