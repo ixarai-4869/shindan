@@ -841,6 +841,7 @@ function freetimePage(){
     <p class="tool-big"><span id="rFree">―</span></p>
     <p class="sub" id="rSub">予定の時間を入れると、空き時間の目安が出ます。</p>
     <p id="rNote"></p>
+    <p class="sub">この時間は目安です。実際の作業時間は人によって違います。</p>
     <button class="primary tool-copy" id="copy" type="button" hidden>結果をコピーする</button>`,
     after:href=>`  <section class="card">
     <h2>空き時間を時間割に入れる</h2>
