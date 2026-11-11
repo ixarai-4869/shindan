@@ -86,6 +86,7 @@ function copyText(t,btn,slug){
 
 function calc(){
   var bwd=num("bwd"),bwe=num("bwe");
+  if($("bwd").value===""||$("bwe").value===""){$("rFree").textContent="―";$("rSub").textContent="予定の時間を入れると、空き時間の目安が出ます。";$("rNote").textContent="";$("copy").hidden=true;return}
   if(!(bwd>=0)||!(bwe>=0)||bwd>24||bwe>24){$("rFree").textContent="―";$("rSub").textContent="予定の時間は0〜24時間で入れてください。";$("rNote").textContent="";$("copy").hidden=true;return}
   var fwd=Math.round((24-bwd)*60),fwe=Math.round((24-bwe)*60);
   var h=function(m){return Math.floor(m/60)+"時間"+(m%60?(m%60)+"分":"")};
