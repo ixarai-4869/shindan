@@ -258,7 +258,7 @@ ${first?`
     <a class="pair" href="${href(typePath(j.t))}">${charSVG(j.t,true)}<span><b>${esc(typeLabel(j.t))}</b><br><span class="sub">${esc(T.catch)}</span></span></a>
   </section>
 
-  <section class="card">
+  <section class="card" id="plan">
     <h2>最初の30日プラン</h2>
     <ol class="plan">${j.plan.map(([d,text,lk])=>`<li><span class="day">${d}日目</span><span>${esc(text)}${live(lk)?`${svcCard(lk,"plan_step",j.id)}`:""}</span></li>`).join("")}</ol>
     ${linkKeys.some(isAd)?`<p class="pr">PR：プラン内のリンクは広告（アフィリエイト）を含みます。</p>`:""}
@@ -271,7 +271,7 @@ ${first?`
   </section>
   </article>
 
-${contCard(href,j)}${related(href,COLUMNS.filter(c=>c.jobs.includes(j.id)))}
+${exitCards(href,j)}
 ${j.id==="blog"&&serverCmp?cmpCard(href,serverCmp,"ブログの土台になるレンタルサーバーを、月額・初期費用・サポートなどで比べました。"):""}${cta(href,`${j.name}があなたに向いているか、診断で確かめる`)}
 
   <section class="card">
@@ -1232,12 +1232,23 @@ ${cta(href,"あなたに向いてる副業を診断する")}
   </script>
 `});
 }
-const contCard=(href,j)=>CONT[j.id]?`  <section class="card first">
-    <h2>31日目からの継続プラン</h2>
-    <p>最初の30日のあと、60日かけて習慣化と改善、単価交渉や確定申告の準備まで進められます。</p>
-    <p><a href="${href(contPath(j.id))}" data-track="plan_extend_view">31〜90日の継続プランを見る</a></p>
+// 副業詳細の末尾の「次に読むもの」（30日プラン・近い条件ページ・関連コラムの3点をそろえる）
+// 継続プランは、あるものだけ併記。条件ページは、その副業に当てはまる最初の1つ。
+// 関連コラムは、その副業のものがなければ始め方の基本コラムを案内する。
+const exitCards=(href,j)=>{
+  const col=COLUMNS.find(c=>c.jobs.includes(j.id))||COLUMNS.find(c=>c.slug==="first-step");
+  const cond=PUB.find(c=>c.ok(j));
+  return `  <section class="card">
+    <h2>次に読むもの</h2>
+    <ul class="links">
+      <li><a href="${href(jobPath(j)+"#plan")}">${esc(j.name)}の最初の30日プラン</a></li>${CONT[j.id]?`
+      <li><a href="${href(contPath(j.id))}" data-track="plan_extend_view">31〜90日の継続プラン</a></li>`:""}${cond?`
+      <li><a href="${href(condPath(cond))}">${esc(cond.short)}</a></li>`:""}${col?`
+      <li><a href="${href(columnPath(col))}">${esc(col.title)}</a></li>`:""}
+    </ul>
   </section>
-`:"";
+`;
+};
 
 // ---- 書き出し ----
 rmSync(join(ROOT,BASE),{recursive:true,force:true});
