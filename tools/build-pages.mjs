@@ -17,6 +17,7 @@ import {CONT} from "./continue-data.mjs";
 import {GUIDES,GUIDE_BANNED} from "./guide-data.mjs";
 import {NEWS} from "./news-data.mjs";
 import {COMICS} from "./comics-data.mjs";
+import {GLOSSARY} from "./glossary-data.mjs";
 
 const ROOT=join(dirname(fileURLToPath(import.meta.url)),"..");
 const SITE="https://mini-shindan.com/";
@@ -363,8 +364,35 @@ function columnIndex(){
   <p class="sub">副業を始める前と、始めたばかりのころによくある悩みに答えます。</p>
 ${COLUMNS.map(c=>`
   <a class="job card" href="${href(columnPath(c))}"><b>${esc(c.title)}</b><span class="sub">${esc(c.desc)}</span><span class="more">読む →</span></a>`).join("")}
+  <a class="job card" href="${href(GLOSS)}"><b>副業用語集</b><span class="sub">クラウドソーシング、単価、ポートフォリオなど、副業の言葉を短く解説します。</span><span class="more">見る →</span></a>
 
 ${cta(href,"あなたに向いてる副業は？")}
+`});
+}
+
+// ---- 副業用語集 ----
+const GLOSS=`${BASE}glossary/`;
+function glossaryPage(){
+  const title=`副業用語集｜${NAME}`;
+  const desc=`副業を始めるときによく出てくる言葉を、1語2〜3行で解説する用語集です。クラウドソーシング、単価、ポートフォリオなどを、初心者向けにまとめました。`;
+  return page({path:GLOSS,title,desc,crumbs:[[NAME,""],["副業用語集",GLOSS]],body:href=>`
+  <article>
+  <header class="card">
+    <h1>副業用語集</h1>
+    <p class="sub">副業の話でよく出てくる言葉を、初心者向けに短く解説しています。</p>
+  </header>
+  <section class="card">
+    <h2>用語一覧</h2>
+    ${GLOSSARY.map(t=>`<p id="${t.id}"><b>${esc(t.term)}</b><br>${esc(t.def)}</p>`).join("\n    ")}
+  </section>
+  </article>
+
+  <section class="card">
+    <h2>副業の悩みコラム</h2>
+    ${columnList(href,COLUMNS)}
+  </section>
+
+${cta(href,"自分に向いてる副業を、診断で確かめる")}
 `});
 }
 
@@ -1259,6 +1287,7 @@ KEYS.forEach(k=>write(typePath(k),typePage(k)));
 JOBS.forEach(j=>write(jobPath(j),jobPage(j)));
 write(COLUMN,columnIndex());
 COLUMNS.forEach(c=>write(columnPath(c),columnPage(c)));
+write(GLOSS,glossaryPage());
 write(ZUKAN,zukanPage());
 if(PUB.length){write(CONDS,conditionHub());PUB.forEach(c=>write(condPath(c),conditionPage(c)))}
 write(TOOLS_DIR,toolHub());write(TOOLS_DIR+"hourly/",hourlyPage());write(TOOLS_DIR+"target/",targetPage());write(TOOLS_DIR+"tax-flow/",taxPage());write(TOOLS_DIR+"schedule/",schedulePage());write(TOOLS_DIR+"freetime/",freetimePage());
