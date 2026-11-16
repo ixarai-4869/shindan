@@ -15,3 +15,12 @@ export const GLOSSARY=[
   {id:"repeat",term:"リピート",def:"一度取引した相手から、あらためて依頼をもらうことのこと。最初の1件のあとに増えやすいと言われます。"},
   {id:"affiliate-asp",term:"アフィリエイトASP",def:"広告を出したい会社と、ブログやSNSで紹介する人をつなぐ仲介サービスのこと。紹介した商品が申し込まれるなどの条件を満たすと、報酬が発生する仕組みです。"},
 ];
+// 言葉ごとの関連ページへの小さなリンク（任意）。to は /（サイト直下）からの相対パス、中身は既存ページ。
+// 飛び先のページに該当語が実際に出てくることを確認してから入れる。自然な飛び先がない言葉には付けない。
+export const GLOSSARY_SEE={
+  "unit-price":["tools/hourly/","時給計算ツールで、単価から時給を試算できます"],
+  "listing":["fukugyo/job/furima/","フリマ副業の解説で、出品の流れを見られます"],
+  "market-price":["fukugyo/job/furima/","フリマ副業の解説で、相場の調べ方を見られます"],
+  "crowdsourcing":["fukugyo/job/writer/","ライター副業の解説で、仕事の探し方を見られます"],
+  "delivery":["fukugyo/job/writer/","ライター副業の解説で、納品までの流れを見られます"],
+};

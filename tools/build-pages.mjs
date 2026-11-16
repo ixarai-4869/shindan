@@ -17,7 +17,7 @@ import {CONT} from "./continue-data.mjs";
 import {GUIDES,GUIDE_BANNED} from "./guide-data.mjs";
 import {NEWS} from "./news-data.mjs";
 import {COMICS} from "./comics-data.mjs";
-import {GLOSSARY} from "./glossary-data.mjs";
+import {GLOSSARY,GLOSSARY_SEE} from "./glossary-data.mjs";
 
 const ROOT=join(dirname(fileURLToPath(import.meta.url)),"..");
 const SITE="https://mini-shindan.com/";
@@ -383,7 +383,7 @@ function glossaryPage(){
   </header>
   <section class="card">
     <h2>用語一覧</h2>
-    ${GLOSSARY.map(t=>`<p id="${t.id}"><b>${esc(t.term)}</b><br>${esc(t.def)}</p>`).join("\n    ")}
+    ${GLOSSARY.map(t=>`<p id="${t.id}"><b>${esc(t.term)}</b><br>${esc(t.def)}${GLOSSARY_SEE[t.id]?` <a class="more" href="${href(GLOSSARY_SEE[t.id][0])}">${esc(GLOSSARY_SEE[t.id][1])}</a>`:""}</p>`).join("\n    ")}
   </section>
   </article>
 
