@@ -356,14 +356,27 @@ ${cta(href,"自分に向いてる副業を、診断で確かめる")}
   </section>
 `});
 }
+// 一覧のカテゴリ分け。各コラムはどれか1つだけに入れる。先頭が代表記事。
+const COLUMN_GROUPS=[
+  ["始め方",["first-step","no-experience"]],
+  ["お金",["10000-yen","expenses"]],
+  ["会社や周りのこと",["company-secret"]],
+  ["続けるかどうか",["quit-or-switch"]],
+  ["怪しい話を見分ける",["suspicious"]],
+];
 function columnIndex(){
   const title=`副業の悩みコラム｜${NAME}`;
   const desc=`副業を始める前の「何から始める？」「会社にバレる？」「経費はどこまで？」などの悩みに答えるコラムの一覧です。`;
+  const grouped=COLUMN_GROUPS.flatMap(([,s])=>s);
+  if(grouped.length!==COLUMNS.length||COLUMNS.some(c=>!grouped.includes(c.slug)))throw new Error("COLUMN_GROUPS と COLUMNS の slug が一致しません");
   return page({path:COLUMN,title,desc,crumbs:[[NAME,""],["副業の悩みコラム",COLUMN]],body:href=>`
   <h1>副業の悩みコラム</h1>
   <p class="sub">副業を始める前と、始めたばかりのころによくある悩みに答えます。</p>
-${COLUMNS.map(c=>`
-  <a class="job card" href="${href(columnPath(c))}"><b>${esc(c.title)}</b><span class="sub">${esc(c.desc)}</span><span class="more">読む →</span></a>`).join("")}
+${COLUMN_GROUPS.map(([h,slugs])=>`
+  <h2 class="cat" style="font-size:1.05rem;margin:1.8em 0 .2em">${esc(h)}</h2>
+${slugs.map(s=>{const c=COLUMNS.find(x=>x.slug===s);return `
+  <a class="job card" href="${href(columnPath(c))}"><b>${esc(c.title)}</b><span class="sub">${esc(c.desc)}</span><span class="more">読む →</span></a>`}).join("")}`).join("")}
+  <h2 class="cat" style="font-size:1.05rem;margin:1.8em 0 .2em">言葉のこと</h2>
   <a class="job card" href="${href(GLOSS)}"><b>副業用語集</b><span class="sub">クラウドソーシング、単価、ポートフォリオなど、副業の言葉を短く解説します。</span><span class="more">見る →</span></a>
 
 ${cta(href,"あなたに向いてる副業は？")}
