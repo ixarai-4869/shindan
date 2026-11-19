@@ -121,7 +121,7 @@ const cta=(href,text)=>`  <div class="cta card">
 const live=k=>!!(k&&LINKS[k]&&!LINKS[k].url.startsWith("#REPLACE"));
 const isAd=k=>live(k)&&!LINKS[k].plain;
 // サービス名＋選ぶ理由＋ボタンのカード（index.html の svcCard と同じ見た目）。place は計測用の置き場所
-const svcCard=(k,place,job)=>{const L=LINKS[k];return `<a class="svc" href="${L.url}" target="_blank" rel="${L.plain?"noopener":"sponsored noopener"}" data-track="${place==="job_top"?"first_step_click":"affiliate_click"}" data-service="${esc(L.svc)}" data-placement="${place}"${job?` data-job-id="${job}"`:""}><span class="svc-t"><b>${esc(L.svc)}</b><span>${esc(L.why)}</span></span><span class="svc-b">${esc(L.label)}</span></a>`};
+const svcCard=(k,place,job)=>{const L=LINKS[k];return `<a class="svc" href="${L.url}" target="_blank" rel="${L.plain?"noopener":"sponsored noopener"}" data-track="${place==="job_top"?"first_step_click":"affiliate_click"}" data-service="${esc(L.svc)}" data-placement="${place}"${job?` data-job-id="${job}"`:""}><span class="svc-t"><b>${esc(L.svc)}</b><span>${esc(L.why)}</span>${k==="BLOG"&&job==="blog"?`<span style="display:block;margin-top:.4em;font-weight:700">※ConoHa WINGは2026年11月14日から緊急メンテナンスのため新規申し込みを受け付けていません（再開時期は未定です）。</span>`:""}</span><span class="svc-b">${esc(L.label)}</span></a>`};
 const affLinks=(keys,place="column")=>keys.length?`<div class="aff">${keys.map(k=>svcCard(k,place)).join("")}</div>
     <p class="pr">PR：上のリンクは広告（アフィリエイト）を含みます。</p>`:"";
 
@@ -799,7 +799,7 @@ ${script}
 const field=(id,label,unit,val,extra="")=>`    <label class="tool-f" for="${id}"><span>${label}</span><span class="tool-in"><input id="${id}" type="number" inputmode="decimal" min="0" step="any" value="${val}" ${extra}><b>${unit}</b></span></label>`;
 const toolHub=()=>page({path:TOOLS_DIR,title:`ミニ計算ツール（副業時給・月1万円の逆算・確定申告の目安）｜${NAME}`,desc:"副業の時給、月1万円までに必要な件数、確定申告が必要かの目安を、1画面で計算できる無料ツール。入力した内容は送信されません。",ptype:"tool",crumbs:[[NAME,""],["ミニ計算ツール",TOOLS_DIR]],body:href=>`
   <article>
-  <header class="card hero"><div class="zk-line">${["W","S","C"].map(k=>charSVG(k,true)).join("")}</div><h1>ミニ計算ツール</h1><p class="left">副業のお金と時間の目安を、1画面で確認できる4つのツールです。入力した内容はこのページの中だけで計算し、送信されません。</p></header>
+  <header class="card hero"><div class="zk-line">${["W","S","C"].map(k=>charSVG(k,true)).join("")}</div><h1>ミニ計算ツール</h1><p class="left">副業のお金と時間の目安を、1画面で確認できる5つのツールです。入力した内容はこのページの中だけで計算し、送信されません。</p></header>
   <section class="card"><div class="jobs">
     <a class="job cond" href="${href(TOOLS_DIR+"hourly/")}">${charSVG("W")}<span><b>副業時給計算機</b><span class="sub">収入と作業時間から、実際の時給を出します</span></span></a>
     <a class="job cond" href="${href(TOOLS_DIR+"target/")}">${charSVG("S")}<span><b>月1万円逆算ツール</b><span class="sub">目標までに必要な件数と作業量の目安</span></span></a>
